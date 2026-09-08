@@ -1,0 +1,6 @@
+network: eip155:84532        # demo; live: eip155:56 (b402) or eip155:8453 (cdp)
+asset: USDC                  # demo; live b402: USD1 (eip3009) or USDT (permit2)
+routes:
+  /v1/signals/liquidation: { price_usd: 0.05, min: 0.01, max: 0.50 }
+  /v1/signals/basis:       { price_usd: 0.05, min: 0.01, max: 0.50 }
+  /v1/signals/contracts:   { price_usd: 0.10, min: 0.02, max: 1.00 }

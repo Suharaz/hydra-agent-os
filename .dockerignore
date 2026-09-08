@@ -1,0 +1,12 @@
+node_modules
+.git
+.env
+*.db
+*.sqlite
+*.sqlite3
+test
+docs
+plans
+.omp
+.claude
+dist

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYDRA dashboard</title>
+<style>
+  :root{--bg:#0b0e11;--panel:#161a1e;--panel2:#1e2329;--line:#2b3139;--txt:#eaecef;--muted:#848e9c;
+        --yellow:#f0b90b;--green:#0ecb81;--red:#f6465d;--blue:#4c8dff;--purple:#b57bff;--orange:#ff8a3d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:13px/1.45 "Segoe UI",system-ui,sans-serif}
+  header{display:flex;align-items:center;gap:16px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+  header h1{margin:0;font-size:18px}
+  header h1 span{color:var(--yellow)}
+  header .st{color:var(--muted);font-size:12px}
+  header .spacer{flex:1}
+  .pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+  .pill.ok{color:var(--green);border-color:var(--green)}
+  .pill.warn{color:var(--yellow);border-color:var(--yellow)}
+  .pill.bad{color:var(--red);border-color:var(--red)}
+  .pill.real{color:var(--orange);border-color:var(--orange)}
+  #banner{display:none;background:var(--red);color:#fff;padding:8px 18px;font-weight:600}
+  #banner.on{display:block}
+  .caps{display:flex;flex-wrap:wrap;gap:6px 14px;padding:6px 18px 0;font-size:12px}
+  .cap{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+  .cap i{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block}
+  .cap.on{color:var(--txt)} .cap.on i{background:var(--green)}
+  .cap small{opacity:.75}
+  main{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;padding:12px 18px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+  section h2{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);display:flex;align-items:center;gap:10px}
+  section h2::after{content:"";flex:1;border-top:1px solid var(--line)}
+  section h2 .n{background:var(--panel2);border-radius:5px;padding:0 6px;color:var(--yellow)}
+  .c3{grid-column:span 3}.c4{grid-column:span 4}.c6{grid-column:span 6}.c8{grid-column:span 8}.c12{grid-column:span 12}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{padding:3px 6px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:top}
+  th{color:var(--muted);font-weight:500;font-size:11px}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  td.clip{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+  .pos{color:var(--green)}.neg{color:var(--red)}.mut{color:var(--muted)}
+  .scroll{max-height:260px;overflow:auto}
+  .log{font:11px/1.4 Consolas,Menlo,monospace;max-height:280px;overflow:auto;background:#0b0e11;border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+  .log div{white-space:pre-wrap;word-break:break-all}
+  .log .warn{color:var(--yellow)}.log .error{color:var(--red)}.log .debug{color:var(--muted)}
+  .tape div{padding:2px 0;border-bottom:1px solid var(--line);font:11px/1.4 Consolas,Menlo,monospace}
+  .tape .k{display:inline-block;min-width:130px;color:var(--blue)}
+  .tape .veto .k{color:var(--red)}.tape .fill .k{color:var(--green)}.tape .breach .k,.tape .kill .k{color:var(--orange)}
+  button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+  button:hover{border-color:var(--yellow)}
+  button.danger{border-color:var(--red);color:var(--red)}
+  button.danger:hover{background:var(--red);color:#fff}
+  button.small{padding:2px 7px;font-size:11px}
+  input,select{background:#0b0e11;color:var(--txt);border:1px solid var(--line);border-radius:5px;padding:4px 6px;font-size:12px}
+  input:invalid{border-color:var(--red)}
+  input.w{width:150px}input.s{width:60px}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:12px}
+  .kv b{color:var(--muted);font-weight:500}
+  .bar{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-top:2px}
+  .bar i{display:block;height:100%;background:var(--green)}
+  .bar i.warn{background:var(--yellow)}.bar i.bad{background:var(--red)}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .msg{font-size:12px;color:var(--muted);min-height:16px}
+  .msg.err{color:var(--red)}.msg.ok{color:var(--green)}
+  .toggle button.on{border-color:var(--yellow);color:var(--yellow)}
+  svg.spark{width:120px;height:26px;vertical-align:middle}
+  code{background:#0b0e11;padding:1px 5px;border-radius:4px;font-size:11px;color:var(--yellow)}
+  details summary{cursor:pointer;color:var(--muted);font-size:11px}
+  #login{position:fixed;inset:0;background:rgba(11,14,17,.92);display:none;place-items:center;z-index:20}
+  #login.on{display:grid}
+  #login form{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:340px}
+  body:not(.operator) .op{display:none}
+  #rolePill{display:none} body.viewer #rolePill,body.operator #rolePill{display:inline-block}
+  #roleNote{display:none} body.viewer #roleNote{display:inline}
+  #loginBtn{display:none} body:not(.operator) #loginBtn{display:inline-block}
+  body:not(.operator) #logout{display:none}
+  #login .close{background:transparent;border:none;color:var(--muted);align-self:flex-end;padding:0;font-size:16px}
+  .secretRow{display:grid;grid-template-columns:210px 1fr auto;gap:8px;align-items:center;margin-bottom:5px}
+  .secretRow label{color:var(--muted);font-size:12px}
+  .secretRow input{width:100%}
+  .secretRow .have{color:var(--green);font-size:11px}
+  .secretRow .miss{color:var(--muted);font-size:11px}
+  #secretsWarn{color:var(--yellow);font-size:11.5px;margin:4px 0}
+</style>
+</head>
+<body>
+<div id="login"><form id="loginForm"><button type="button" class="close" id="loginClose" title="close">✕</button><b>Admin login</b><span class="mut">Sign in with your username and password (DASHBOARD_USER / DASHBOARD_PASSWORD from .env; the password is printed at boot in demo mode). Viewers need no login.</span><input id="usernameInput" type="text" autocomplete="username" placeholder="username" value="admin"><input id="passwordInput" type="password" autocomplete="current-password" placeholder="password"><div class="msg err" id="loginMsg"></div><button type="submit">Sign in as operator</button></form></div>
+<header>
+  <h1><span>HYDRA</span> dashboard</h1>
+  <span class="pill" id="modePill">mode</span>
+  <span class="pill" id="rolePill"></span>
+  <span class="st" id="roleNote">viewer: read-only</span>
+  <span class="st" id="conn">connecting…</span>
+  <span class="st" id="clock"></span>
+  <div class="spacer"></div>
+  <span class="st" id="navBox"></span>
+  <button class="small op" id="revokeAll" data-action="revoke-all" title="revoke every dashboard session, including this one">revoke all sessions</button>
+  <button class="small" id="loginBtn" title="sign in as operator to configure the system">admin login</button>
+  <button class="small" id="logout">logout</button>
+  <button class="danger op" id="killBtn">KILL</button>
+</header>
+<div id="banner"></div>
+<div id="caps" class="caps"></div>
+<main>
+  <section class="c4"><h2><span class="n">1</span>venues &amp; latency</h2>
+    <table><thead><tr><th>venue</th><th>flag</th><th>money</th></tr></thead><tbody id="venues"></tbody></table>
+    <div class="kv" style="margin-top:6px"><b>orders 24h</b><span id="latCount">-</span><b>ack p50</b><span id="latP50">-</span><b>ack p95</b><span id="latP95">-</span><b>executor</b><span id="execState">-</span></div>
+  </section>
+  <section class="c8"><h2><span class="n">2</span>books · marks · tape</h2>
+    <div class="scroll" style="max-height:150px"><table><thead><tr><th>symbol</th><th class="num">bid</th><th class="num">ask</th><th class="num">spread bps</th><th class="num">imb</th><th class="num">mark</th><th class="num">gap bps</th><th class="num">fund %</th><th class="num">buy 1s</th><th class="num">sell 1s</th><th>age</th></tr></thead><tbody id="books"></tbody></table></div>
+    <div class="tape scroll" id="tape" style="max-height:120px;margin-top:6px"></div>
+  </section>
+  <section class="c12"><h2><span class="n">3</span>engines</h2>
+    <div class="scroll"><table><thead><tr><th>engine</th><th>on</th><th>paper</th><th>symbols</th><th class="num">size $</th><th class="num">budget $</th><th class="num">max notional</th><th>params</th><th>contract</th><th class="num">pnl 24h</th><th class="num">hit</th><th class="num">trades</th><th>stats</th></tr></thead><tbody id="engines"></tbody></table></div>
+  </section>
+  <section class="c6"><h2><span class="n">4</span>kernel · guardian · log</h2>
+    <div class="scroll" style="max-height:110px"><table><thead><tr><th>t</th><th>rule</th><th>intent</th><th>detail</th></tr></thead><tbody id="vetoes"></tbody></table></div>
+    <div class="log" id="log" style="margin-top:6px"></div>
+  </section>
+  <section class="c6"><h2><span class="n">5</span>agents timeline</h2>
+    <div class="scroll" style="max-height:400px"><table><thead><tr><th>t</th><th>agent</th><th>role</th><th>model</th><th class="num">cost $</th><th class="num">ms</th><th>ok</th><th>decision</th></tr></thead><tbody id="runs"></tbody></table></div>
+  </section>
+  <section class="c12" id="auditPanel"><h2><span class="n">11</span>Audit</h2>
+    <div class="scroll" style="max-height:300px"><table><thead><tr><th>time</th><th>role</th><th>session</th><th>action</th><th class="num">status</th><th>detail</th></tr></thead><tbody id="audit"></tbody></table></div>
+  </section>
+  <section class="c6"><h2><span class="n">6</span>positions &amp; orders</h2>
+    <div class="kv"><b>NAV</b><span id="nav">-</span><b>drawdown</b><span id="dd">-</span><b>limits overlay</b><span id="limits">none</span></div>
+    <div class="scroll" style="max-height:140px;margin-top:6px"><table><thead><tr><th>engine</th><th>venue</th><th>symbol</th><th class="num">qty</th><th class="num">entry</th><th class="num">mark</th><th class="num">unreal</th><th class="num">notional</th></tr></thead><tbody id="positions"></tbody></table></div>
+    <div class="scroll" style="max-height:120px;margin-top:6px"><table><thead><tr><th>id</th><th>venue</th><th>symbol</th><th>side</th><th class="num">qty</th><th>status</th><th class="num">ack ms</th></tr></thead><tbody id="orders"></tbody></table></div>
+  </section>
+  <section class="c6"><h2><span class="n">7</span>payments &amp; spend</h2>
+    <div class="kv"><b>LLM today</b><span id="llmSpend">-</span><b>data today</b><span id="dataSpend">-</span></div>
+    <div class="scroll" style="max-height:200px;margin-top:6px"><table><thead><tr><th>t</th><th>dir</th><th>counterparty</th><th class="num">amount</th><th>asset</th><th>network</th><th>tx</th></tr></thead><tbody id="payments"></tbody></table></div>
+  </section>
+  <section class="c6"><h2><span class="n">9</span>settings</h2>
+    <form id="settings">
+      <div class="scroll"><table><thead><tr><th>agent</th><th>model</th><th>shadow</th><th>fallbacks</th><th class="num">temp</th><th>interval</th><th></th></tr></thead><tbody id="agentRows"></tbody></table></div>
+      <div class="row" style="margin-top:8px">
+        <label>llm_daily_budget_usd <input class="s" name="llm_daily_budget_usd" type="number" min="0" step="0.01"></label>
+        <label>data_daily_budget_usd <input class="s" name="data_daily_budget_usd" type="number" min="0" step="0.01"></label>
+        <button type="submit" class="op">Save</button>
+        <button type="button" id="reloadModels" class="small">load model list</button>
+      </div>
+      <div class="msg" id="settingsMsg"></div>
+    </form>
+    <datalist id="models"></datalist>
+    <details style="margin-top:6px"><summary>engines.yaml (read-only; written by Commander/Coach)</summary><pre id="enginesYaml" class="log" style="max-height:200px"></pre></details>
+  </section>
+  <section class="c12 op" id="secretsPanel"><h2><span class="n">12</span>API keys &amp; secrets (AES-256-GCM encrypted)</h2>
+    <div id="secretsWarn"></div>
+    <form id="secretsForm">
+      <div class="secretRow"><label for="secPass">master passphrase</label><input id="secPass" type="password" autocomplete="off" placeholder="min 12 chars — decrypts state/secrets.enc"><span class="mut" style="font-size:11px">never written to disk</span></div>
+      <div id="secretFields"></div>
+      <div class="row" style="margin-top:8px">
+        <button type="submit">Save</button>
+        <button type="button" id="secSaveRestart" class="danger">Save &amp; Restart</button>
+        <button type="button" id="secUnlock" class="small">Verify passphrase</button>
+        <span class="mut" style="font-size:11px">blank field = keep current; clears only when you type a space</span>
+      </div>
+      <div class="msg" id="secretsMsg"></div>
+    </form>
+  </section>
+  <section class="c6"><h2><span class="n">10</span>A/B primary vs shadow <span class="toggle" id="abDays"><button class="small on" data-d="1">1d</button><button class="small" data-d="7">7d</button><button class="small" data-d="30">30d</button></span></h2>
+    <div class="scroll" style="max-height:420px"><table><thead><tr><th>agent</th><th>role</th><th>model</th><th class="num">runs</th><th class="num">cost $</th><th class="num">p50 ms</th><th class="num">schema %</th><th class="num">tool-rej %</th><th class="num">agree %</th><th class="num">pnl 1h</th><th>agreement</th></tr></thead><tbody id="ab"></tbody></table></div>
+  </section>
+</main>
+<script>
+(() => {
+  const MODEL_ID = /^[a-z0-9-]+\/[a-z0-9._:-]+$/;
+  const DURATION = /^[1-9]\d*(ms|s|m|h|d)$/;
+  const AGENTS = ["commander", "supervisor", "treasurer", "coach", "sales"];
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const fmt = (v, d = 2) => (v === null || v === undefined || Number.isNaN(v) ? "-" : Number(v).toFixed(d));
+  const money = (v) => (v === null || v === undefined ? "-" : (v < 0 ? "-" : "") + "$" + Math.abs(v).toFixed(2));
+  const pct = (v) => (v === null || v === undefined ? "-" : (v * 100).toFixed(0) + "%");
+  const time = (ms) => (ms ? new Date(ms).toLocaleTimeString() : "-");
+  const sign = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
+  let ws = null;
+  let role = null;
+  let abDays = 1;
+  let settingsDirty = false;
+  let lastAgents = null;
+  let timers = [];
+
+  // ---- auth ---------------------------------------------------------------
+  const lockoutMsg = (body) => `locked out, retry in ${Math.ceil((body.retryAfterMs || 60000) / 1000)} s`;
+  const api = async (path, init = {}) => {
+    const res = await fetch(path, { ...init, headers: { ...(init.headers || {}), ...(init.body ? { "content-type": "application/json" } : {}) } });
+    if (res.status === 401) { if (role === "operator") showLogin("session expired"); throw Object.assign(new Error("unauthorized"), { status: 401 }); }
+    const body = res.status === 204 ? {} : await res.json().catch(() => ({}));
+    if (res.status === 429) throw Object.assign(new Error(lockoutMsg(body)), { status: 429 });
+    if (!res.ok) throw Object.assign(new Error(body.error || res.statusText), { problems: body.problems, status: res.status });
+    return body;
+  };
+  const setRole = (r) => {
+    role = r;
+    document.body.classList.toggle("viewer", r === "viewer");
+    document.body.classList.toggle("operator", r === "operator");
+    $("rolePill").textContent = r || "";
+    $("rolePill").className = "pill" + (r === "operator" ? " warn" : "");
+  };
+  const stopTimers = () => { for (const t of timers) clearInterval(t); timers = []; };
+  const closeSocket = () => { if (ws) { ws.onclose = null; ws.close(); ws = null; } };
+  const showLogin = (msg) => { stopTimers(); closeSocket(); setRole(null); $("conn").textContent = "signed out"; $("loginMsg").textContent = msg || ""; $("login").classList.add("on"); $("passwordInput").focus(); };
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = $("usernameInput").value.trim(); const pwInput = $("passwordInput"); const password = pwInput.value; pwInput.value = "";
+    if (!username || !password) return;
+    $("loginMsg").textContent = "";
+    try {
+      const res = await fetch("/api/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ username, password }) });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok) { $("login").classList.remove("on"); boot(); return; }
+      $("loginMsg").textContent = res.status === 401 ? "invalid username or password" : res.status === 429 ? lockoutMsg(body) : body.error || res.statusText;
+    } catch (err) { $("loginMsg").textContent = err.message; }
+  });
+  $("logout").addEventListener("click", async () => { await api("/api/logout", { method: "POST" }).catch(() => {}); $("login").classList.remove("on"); boot(); });
+  $("loginBtn").addEventListener("click", () => { $("loginMsg").textContent = ""; $("login").classList.add("on"); $("passwordInput").focus(); });
+  $("loginClose").addEventListener("click", () => { $("login").classList.remove("on"); if (!role) boot(); });
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-action]"); if (!b) return;
+    if (b.dataset.action === "revoke-all") {
+      if (!confirm("Revoke every dashboard session, including this one?")) return;
+      try { await api("/api/sessions/revoke-all", { method: "POST", body: "{}" }); showLogin("all sessions revoked"); }
+      catch (err) { if (err.status !== 401) alert("revoke failed: " + err.message); }
+    }
+  });
+
+  // ---- live socket (one-time ticket per connect) ---------------------------
+  const scheduleReconnect = () => { setTimeout(() => { if (role && !$("login").classList.contains("on")) connect(); }, 2000); };
+  const connect = async () => {
+    closeSocket();
+    let ticket;
+    try { ticket = (await api("/api/ws-ticket", { method: "POST", body: "{}" })).ticket; }
+    catch (err) { if (err.status !== 401) { $("conn").textContent = "ticket: " + err.message; scheduleReconnect(); } return; }
+    const proto = location.protocol === "https:" ? "wss" : "ws";
+    const sock = new WebSocket(proto + "://" + location.host + "/ws?ticket=" + encodeURIComponent(ticket));
+    ws = sock;
+    sock.onopen = () => { $("conn").textContent = "live"; };
+    sock.onmessage = (ev) => render(JSON.parse(ev.data));
+    sock.onclose = (ev) => { if (ws !== sock) return; ws = null; $("conn").textContent = ev.code === 1008 || ev.code === 1006 ? "disconnected" : "closed"; scheduleReconnect(); };
+  };
+
+  // ---- render -------------------------------------------------------------
+  const render = (s) => {
+    if (s.role !== role) setRole(s.role);
+    $("clock").textContent = new Date(s.ts).toLocaleTimeString();
+    $("modePill").textContent = s.mode;
+    $("modePill").className = "pill " + (s.mode === "live" ? "real" : "ok");
+    $("venues").innerHTML = s.venues.map((v) => `<tr><td>${v.venue}</td><td>${v.flag}</td><td><span class="pill ${v.realMoney ? "real" : "ok"}">${v.realMoney ? "REAL" : "paper/test"}</span></td></tr>`).join("");
+    $("caps").innerHTML = (s.capabilities ?? []).map((c) => `<span class="cap ${c.on ? "on" : "off"}" title="${esc(c.detail)}"><i></i>${esc(c.name)}<small>${esc(c.detail)}</small></span>`).join("");
+    $("latCount").textContent = s.latency.count;
+    $("latP50").textContent = fmt(s.latency.p50, 1) + " ms";
+    $("latP95").textContent = fmt(s.latency.p95, 1) + " ms";
+    $("execState").innerHTML = s.executor.started ? (s.executor.paused ? '<span class="pill warn">paused (429/418)</span>' : '<span class="pill ok">running</span>') : '<span class="pill bad">not started</span>';
+    $("books").innerHTML = s.books.map((b) => `<tr><td>${b.symbol}</td><td class="num">${fmt(b.bid)}</td><td class="num">${fmt(b.ask)}</td><td class="num">${fmt(b.spreadBps, 1)}</td><td class="num">${fmt(b.imbalance)}</td><td class="num">${fmt(b.mark)}</td><td class="num ${sign(b.gapBps)}">${fmt(b.gapBps, 1)}</td><td class="num">${b.fundingRate === null ? "-" : (b.fundingRate * 100).toFixed(4)}</td><td class="num pos">${fmt(b.buyUsd1s, 0)}</td><td class="num neg">${fmt(b.sellUsd1s, 0)}</td><td>${b.synced ? fmt(b.ageMs, 0) + " ms" : '<span class="mut">no snapshot</span>'}</td></tr>`).join("")
+      + s.spot.map((x) => `<tr><td>${x.symbol} <span class="mut">spot</span></td><td class="num">${fmt(x.top && x.top.bid)}</td><td class="num">${fmt(x.top && x.top.ask)}</td><td colspan="8"></td></tr>`).join("");
+    $("tape").innerHTML = s.tape.slice().reverse().slice(0, 60).map((t) => `<div class="${t.name.includes("veto") ? "veto" : t.name.includes("fill") ? "fill" : t.name.includes("breach") ? "breach" : t.name.includes("kill") ? "kill" : ""}"><span class="mut">${time(t.ts)}</span> <span class="k">${t.name}</span> ${esc(short(t.payload))}</div>`).join("");
+    $("engines").innerHTML = s.engines.map((e) => `<tr><td><b>${e.id}</b></td><td>${e.enabled ? '<span class="pill ok">on</span>' : '<span class="pill">off</span>'}</td><td>${e.paper ? "paper" : '<span class="pill real">live</span>'}</td><td>${e.symbols.join(", ")}</td><td class="num">${fmt(e.sizeUsd, 0)}</td><td class="num">${e.budgetUsd === null ? "-" : fmt(e.budgetUsd, 0)}</td><td class="num">${fmt(e.maxNotionalUsd, 0)}</td><td class="mut clip" title="${esc(JSON.stringify(e.params))}">${esc(shortParams(e.params))}</td><td>${e.contract ? `${e.contract.side} ${e.contract.symbol} ${fmt(e.contract.edgeBps, 1)}bps c=${fmt(e.contract.confidence)} $${fmt(e.contract.sizeUsd, 0)}` : '<span class="mut">-</span>'}</td><td class="num ${sign(e.pnl24h)}">${money(e.pnl24h)}</td><td class="num">${e.hitRate === null ? "-" : pct(e.hitRate)}</td><td class="num">${e.trades24h}</td><td class="mut clip">${esc(shortParams(e.stats))}</td></tr>`).join("");
+    $("vetoes").innerHTML = s.vetoes.map((v) => `<tr><td>${time(v.tsWall)}</td><td><span class="pill bad">rule ${v.rule}</span></td><td class="mut">${esc(v.intentId)}</td><td>${esc(v.detail)}</td></tr>`).join("");
+    $("log").innerHTML = s.logs ? s.logs.slice().reverse().map((l) => `<div class="${l.level}">${time(l.ts)} [${l.mod}] ${esc(l.msg)}${l.data ? " " + esc(JSON.stringify(l.data)) : ""}</div>`).join("") : '<div class="mut">(hidden for viewer)</div>';
+    $("nav").textContent = money(s.executor.nav);
+    $("navBox").textContent = s.executor.nav === null ? "" : "NAV " + money(s.executor.nav);
+    $("dd").innerHTML = `<span class="${s.executor.drawdownPct > 0 ? "neg" : ""}">${fmt(s.executor.drawdownPct)}%</span>`;
+    $("limits").innerHTML = s.limits ? `<span class="pill warn">${s.limits.actor}</span> ${esc(Object.entries(s.limits).filter(([k]) => !["actor", "reason", "expires_at", "updated_at"].includes(k)).map(([k, v]) => `${k}=${JSON.stringify(v)}`).join(" "))}${s.limits.reason ? ` <span class="mut">${esc(s.limits.reason)}</span>` : ""}` : '<span class="mut">none</span>';
+    $("positions").innerHTML = s.executor.positions.map((p) => `<tr><td>${p.engine}</td><td>${p.venue}</td><td>${p.symbol}</td><td class="num ${sign(p.qty)}">${fmt(p.qty, 4)}</td><td class="num">${fmt(p.entry)}</td><td class="num">${fmt(p.mark)}</td><td class="num ${sign(p.unrealized)}">${money(p.unrealized)}</td><td class="num">${money(p.notionalUsd)}</td></tr>`).join("") || '<tr><td colspan="8" class="mut">flat</td></tr>';
+    $("orders").innerHTML = s.openOrders.map((o) => `<tr><td>${o.id}</td><td>${o.venue}</td><td>${o.symbol}</td><td>${o.side}</td><td class="num">${fmt(o.qty, 4)}</td><td>${o.status}</td><td class="num">${fmt(o.latencyMs, 1)}</td></tr>`).join("") || '<tr><td colspan="7" class="mut">no open orders</td></tr>';
+    const banner = $("banner");
+    if (s.kill) { banner.className = "on"; banner.textContent = `KILL LOCK — ${s.kill.reason} at ${new Date(s.kill.at).toLocaleString()} · residue ${JSON.stringify(s.kill.residue)} · clear with: bun run src/cli.ts unkill`; }
+    else banner.className = "";
+    $("llmSpend").innerHTML = spend(s.spend.llmTodayUsd, s.spend.llmBudgetUsd);
+    $("dataSpend").innerHTML = spend(s.spend.dataTodayUsd, s.spend.dataBudgetUsd);
+    $("payments").innerHTML = s.payments.map((p) => `<tr><td>${time(p.ts_wall)}</td><td class="${p.direction === "in" ? "pos" : "neg"}">${p.direction}</td><td class="mut">${esc(p.counterparty.slice(0, 12))}…</td><td class="num">${fmt(p.amount, 4)}</td><td>${p.asset}</td><td>${p.network}</td><td class="mut">${esc(p.tx.slice(0, 14))}…</td></tr>`).join("") || '<tr><td colspan="7" class="mut">no payments yet</td></tr>';
+    if (!settingsDirty && JSON.stringify(s.agents.config) !== JSON.stringify(lastAgents)) { lastAgents = s.agents.config; renderSettings(s.agents.config, s.agents.overrides, s.spend); }
+    $("enginesYaml").textContent = JSON.stringify(Object.fromEntries(s.engines.map((e) => [e.id, { enabled: e.enabled, paper: e.paper, symbols: e.symbols, sizeUsd: e.sizeUsd, params: e.params }])), null, 2);
+  };
+  const spend = (v, cap) => { const r = cap > 0 ? v / cap : 0; return `${money(v)} / ${money(cap)}<div class="bar"><i class="${r > 0.9 ? "bad" : r > 0.7 ? "warn" : ""}" style="width:${Math.min(100, r * 100)}%"></i></div>`; };
+  const short = (p) => { if (p === null || typeof p !== "object") return String(p); const keys = ["symbol", "side", "qty", "price", "usd", "rule", "detail", "reason", "kind", "value", "threshold", "venue", "status", "pauseMs", "agent", "role", "model", "engine", "file", "hash", "actor"]; return keys.filter((k) => p[k] !== undefined).map((k) => `${k}=${typeof p[k] === "number" ? +p[k].toFixed(4) : String(p[k]).slice(0, 40)}`).join(" "); };
+  const shortParams = (o) => Object.entries(o || {}).map(([k, v]) => `${k}=${typeof v === "number" ? +v.toFixed(3) : v}`).join(" ");
+
+  // ---- settings (panel 9) --------------------------------------------------
+  const renderSettings = (cfg, overrides, spend) => {
+    $("agentRows").innerHTML = AGENTS.map((a) => { const c = cfg[a]; const ov = overrides && overrides[a]; return `<tr data-agent="${a}"><td><b>${a}</b>${ov ? `<br><span class="pill warn" title="HYDRA_MODEL_${a.toUpperCase()} env override">env: ${esc(ov)}</span>` : ""}</td>
+      <td><input class="w" name="model" list="models" pattern="^[a-z0-9\\-]+/[a-z0-9._:\\-]+$" value="${esc(c.model)}" required></td>
+      <td><input class="w" name="shadow_model" list="models" pattern="^[a-z0-9\\-]+/[a-z0-9._:\\-]+$" value="${esc(c.shadow_model || "")}" placeholder="none"></td>
+      <td><input class="w" name="fallback_models" value="${esc((c.fallback_models || []).join(","))}" placeholder="a/b,c/d"></td>
+      <td><input class="s" name="temperature" type="number" min="0" max="2" step="0.05" value="${c.temperature}"></td>
+      <td>${c.cron ? `<span class="mut" title="cron">${esc(c.cron)}</span>` : `<input class="s" name="interval" pattern="^[1-9]\\d*(ms|s|m|h|d)$" value="${esc(c.interval || "")}">`}</td>
+      <td>${c.shadow_model ? `<button type="button" class="small promote op" data-agent="${a}" title="shadow → primary; old primary becomes the shadow">Promote shadow → primary</button>` : ""}</td></tr>`; }).join("");
+    const f = $("settings");
+    f.llm_daily_budget_usd.value = spend.llmBudgetUsd;
+    f.data_daily_budget_usd.value = spend.dataBudgetUsd;
+  };
+  $("settings").addEventListener("input", () => { settingsDirty = true; });
+  $("settings").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("settingsMsg"); msg.className = "msg"; msg.textContent = "saving…";
+    const patch = {}; const problems = [];
+    for (const tr of $("agentRows").querySelectorAll("tr")) {
+      const a = tr.dataset.agent; const prev = lastAgents[a]; const p = {};
+      const val = (n) => { const i = tr.querySelector(`[name=${n}]`); return i ? i.value.trim() : undefined; };
+      const model = val("model"); if (!MODEL_ID.test(model)) problems.push(`${a}.model: expected provider/model`); else if (model !== prev.model) p.model = model;
+      const shadow = val("shadow_model");
+      if (shadow) { if (!MODEL_ID.test(shadow)) problems.push(`${a}.shadow_model: expected provider/model`); else if (shadow !== prev.shadow_model) p.shadow_model = shadow; }
+      else if (prev.shadow_model) problems.push(`${a}.shadow_model: clearing is not supported from the dashboard (edit agents.yaml); set a model or promote it`);
+      const fb = val("fallback_models"); const fbList = fb ? fb.split(",").map((x) => x.trim()).filter(Boolean) : [];
+      if (fbList.some((x) => !MODEL_ID.test(x))) problems.push(`${a}.fallback_models: every entry must be provider/model`);
+      else if (fbList.length > 0 && JSON.stringify(fbList) !== JSON.stringify(prev.fallback_models || [])) p.fallback_models = fbList;
+      const t = Number(val("temperature")); if (!(t >= 0 && t <= 2)) problems.push(`${a}.temperature: 0..2`); else if (t !== prev.temperature) p.temperature = t;
+      const iv = val("interval"); if (iv !== undefined) { if (!DURATION.test(iv)) problems.push(`${a}.interval: e.g. 5m, 30s`); else if (iv !== prev.interval) p.interval = iv; }
+      if (Object.keys(p).length) patch[a] = p;
+    }
+    if (problems.length) { msg.className = "msg err"; msg.textContent = problems.join(" · "); return; }
+    const f = $("settings"); const budgets = {};
+    const llm = Number(f.llm_daily_budget_usd.value), data = Number(f.data_daily_budget_usd.value);
+    if (llm >= 0) budgets.llm_daily_budget_usd = llm; if (data >= 0) budgets.data_daily_budget_usd = data;
+    try {
+      const out = [];
+      if (Object.keys(patch).length) { const r = await api("/api/config/agents", { method: "PUT", body: JSON.stringify(patch) }); out.push(`agents ${r.changed ? "saved" : "unchanged"}`); }
+      const r2 = await api("/api/config/budgets", { method: "PUT", body: JSON.stringify(budgets) }); out.push(`budgets ${r2.changed ? "saved" : "unchanged"}`);
+      msg.className = "msg ok"; msg.textContent = out.join(" · ") + " (config_changes logged, actor operator)";
+      settingsDirty = false; lastAgents = null; loadAb();
+    } catch (err) { msg.className = "msg err"; msg.textContent = (err.problems || [err.message]).join(" · "); }
+  });
+  $("agentRows").addEventListener("click", async (e) => {
+    const b = e.target.closest("button.promote"); if (!b) return;
+    const a = b.dataset.agent; if (!confirm(`Promote ${a} shadow model to primary? The current primary becomes the shadow.`)) return;
+    const msg = $("settingsMsg");
+    try { const r = await api(`/api/config/agents/${a}/promote-shadow`, { method: "POST", body: "{}" }); msg.className = "msg ok"; msg.textContent = `${a}: primary=${r.model} shadow=${r.shadow_model}`; settingsDirty = false; lastAgents = null; loadAb(); }
+    catch (err) { msg.className = "msg err"; msg.textContent = err.message; }
+  });
+  $("reloadModels").addEventListener("click", async () => {
+    const msg = $("settingsMsg");
+    try { const r = await api("/api/models"); $("models").innerHTML = r.models.map((m) => `<option value="${esc(m)}">`).join(""); msg.className = "msg ok"; msg.textContent = `${r.models.length} OpenRouter models loaded${r.cached ? " (cached)" : ""}`; }
+    catch (err) { msg.className = "msg err"; msg.textContent = err.message; }
+  });
+
+  // ---- A/B (panel 10) ------------------------------------------------------
+  const spark = (vals) => { const v = vals.filter((x) => x !== null && x !== undefined); if (v.length < 2) return '<span class="mut">-</span>'; const w = 120, h = 26; const pts = v.map((y, i) => `${(i / (v.length - 1)) * w},${h - 2 - (Math.max(0, Math.min(100, y)) / 100) * (h - 4)}`).join(" "); return `<svg class="spark" viewBox="0 0 ${w} ${h}"><polyline fill="none" stroke="#b57bff" stroke-width="1.5" points="${pts}"/></svg>`; };
+  const loadAb = async () => {
+    try {
+      const [ab, runs] = await Promise.all([api(`/api/agents/ab?days=${abDays}`), api("/api/agents/runs?limit=200")]);
+      const rows = [];
+      for (const a of ab.agents) {
+        for (const [role, model] of [["primary", a.primary], ["shadow", a.shadow]]) {
+          if (!model) continue;
+          const m = a.metrics[model];
+          const agreeSeries = runs.runs.filter((r) => r.agent === a.agent && r.model === model).map((r) => r.agreementPct).reverse();
+          rows.push(`<tr><td><b>${a.agent}</b></td><td>${role === "shadow" ? '<span class="pill" style="color:var(--purple);border-color:var(--purple)">shadow</span>' : '<span class="pill ok">primary</span>'}</td><td>${esc(model)}</td>` + (m
+            ? `<td class="num">${m.runs}</td><td class="num">${fmt(m.costUsd, 4)}</td><td class="num">${fmt(m.p50LatencyMs, 0)}</td><td class="num">${pct(m.schemaValidRate)}</td><td class="num">${pct(m.toolRejectRate)}</td><td class="num">${m.agreementPct === null ? "-" : fmt(m.agreementPct, 0) + "%"}</td><td class="num ${sign(m.pnl1hUsd)}">${m.pnl1hUsd === null ? "-" : money(m.pnl1hUsd)}</td><td>${spark(agreeSeries)}</td>`
+            : `<td class="num mut">0</td><td class="mut" colspan="7">no runs in window</td>`) + `</tr>`);
+        }
+      }
+      $("ab").innerHTML = rows.join("");
+    } catch (err) { $("ab").innerHTML = `<tr><td colspan="11" class="neg">${esc(err.message)}</td></tr>`; }
+  };
+  $("abDays").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; abDays = Number(b.dataset.d); for (const x of $("abDays").querySelectorAll("button")) x.classList.toggle("on", x === b); loadAb(); });
+
+  // ---- agents timeline (panel 5) -------------------------------------------
+  const loadRuns = async () => {
+    try {
+      const r = await api("/api/agents/runs?limit=60");
+      $("runs").innerHTML = r.runs.map((x) => `<tr><td>${time(x.ts)}</td><td>${x.agent}</td><td>${x.role === "shadow" ? '<span class="pill" style="color:var(--purple);border-color:var(--purple)">shadow</span>' : '<span class="pill ok">primary</span>'}</td><td title="${esc(x.model)}">${esc(x.model)}</td><td class="num">${fmt(x.costUsd, 4)}</td><td class="num">${fmt(x.latencyMs, 0)}</td><td>${x.schemaValid ? (x.applied ? '<span class="pill ok">applied</span>' : '<span class="pill">valid</span>') : '<span class="pill bad">invalid</span>'}${x.toolRejections ? ` <span class="pill warn">${x.toolRejections} rej</span>` : ""}</td><td class="mut" title="${esc(JSON.stringify(x.decision))}">${esc(JSON.stringify(x.decision)).slice(0, 90)}</td></tr>`).join("") || '<tr><td colspan="8" class="mut">no agent runs yet</td></tr>';
+    } catch (err) { $("runs").innerHTML = `<tr><td colspan="8" class="neg">${esc(err.message)}</td></tr>`; }
+  };
+
+  // ---- audit (panel 11) ----------------------------------------------------
+  const loadAudit = async () => {
+    if (role !== "operator") { $("audit").innerHTML = '<tr><td colspan="6" class="mut">(operator only)</td></tr>'; return; }
+    try {
+      const r = await api("/api/audit?limit=50");
+      $("audit").innerHTML = r.rows.map((x) => { const d = x.detail || ""; return `<tr><td>${time(x.ts)}</td><td>${esc(x.role)}</td><td class="mut">${esc(x.session)}</td><td>${esc(x.action)}</td><td class="num ${x.status >= 400 ? "neg" : ""}">${x.status}</td><td class="mut clip" title="${esc(d)}">${esc(d.slice(0, 80))}</td></tr>`; }).join("") || '<tr><td colspan="6" class="mut">no audit rows yet</td></tr>';
+    } catch (err) { $("audit").innerHTML = `<tr><td colspan="6" class="neg">${esc(err.message)}</td></tr>`; }
+  };
+
+  // ---- kill (panel 8) ------------------------------------------------------
+  $("killBtn").addEventListener("click", async () => {
+    const c = prompt("Flatten every venue and write kill.lock. Type KILL to confirm:");
+    if (c !== "KILL") return;
+    const reason = prompt("Reason (logged):", "operator dashboard") || "operator dashboard";
+    try { const r = await api("/api/kill", { method: "POST", body: JSON.stringify({ confirm: "KILL", reason }) }); alert(`kill done: flat=${r.result.flat} attempts=${r.result.attempts} residue=${JSON.stringify(r.result.residue)}`); }
+    catch (err) { alert("kill failed: " + err.message); }
+  });
+
+  // ---- secrets (panel 12, operator only) -----------------------------------
+  const SECRET_FIELDS = [
+    ["BINANCE_SPOT_API_KEY", "Binance Spot API key"],
+    ["BINANCE_SPOT_API_SECRET", "Binance Spot API secret"],
+    ["BINANCE_FUTURES_API_KEY", "Binance Futures API key"],
+    ["BINANCE_FUTURES_API_SECRET", "Binance Futures API secret"],
+    ["OPENROUTER_API_KEY", "OpenRouter API key (LLM agents)"],
+    ["X402_DEMO_PRIVATE_KEY", "x402 demo signer private key"],
+    ["TELEGRAM_BOT_TOKEN", "Telegram bot token (alerts)"],
+    ["TELEGRAM_CHAT_ID", "Telegram chat id"],
+    ["ALERT_WEBHOOK_URL", "Alert webhook URL"],
+    ["BAW_BIN", "baw binary absolute path"],
+  ];
+  const loadSecrets = async () => {
+    if (role !== "operator") return;
+    let st;
+    try { st = await api("/api/secrets/status"); } catch (err) { if (err.status !== 401) $("secretsMsg").textContent = err.message; return; }
+    const present = new Set(st.present || []);
+    $("secretFields").innerHTML = SECRET_FIELDS.map(([k, label]) => `<div class="secretRow"><label title="${k}">${esc(label)}</label><input name="${k}" type="password" autocomplete="off" placeholder="${present.has(k) ? "•••• stored — blank keeps it" : "not set"}"><span class="${present.has(k) ? "have" : "miss"}">${present.has(k) ? "stored" : "not set"}</span></div>`).join("");
+    $("secretsWarn").textContent = st.passphraseSet
+      ? "✓ HYDRA_MASTER_PASSPHRASE is set at launch — saved keys load automatically on the next restart."
+      : "⚠ HYDRA_MASTER_PASSPHRASE is NOT set in the launch environment: keys save encrypted but will NOT load until the engine is launched with that passphrase.";
+  };
+  const collectSecrets = () => {
+    const secrets = {};
+    for (const [k] of SECRET_FIELDS) { const el = $("secretsForm").querySelector(`[name="${k}"]`); if (el && el.value !== "") secrets[k] = el.value; }
+    return secrets;
+  };
+  const waitForRestart = () => {
+    $("conn").textContent = "restarting…";
+    let n = 0;
+    const t = setInterval(async () => {
+      n++;
+      try { const res = await fetch("/api/session", { cache: "no-store" }); if (res.ok) { clearInterval(t); boot(); return; } } catch (e) {}
+      if (n > 45) { clearInterval(t); $("secretsMsg").className = "msg err"; $("secretsMsg").textContent = "engine did not come back within 45s — check the process terminal and reload."; }
+    }, 1000);
+  };
+  const saveSecrets = async (restart) => {
+    const msg = $("secretsMsg"); msg.className = "msg"; msg.textContent = restart ? "saving & restarting…" : "saving…";
+    const passphrase = $("secPass").value;
+    if (passphrase.length < 12) { msg.className = "msg err"; msg.textContent = "passphrase must be at least 12 characters"; return; }
+    try {
+      const r = await api("/api/secrets/save", { method: "POST", body: JSON.stringify({ passphrase, secrets: collectSecrets(), restart }) });
+      for (const el of $("secretsForm").querySelectorAll("input[type=password]")) if (el.id !== "secPass") el.value = "";
+      if (restart && r.restarting) { msg.className = "msg ok"; msg.textContent = "saved — restarting engine…"; waitForRestart(); return; }
+      msg.className = "msg ok"; msg.textContent = `saved (${(r.present || []).length} keys stored)` + (r.passphraseSet ? "" : " — set HYDRA_MASTER_PASSPHRASE and restart to apply");
+      loadSecrets();
+    } catch (err) { msg.className = "msg err"; msg.textContent = err.message; }
+  };
+  $("secretsForm").addEventListener("submit", (e) => { e.preventDefault(); saveSecrets(false); });
+  $("secSaveRestart").addEventListener("click", () => { if (confirm("Save keys and restart the engine to apply? The process briefly goes down.")) saveSecrets(true); });
+  $("secUnlock").addEventListener("click", async () => {
+    const msg = $("secretsMsg"); const passphrase = $("secPass").value;
+    if (!passphrase) { msg.className = "msg err"; msg.textContent = "enter a passphrase"; return; }
+    try { const r = await api("/api/secrets/unlock", { method: "POST", body: JSON.stringify({ passphrase }) }); msg.className = "msg ok"; msg.textContent = `passphrase OK — ${(r.present || []).length} keys currently stored`; }
+    catch (err) { msg.className = "msg err"; msg.textContent = err.message; }
+  });
+
+  // ---- boot ---------------------------------------------------------------
+  const boot = async () => {
+    stopTimers();
+    // Pre-session builds kept the operator token here; purge it from any browser that still has it.
+    localStorage.removeItem("hydra.token");
+    let session;
+    try { session = await api("/api/session"); } catch (err) { if (err.status !== 401) $("conn").textContent = err.message; return; }
+    setRole(session.role);
+    try { render(await api("/api/state")); } catch (err) { if (err.status !== 401) $("conn").textContent = err.message; return; }
+    connect(); loadRuns(); loadAb(); loadAudit();
+    timers.push(setInterval(loadRuns, 5000), setInterval(loadAb, 15000));
+    if (role === "operator") { loadSecrets(); timers.push(setInterval(loadAudit, 15000)); }
+  };
+  boot();
+})();
+</script>
+</body>
+</html>

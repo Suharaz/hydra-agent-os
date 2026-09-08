@@ -1,0 +1,35 @@
+{
+  "name": "hydra",
+  "version": "0.1.0",
+  "description": "HYDRA - two-speed autonomous scalping system on Binance Agent OS",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "hydra": "bun run src/main.ts",
+    "cli": "bun run src/cli.ts",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "reconcile": "bun run scripts/reconcile.ts",
+    "latency-report": "bun run scripts/latency-report.ts",
+    "export-ledger": "bun run scripts/export-ledger.ts",
+    "apikey-check": "bun run scripts/apikey-check.ts",
+    "soak": "bash scripts/soak.sh",
+    "build:dist": "bun run scripts/build-dist.ts",
+    "deploy:cf": "bun run scripts/build-dist.ts && bunx wrangler deploy"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@x402/core": "2.25.0",
+    "@x402/evm": "2.25.0",
+    "@x402/fetch": "2.25.0",
+    "hono": "4.13.7",
+    "viem": "2.56.3",
+    "yaml": "2.9.0",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.1",
+    "typescript": "7.0.2"
+  }
+}

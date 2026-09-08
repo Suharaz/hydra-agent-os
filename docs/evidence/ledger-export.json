@@ -1,0 +1,2433 @@
+{
+  "exportedAt": "2026-09-07T15:23:27.759Z",
+  "rowCap": 5000,
+  "tables": [
+    {
+      "table": "events",
+      "rowCount": 61,
+      "rows": [
+        {
+          "id": 61,
+          "ts_ns": 768648100,
+          "ts_wall": 1788794577474,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 60,
+          "ts_ns": 661710700,
+          "ts_wall": 1788794577367,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 59,
+          "ts_ns": 711522500,
+          "ts_wall": 1788794487365,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 58,
+          "ts_ns": 606746400,
+          "ts_wall": 1788794487261,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 57,
+          "ts_ns": 18631676700,
+          "ts_wall": 1788794411571,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 56,
+          "ts_ns": 6605207500,
+          "ts_wall": 1788794399544,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.623221292669854,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6434470000,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.5257184,\"dispBps\":47.623221292669854,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 55,
+          "ts_ns": 729454900,
+          "ts_wall": 1788794393668,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 54,
+          "ts_ns": 18736004600,
+          "ts_wall": 1788794381112,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 53,
+          "ts_ns": 6660983700,
+          "ts_wall": 1788794369037,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.62322129266684,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6576828100,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.5257184,\"dispBps\":47.62322129266684,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 52,
+          "ts_ns": 791003700,
+          "ts_wall": 1788794363167,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 51,
+          "ts_ns": 791505200,
+          "ts_wall": 1788794249041,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 50,
+          "ts_ns": 662309100,
+          "ts_wall": 1788794248912,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 49,
+          "ts_ns": 30747636900,
+          "ts_wall": 1788793837519,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"basis\",\"venue\":\"futures\",\"symbol\":\"BTCUSDT\",\"side\":\"SELL\",\"edgeBps\":1.760173554666883,\"confidence\":0.5227590537664695,\"sizeUsd\":200,\"ttlMs\":120000,\"tsNs\":30609795300,\"meta\":{\"z\":2.091036215065878,\"basisBps\":-2.9717802253160217}}"
+        },
+        {
+          "id": 48,
+          "ts_ns": 826104200,
+          "ts_wall": 1788793807597,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 47,
+          "ts_ns": 61237136700,
+          "ts_wall": 1788793646719,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 46,
+          "ts_ns": 7704003300,
+          "ts_wall": 1788793593186,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.62322129267135,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":7609749800,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.525718400000001,\"dispBps\":47.62322129267135,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 45,
+          "ts_ns": 1809698300,
+          "ts_wall": 1788793587291,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 44,
+          "ts_ns": 8858357100,
+          "ts_wall": 1788740012231,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 43,
+          "ts_ns": 6699088300,
+          "ts_wall": 1788740010071,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.623221292669854,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6522351100,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.5257184,\"dispBps\":47.623221292669854,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 42,
+          "ts_ns": 745835500,
+          "ts_wall": 1788740004118,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 41,
+          "ts_ns": 762296800,
+          "ts_wall": 1788739999000,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 40,
+          "ts_ns": 696712900,
+          "ts_wall": 1788739998935,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 39,
+          "ts_ns": 761979500,
+          "ts_wall": 1788739995062,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 38,
+          "ts_ns": 682421100,
+          "ts_wall": 1788739994982,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 37,
+          "ts_ns": 6450878400,
+          "ts_wall": 1788739984671,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.62322129267135,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6439580300,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.525718400000001,\"dispBps\":47.62322129267135,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 36,
+          "ts_ns": 714064500,
+          "ts_wall": 1788739978934,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 35,
+          "ts_ns": 60121992900,
+          "ts_wall": 1788739978015,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 34,
+          "ts_ns": 6611169000,
+          "ts_wall": 1788739924504,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.623221292669854,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6360686500,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.5257184,\"dispBps\":47.623221292669854,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 33,
+          "ts_ns": 705458400,
+          "ts_wall": 1788739918598,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 32,
+          "ts_ns": 60268582700,
+          "ts_wall": 1788739869555,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 31,
+          "ts_ns": 6640736300,
+          "ts_wall": 1788739815927,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"edgeBps\":47.623221292669854,\"confidence\":0.75085728,\"sizeUsd\":200,\"ttlMs\":6000,\"tsNs\":6416654300,\"meta\":{\"snapshots\":3,\"gapBps\":-12.67131281469933,\"burstRatio\":4.5257184,\"dispBps\":47.623221292669854,\"type\":\"MARKET\"}}"
+        },
+        {
+          "id": 30,
+          "ts_ns": 752490000,
+          "ts_wall": 1788739810039,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 29,
+          "ts_ns": 6421956300,
+          "ts_wall": 1788739779239,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 28,
+          "ts_ns": 684267000,
+          "ts_wall": 1788739773501,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 27,
+          "ts_ns": 60159295300,
+          "ts_wall": 1788739706821,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 26,
+          "ts_ns": 70130098700,
+          "ts_wall": 1788739664346,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"basis\",\"venue\":\"futures\",\"symbol\":\"BTCUSDT\",\"side\":\"SELL\",\"edgeBps\":2.7832104535758266,\"confidence\":0.5237756192304136,\"sizeUsd\":200,\"ttlMs\":120000,\"tsNs\":70061960000,\"meta\":{\"z\":2.0951024769216544,\"basisBps\":1.4927694020970506}}"
+        },
+        {
+          "id": 25,
+          "ts_ns": 747013000,
+          "ts_wall": 1788739647409,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 24,
+          "ts_ns": 828117100,
+          "ts_wall": 1788739637257,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 23,
+          "ts_ns": 756641900,
+          "ts_wall": 1788739637185,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 22,
+          "ts_ns": 36278866900,
+          "ts_wall": 1788739630494,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"basis\",\"venue\":\"futures\",\"symbol\":\"BTCUSDT\",\"side\":\"BUY\",\"edgeBps\":3.4539102485602458,\"confidence\":0.7315523489482177,\"sizeUsd\":200,\"ttlMs\":120000,\"tsNs\":36058711400,\"meta\":{\"z\":-2.926209395792871,\"basisBps\":-4.382700584686862}}"
+        },
+        {
+          "id": 21,
+          "ts_ns": 30259846700,
+          "ts_wall": 1788739624475,
+          "kind": "engine.contract",
+          "json": "{\"engine\":\"basis\",\"venue\":\"futures\",\"symbol\":\"BTCUSDT\",\"side\":\"BUY\",\"edgeBps\":1.9795225546733937,\"confidence\":0.5104121678543048,\"sizeUsd\":200,\"ttlMs\":120000,\"tsNs\":30057913100,\"meta\":{\"z\":-2.041648671417219,\"basisBps\":-2.652844094558503}}"
+        },
+        {
+          "id": 20,
+          "ts_ns": 356547900,
+          "ts_wall": 1788739594572,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 19,
+          "ts_ns": 57447110900,
+          "ts_wall": 1788739588808,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 18,
+          "ts_ns": 390614500,
+          "ts_wall": 1788739583513,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 17,
+          "ts_ns": 327398200,
+          "ts_wall": 1788739583450,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 16,
+          "ts_ns": 674390100,
+          "ts_wall": 1788739532036,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 15,
+          "ts_ns": 338299500,
+          "ts_wall": 1788738941985,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 14,
+          "ts_ns": 460618000,
+          "ts_wall": 1788738883023,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 13,
+          "ts_ns": 284318400,
+          "ts_wall": 1788738034773,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 12,
+          "ts_ns": 374831300,
+          "ts_wall": 1788738023087,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 11,
+          "ts_ns": 374309100,
+          "ts_wall": 1788738023086,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 10,
+          "ts_ns": 642986900,
+          "ts_wall": 1788737193369,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 9,
+          "ts_ns": 226371300,
+          "ts_wall": 1788706737993,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 8,
+          "ts_ns": 610129000,
+          "ts_wall": 1788706714319,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 7,
+          "ts_ns": 349939900,
+          "ts_wall": 1788706645319,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 6,
+          "ts_ns": 335899200,
+          "ts_wall": 1788706637113,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 5,
+          "ts_ns": 335436600,
+          "ts_wall": 1788706637112,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 4,
+          "ts_ns": 46217148200,
+          "ts_wall": 1788703040142,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 3,
+          "ts_ns": 307942300,
+          "ts_wall": 1788702994233,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        },
+        {
+          "id": 2,
+          "ts_ns": 535916900,
+          "ts_wall": 1788702648402,
+          "kind": "system.shutdown",
+          "json": null
+        },
+        {
+          "id": 1,
+          "ts_ns": 535328900,
+          "ts_wall": 1788702648402,
+          "kind": "system.boot",
+          "json": "{\"mode\":\"demo\",\"spot\":\"testnet\",\"futures\":\"demo\",\"onchain\":\"paper\",\"x402\":\"mock\",\"mcp\":\"off\"}"
+        }
+      ]
+    },
+    {
+      "table": "intents",
+      "rowCount": 7,
+      "rows": [
+        {
+          "id": 7,
+          "ts_ns": 6437764400,
+          "ts_wall": 1788794399377,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6434129500,
+          "json": "{\"id\":\"liqfade-1-2yepq3g\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6434129500,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 6,
+          "ts_ns": 6583254000,
+          "ts_wall": 1788794368960,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6576274400,
+          "json": "{\"id\":\"liqfade-1-30rcdsw\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6576274400,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 5,
+          "ts_ns": 7614194400,
+          "ts_wall": 1788793593096,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 7602697300,
+          "json": "{\"id\":\"liqfade-1-3hqg6s4\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":7602697300,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 4,
+          "ts_ns": 6528613000,
+          "ts_wall": 1788740009901,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6521846000,
+          "json": "{\"id\":\"liqfade-1-2zuxskw\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6521846000,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 3,
+          "ts_ns": 6445565700,
+          "ts_wall": 1788739984666,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6438562600,
+          "json": "{\"id\":\"liqfade-1-2yhcqp4\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6438562600,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 2,
+          "ts_ns": 6367325900,
+          "ts_wall": 1788739924260,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6359529000,
+          "json": "{\"id\":\"liqfade-1-2x6arzc\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6359529000,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        },
+        {
+          "id": 1,
+          "ts_ns": 6422393900,
+          "ts_wall": 1788739815709,
+          "engine": "liqfade",
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "qty": 0.06677573369837402,
+          "type": "MARKET",
+          "paper": 1,
+          "t_signal_ns": 6415753900,
+          "json": "{\"id\":\"liqfade-1-2y3rve4\",\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"type\":\"MARKET\",\"ttlMs\":5000,\"paper\":true,\"tSignalNs\":6415753900,\"tp\":3005.5828500000002,\"sl\":2987.61225}"
+        }
+      ]
+    },
+    {
+      "table": "orders",
+      "rowCount": 7,
+      "rows": [
+        {
+          "id": 7,
+          "ts_ns": 6438379200,
+          "ts_wall": 1788794399377,
+          "intent_id": 7,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-2yepq3g",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6438289300,
+          "t_ack_ns": 6438478500,
+          "latency_ms": 4.349,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 6,
+          "ts_ns": 6584531400,
+          "ts_wall": 1788794368961,
+          "intent_id": 6,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-30rcdsw",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6584388400,
+          "t_ack_ns": 6584753900,
+          "latency_ms": 8.4795,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 5,
+          "ts_ns": 7615111400,
+          "ts_wall": 1788793593097,
+          "intent_id": 5,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-3hqg6s4",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 7615012500,
+          "t_ack_ns": 7615416200,
+          "latency_ms": 12.7189,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 4,
+          "ts_ns": 6529690900,
+          "ts_wall": 1788740009902,
+          "intent_id": 4,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-2zuxskw",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6529560300,
+          "t_ack_ns": 6529915100,
+          "latency_ms": 8.0691,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 3,
+          "ts_ns": 6446773000,
+          "ts_wall": 1788739984667,
+          "intent_id": 3,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-2yhcqp4",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6446630900,
+          "t_ack_ns": 6447129300,
+          "latency_ms": 8.5667,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 2,
+          "ts_ns": 6368688300,
+          "ts_wall": 1788739924262,
+          "intent_id": 2,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-2x6arzc",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6368528600,
+          "t_ack_ns": 6369137700,
+          "latency_ms": 9.6087,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        },
+        {
+          "id": 1,
+          "ts_ns": 6423642400,
+          "ts_wall": 1788739815710,
+          "intent_id": 1,
+          "venue": "futures",
+          "client_id": "hydra-liqfade-liqfade-1-2y3rve4",
+          "ext_id": null,
+          "status": "PAPER",
+          "t_sent_ns": 6423502500,
+          "t_ack_ns": 6424027700,
+          "latency_ms": 8.2738,
+          "json": "{\"symbol\":\"ETHUSDT\",\"side\":\"BUY\",\"qty\":0.06677573369837402,\"price\":2995.1}"
+        }
+      ]
+    },
+    {
+      "table": "fills",
+      "rowCount": 7,
+      "rows": [
+        {
+          "id": 7,
+          "ts_ns": 6438839300,
+          "ts_wall": 1788794399378,
+          "order_id": 7,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-7",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 6,
+          "ts_ns": 6585274300,
+          "ts_wall": 1788794368962,
+          "order_id": 6,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-6",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 5,
+          "ts_ns": 7615817300,
+          "ts_wall": 1788793593097,
+          "order_id": 5,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-5",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 4,
+          "ts_ns": 6530361600,
+          "ts_wall": 1788740009903,
+          "order_id": 4,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-4",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 3,
+          "ts_ns": 6447714600,
+          "ts_wall": 1788739984668,
+          "order_id": 3,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-3",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 2,
+          "ts_ns": 6369840600,
+          "ts_wall": 1788739924263,
+          "order_id": 2,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-2",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        },
+        {
+          "id": 1,
+          "ts_ns": 6424598000,
+          "ts_wall": 1788739815711,
+          "order_id": 1,
+          "venue": "futures",
+          "symbol": "ETHUSDT",
+          "side": "BUY",
+          "trade_id": "paper-1",
+          "price": 2995.1,
+          "qty": 0.06677573369837402,
+          "fee": 0.08,
+          "fee_asset": "USDT"
+        }
+      ]
+    },
+    {
+      "table": "trades",
+      "rowCount": 0,
+      "rows": []
+    },
+    {
+      "table": "vetoes",
+      "rowCount": 5,
+      "rows": [
+        {
+          "id": 5,
+          "ts_ns": 30614042000,
+          "ts_wall": 1788793837385,
+          "intent_id": "basis-1-e27sgk8",
+          "rule": 5,
+          "detail": "leg 0 futures:BTCUSDT: net delta -200.00 exceeds 0.00"
+        },
+        {
+          "id": 4,
+          "ts_ns": 6415906800,
+          "ts_wall": 1788739779233,
+          "intent_id": "liqfade-1-2y07gjw",
+          "rule": 5,
+          "detail": "net delta 200.00 exceeds 0.00"
+        },
+        {
+          "id": 3,
+          "ts_ns": 70062191200,
+          "ts_wall": 1788739664278,
+          "intent_id": "basis-3-w6ozp9o",
+          "rule": 5,
+          "detail": "leg 0 futures:BTCUSDT: net delta -200.00 exceeds 0.00"
+        },
+        {
+          "id": 2,
+          "ts_ns": 36058990600,
+          "ts_wall": 1788739630274,
+          "intent_id": "basis-2-gkcbq2s",
+          "rule": 5,
+          "detail": "leg 0 futures:BTCUSDT: net delta 200.00 exceeds 0.00"
+        },
+        {
+          "id": 1,
+          "ts_ns": 30061713200,
+          "ts_wall": 1788739624277,
+          "intent_id": "basis-1-dt3cb9s",
+          "rule": 5,
+          "detail": "leg 0 futures:BTCUSDT: net delta 200.00 exceeds 0.00"
+        }
+      ]
+    },
+    {
+      "table": "positions_snap",
+      "rowCount": 259,
+      "rows": [
+        {
+          "id": 259,
+          "ts_ns": 18631513700,
+          "ts_wall": 1788794411570,
+          "json": "{\"tsNs\":18631500300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 258,
+          "ts_ns": 17785829100,
+          "ts_wall": 1788794410725,
+          "json": "{\"tsNs\":17785802600,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 257,
+          "ts_ns": 16792502200,
+          "ts_wall": 1788794409731,
+          "json": "{\"tsNs\":16792439600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 256,
+          "ts_ns": 15786309400,
+          "ts_wall": 1788794408725,
+          "json": "{\"tsNs\":15786170700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 255,
+          "ts_ns": 14795499400,
+          "ts_wall": 1788794407734,
+          "json": "{\"tsNs\":14795401400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 254,
+          "ts_ns": 13794947900,
+          "ts_wall": 1788794406734,
+          "json": "{\"tsNs\":13790858900,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 253,
+          "ts_ns": 12780670900,
+          "ts_wall": 1788794405720,
+          "json": "{\"tsNs\":12780592000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 252,
+          "ts_ns": 11792427400,
+          "ts_wall": 1788794404731,
+          "json": "{\"tsNs\":11788019500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 251,
+          "ts_ns": 10795244900,
+          "ts_wall": 1788794403734,
+          "json": "{\"tsNs\":10795161300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 250,
+          "ts_ns": 9787077900,
+          "ts_wall": 1788794402726,
+          "json": "{\"tsNs\":9786919300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 249,
+          "ts_ns": 8782104600,
+          "ts_wall": 1788794401721,
+          "json": "{\"tsNs\":8781987000,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 248,
+          "ts_ns": 7788685600,
+          "ts_wall": 1788794400728,
+          "json": "{\"tsNs\":7788660100,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 247,
+          "ts_ns": 6788634800,
+          "ts_wall": 1788794399728,
+          "json": "{\"tsNs\":6788587700,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 246,
+          "ts_ns": 5783915500,
+          "ts_wall": 1788794398723,
+          "json": "{\"tsNs\":5783871900,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 245,
+          "ts_ns": 4792921500,
+          "ts_wall": 1788794397732,
+          "json": "{\"tsNs\":4792907600,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 244,
+          "ts_ns": 3783347600,
+          "ts_wall": 1788794396722,
+          "json": "{\"tsNs\":3783333700,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 243,
+          "ts_ns": 2788878300,
+          "ts_wall": 1788794395728,
+          "json": "{\"tsNs\":2788775800,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 242,
+          "ts_ns": 1782883000,
+          "ts_wall": 1788794394722,
+          "json": "{\"tsNs\":1782740100,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 241,
+          "ts_ns": 18735858200,
+          "ts_wall": 1788794381112,
+          "json": "{\"tsNs\":18735846800,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 240,
+          "ts_ns": 17909856500,
+          "ts_wall": 1788794380286,
+          "json": "{\"tsNs\":17909812700,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 239,
+          "ts_ns": 16919317900,
+          "ts_wall": 1788794379296,
+          "json": "{\"tsNs\":16919197200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 238,
+          "ts_ns": 15913493800,
+          "ts_wall": 1788794378290,
+          "json": "{\"tsNs\":15913395600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 237,
+          "ts_ns": 14892260800,
+          "ts_wall": 1788794377269,
+          "json": "{\"tsNs\":14892144300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 236,
+          "ts_ns": 13896198000,
+          "ts_wall": 1788794376273,
+          "json": "{\"tsNs\":13892650500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 235,
+          "ts_ns": 12893682500,
+          "ts_wall": 1788794375270,
+          "json": "{\"tsNs\":12893615200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 234,
+          "ts_ns": 11897318900,
+          "ts_wall": 1788794374274,
+          "json": "{\"tsNs\":11892181600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 233,
+          "ts_ns": 10893927800,
+          "ts_wall": 1788794373270,
+          "json": "{\"tsNs\":10893831900,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 232,
+          "ts_ns": 9891963800,
+          "ts_wall": 1788794372268,
+          "json": "{\"tsNs\":9891710400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 231,
+          "ts_ns": 8876981900,
+          "ts_wall": 1788794371253,
+          "json": "{\"tsNs\":8876615700,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 230,
+          "ts_ns": 7877448300,
+          "ts_wall": 1788794370254,
+          "json": "{\"tsNs\":7877315500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 229,
+          "ts_ns": 6860971700,
+          "ts_wall": 1788794369237,
+          "json": "{\"tsNs\":6860788800,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 228,
+          "ts_ns": 5860530900,
+          "ts_wall": 1788794368237,
+          "json": "{\"tsNs\":5860464800,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 227,
+          "ts_ns": 4861874800,
+          "ts_wall": 1788794367238,
+          "json": "{\"tsNs\":4861864300,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 226,
+          "ts_ns": 3859375900,
+          "ts_wall": 1788794366236,
+          "json": "{\"tsNs\":3859360000,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 225,
+          "ts_ns": 2861368200,
+          "ts_wall": 1788794365238,
+          "json": "{\"tsNs\":2861083800,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 224,
+          "ts_ns": 1861880200,
+          "ts_wall": 1788794364238,
+          "json": "{\"tsNs\":1861695800,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 223,
+          "ts_ns": 61236864500,
+          "ts_wall": 1788793646718,
+          "json": "{\"tsNs\":61236849900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 222,
+          "ts_ns": 61014181400,
+          "ts_wall": 1788793646496,
+          "json": "{\"tsNs\":61008819900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 221,
+          "ts_ns": 60005742600,
+          "ts_wall": 1788793645487,
+          "json": "{\"tsNs\":60005714100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 220,
+          "ts_ns": 58992630700,
+          "ts_wall": 1788793644474,
+          "json": "{\"tsNs\":58992558500,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 219,
+          "ts_ns": 57995667300,
+          "ts_wall": 1788793643477,
+          "json": "{\"tsNs\":57995162200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 218,
+          "ts_ns": 56993259800,
+          "ts_wall": 1788793642475,
+          "json": "{\"tsNs\":56987621800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 217,
+          "ts_ns": 55990153900,
+          "ts_wall": 1788793641472,
+          "json": "{\"tsNs\":55990024600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 216,
+          "ts_ns": 55003889500,
+          "ts_wall": 1788793640485,
+          "json": "{\"tsNs\":54997522800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 215,
+          "ts_ns": 53997299300,
+          "ts_wall": 1788793639479,
+          "json": "{\"tsNs\":53997202500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 214,
+          "ts_ns": 53003576900,
+          "ts_wall": 1788793638485,
+          "json": "{\"tsNs\":52997477600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 213,
+          "ts_ns": 51983440200,
+          "ts_wall": 1788793637465,
+          "json": "{\"tsNs\":51983370400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 212,
+          "ts_ns": 50986166800,
+          "ts_wall": 1788793636468,
+          "json": "{\"tsNs\":50981414600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 211,
+          "ts_ns": 49982402100,
+          "ts_wall": 1788793635464,
+          "json": "{\"tsNs\":49982331500,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 210,
+          "ts_ns": 48982900200,
+          "ts_wall": 1788793634464,
+          "json": "{\"tsNs\":48982869300,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 209,
+          "ts_ns": 47981697700,
+          "ts_wall": 1788793633463,
+          "json": "{\"tsNs\":47981567300,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 208,
+          "ts_ns": 46978035800,
+          "ts_wall": 1788793632460,
+          "json": "{\"tsNs\":46978017800,\"nav\":4999.783109745918,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2993.05,\"unrealized\":-0.1368902540816485,\"notionalUsd\":199.86310974591836}]}"
+        },
+        {
+          "id": 207,
+          "ts_ns": 45962627200,
+          "ts_wall": 1788793631444,
+          "json": "{\"tsNs\":45962538400,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 206,
+          "ts_ns": 44948795900,
+          "ts_wall": 1788793630430,
+          "json": "{\"tsNs\":44948738600,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 205,
+          "ts_ns": 43955999600,
+          "ts_wall": 1788793629438,
+          "json": "{\"tsNs\":43950672300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 204,
+          "ts_ns": 42951973900,
+          "ts_wall": 1788793628434,
+          "json": "{\"tsNs\":42951922100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 203,
+          "ts_ns": 41955407800,
+          "ts_wall": 1788793627437,
+          "json": "{\"tsNs\":41949621900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 202,
+          "ts_ns": 40947519600,
+          "ts_wall": 1788793626429,
+          "json": "{\"tsNs\":40947420500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 201,
+          "ts_ns": 39947621700,
+          "ts_wall": 1788793625429,
+          "json": "{\"tsNs\":39947563000,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 200,
+          "ts_ns": 38950827500,
+          "ts_wall": 1788793624432,
+          "json": "{\"tsNs\":38950742900,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 199,
+          "ts_ns": 37954638700,
+          "ts_wall": 1788793623436,
+          "json": "{\"tsNs\":37948730700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 198,
+          "ts_ns": 36949977300,
+          "ts_wall": 1788793622432,
+          "json": "{\"tsNs\":36949920400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 197,
+          "ts_ns": 35956225000,
+          "ts_wall": 1788793621438,
+          "json": "{\"tsNs\":35956061200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 196,
+          "ts_ns": 34953378800,
+          "ts_wall": 1788793620435,
+          "json": "{\"tsNs\":34948945400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 195,
+          "ts_ns": 33951096000,
+          "ts_wall": 1788793619433,
+          "json": "{\"tsNs\":33950981100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 194,
+          "ts_ns": 32956838200,
+          "ts_wall": 1788793618438,
+          "json": "{\"tsNs\":32952688500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 193,
+          "ts_ns": 31950410500,
+          "ts_wall": 1788793617432,
+          "json": "{\"tsNs\":31950231700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 192,
+          "ts_ns": 30954693000,
+          "ts_wall": 1788793616436,
+          "json": "{\"tsNs\":30949537500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 191,
+          "ts_ns": 29950576500,
+          "ts_wall": 1788793615432,
+          "json": "{\"tsNs\":29950512200,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 190,
+          "ts_ns": 28950425000,
+          "ts_wall": 1788793614432,
+          "json": "{\"tsNs\":28950401600,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 189,
+          "ts_ns": 27955347800,
+          "ts_wall": 1788793613437,
+          "json": "{\"tsNs\":27955262100,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 188,
+          "ts_ns": 26943127500,
+          "ts_wall": 1788793612425,
+          "json": "{\"tsNs\":26943067800,\"nav\":4999.793126105973,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2993.2,\"unrealized\":-0.1268738940269167,\"notionalUsd\":199.87312610597309}]}"
+        },
+        {
+          "id": 187,
+          "ts_ns": 25955517800,
+          "ts_wall": 1788793611437,
+          "json": "{\"tsNs\":25955467400,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 186,
+          "ts_ns": 24950621200,
+          "ts_wall": 1788793610432,
+          "json": "{\"tsNs\":24950565600,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 185,
+          "ts_ns": 23957871400,
+          "ts_wall": 1788793609439,
+          "json": "{\"tsNs\":23952620300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 184,
+          "ts_ns": 22952346400,
+          "ts_wall": 1788793608434,
+          "json": "{\"tsNs\":22952273300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 183,
+          "ts_ns": 21959659800,
+          "ts_wall": 1788793607441,
+          "json": "{\"tsNs\":21953765600,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 182,
+          "ts_ns": 20950062500,
+          "ts_wall": 1788793606432,
+          "json": "{\"tsNs\":20949957500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 181,
+          "ts_ns": 19952046100,
+          "ts_wall": 1788793605434,
+          "json": "{\"tsNs\":19951973100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 180,
+          "ts_ns": 18951233200,
+          "ts_wall": 1788793604433,
+          "json": "{\"tsNs\":18951037600,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 179,
+          "ts_ns": 17955776900,
+          "ts_wall": 1788793603437,
+          "json": "{\"tsNs\":17955717600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 178,
+          "ts_ns": 16955736200,
+          "ts_wall": 1788793602437,
+          "json": "{\"tsNs\":16952035500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 177,
+          "ts_ns": 15951451800,
+          "ts_wall": 1788793601433,
+          "json": "{\"tsNs\":15951350800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 176,
+          "ts_ns": 14956583800,
+          "ts_wall": 1788793600438,
+          "json": "{\"tsNs\":14951172700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 175,
+          "ts_ns": 13943706000,
+          "ts_wall": 1788793599425,
+          "json": "{\"tsNs\":13943595700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 174,
+          "ts_ns": 12942276800,
+          "ts_wall": 1788793598424,
+          "json": "{\"tsNs\":12936945800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 173,
+          "ts_ns": 11935863100,
+          "ts_wall": 1788793597417,
+          "json": "{\"tsNs\":11935772200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 172,
+          "ts_ns": 10936754200,
+          "ts_wall": 1788793596418,
+          "json": "{\"tsNs\":10936650700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 171,
+          "ts_ns": 9936540200,
+          "ts_wall": 1788793595418,
+          "json": "{\"tsNs\":9936321600,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 170,
+          "ts_ns": 8941076500,
+          "ts_wall": 1788793594423,
+          "json": "{\"tsNs\":8941050600,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 169,
+          "ts_ns": 7936910300,
+          "ts_wall": 1788793593419,
+          "json": "{\"tsNs\":7936716600,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 168,
+          "ts_ns": 6930487900,
+          "ts_wall": 1788793592412,
+          "json": "{\"tsNs\":6930402300,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 167,
+          "ts_ns": 5934346500,
+          "ts_wall": 1788793591416,
+          "json": "{\"tsNs\":5934323200,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 166,
+          "ts_ns": 4930983700,
+          "ts_wall": 1788793590413,
+          "json": "{\"tsNs\":4930967500,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 165,
+          "ts_ns": 3914645800,
+          "ts_wall": 1788793589396,
+          "json": "{\"tsNs\":3914280300,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 164,
+          "ts_ns": 2895356200,
+          "ts_wall": 1788793588377,
+          "json": "{\"tsNs\":2895061100,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 163,
+          "ts_ns": 34951687700,
+          "ts_wall": 1788740013172,
+          "json": "{\"tsNs\":34951459000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 162,
+          "ts_ns": 8858195300,
+          "ts_wall": 1788740012231,
+          "json": "{\"tsNs\":8858152400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 161,
+          "ts_ns": 8796603400,
+          "ts_wall": 1788740012169,
+          "json": "{\"tsNs\":8796504200,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 160,
+          "ts_ns": 33951592900,
+          "ts_wall": 1788740012172,
+          "json": "{\"tsNs\":33948588100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 159,
+          "ts_ns": 32956176600,
+          "ts_wall": 1788740011176,
+          "json": "{\"tsNs\":32950942200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 158,
+          "ts_ns": 7798976300,
+          "ts_wall": 1788740011171,
+          "json": "{\"tsNs\":7798912500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 157,
+          "ts_ns": 6787793400,
+          "ts_wall": 1788740010160,
+          "json": "{\"tsNs\":6787739400,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 156,
+          "ts_ns": 31939888900,
+          "ts_wall": 1788740010160,
+          "json": "{\"tsNs\":31939808600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 155,
+          "ts_ns": 30943999200,
+          "ts_wall": 1788740009164,
+          "json": "{\"tsNs\":30943865500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 154,
+          "ts_ns": 5791929300,
+          "ts_wall": 1788740009164,
+          "json": "{\"tsNs\":5791879900,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 153,
+          "ts_ns": 29934262400,
+          "ts_wall": 1788740008155,
+          "json": "{\"tsNs\":29934022600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 152,
+          "ts_ns": 4798744500,
+          "ts_wall": 1788740008171,
+          "json": "{\"tsNs\":4798728100,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 151,
+          "ts_ns": 3791582000,
+          "ts_wall": 1788740007164,
+          "json": "{\"tsNs\":3791568900,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 150,
+          "ts_ns": 28926670000,
+          "ts_wall": 1788740007147,
+          "json": "{\"tsNs\":28926600700,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 149,
+          "ts_ns": 27912016500,
+          "ts_wall": 1788740006132,
+          "json": "{\"tsNs\":27911986800,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 148,
+          "ts_ns": 2797937800,
+          "ts_wall": 1788740006170,
+          "json": "{\"tsNs\":2797670400,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 147,
+          "ts_ns": 1790532800,
+          "ts_wall": 1788740005163,
+          "json": "{\"tsNs\":1790391600,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 146,
+          "ts_ns": 26893764100,
+          "ts_wall": 1788740005114,
+          "json": "{\"tsNs\":26893676800,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 145,
+          "ts_ns": 25889911400,
+          "ts_wall": 1788740004110,
+          "json": "{\"tsNs\":25889838200,\"nav\":4999.783109745918,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2993.05,\"unrealized\":-0.1368902540816485,\"notionalUsd\":199.86310974591836}]}"
+        },
+        {
+          "id": 144,
+          "ts_ns": 24878636500,
+          "ts_wall": 1788740003099,
+          "json": "{\"tsNs\":24878524200,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 143,
+          "ts_ns": 23878603200,
+          "ts_wall": 1788740002099,
+          "json": "{\"tsNs\":23878491000,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 142,
+          "ts_ns": 22872353500,
+          "ts_wall": 1788740001093,
+          "json": "{\"tsNs\":22872008800,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 141,
+          "ts_ns": 21850305700,
+          "ts_wall": 1788740000071,
+          "json": "{\"tsNs\":21845107100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 140,
+          "ts_ns": 20843901400,
+          "ts_wall": 1788739999064,
+          "json": "{\"tsNs\":20843783400,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 139,
+          "ts_ns": 19839628900,
+          "ts_wall": 1788739998060,
+          "json": "{\"tsNs\":19839438200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 138,
+          "ts_ns": 18843403600,
+          "ts_wall": 1788739997064,
+          "json": "{\"tsNs\":18843362500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 137,
+          "ts_ns": 17839221500,
+          "ts_wall": 1788739996059,
+          "json": "{\"tsNs\":17839069700,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 136,
+          "ts_ns": 16838374500,
+          "ts_wall": 1788739995059,
+          "json": "{\"tsNs\":16838283800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 135,
+          "ts_ns": 15827198700,
+          "ts_wall": 1788739994047,
+          "json": "{\"tsNs\":15827019600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 134,
+          "ts_ns": 14813122400,
+          "ts_wall": 1788739993033,
+          "json": "{\"tsNs\":14812943400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 133,
+          "ts_ns": 13808480700,
+          "ts_wall": 1788739992029,
+          "json": "{\"tsNs\":13808343400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 132,
+          "ts_ns": 12800254400,
+          "ts_wall": 1788739991021,
+          "json": "{\"tsNs\":12800166100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 131,
+          "ts_ns": 11812548300,
+          "ts_wall": 1788739990033,
+          "json": "{\"tsNs\":11812347400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 130,
+          "ts_ns": 10807812100,
+          "ts_wall": 1788739989028,
+          "json": "{\"tsNs\":10807660100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 129,
+          "ts_ns": 9806099700,
+          "ts_wall": 1788739988026,
+          "json": "{\"tsNs\":9805977800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 128,
+          "ts_ns": 8810120200,
+          "ts_wall": 1788739987030,
+          "json": "{\"tsNs\":8810004600,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 127,
+          "ts_ns": 7805148200,
+          "ts_wall": 1788739986025,
+          "json": "{\"tsNs\":7805114900,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 126,
+          "ts_ns": 6797206400,
+          "ts_wall": 1788739985017,
+          "json": "{\"tsNs\":6797156100,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 125,
+          "ts_ns": 5789621100,
+          "ts_wall": 1788739984010,
+          "json": "{\"tsNs\":5789519200,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 124,
+          "ts_ns": 4791733900,
+          "ts_wall": 1788739983012,
+          "json": "{\"tsNs\":4791689500,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 123,
+          "ts_ns": 3783728600,
+          "ts_wall": 1788739982004,
+          "json": "{\"tsNs\":3783691200,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 122,
+          "ts_ns": 2781137400,
+          "ts_wall": 1788739981001,
+          "json": "{\"tsNs\":2780823300,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 121,
+          "ts_ns": 1781091800,
+          "ts_wall": 1788739980001,
+          "json": "{\"tsNs\":1780884100,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 120,
+          "ts_ns": 60121743900,
+          "ts_wall": 1788739978015,
+          "json": "{\"tsNs\":60121729200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 119,
+          "ts_ns": 59974605400,
+          "ts_wall": 1788739977867,
+          "json": "{\"tsNs\":59974521200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 118,
+          "ts_ns": 58974385700,
+          "ts_wall": 1788739976867,
+          "json": "{\"tsNs\":58974302300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 117,
+          "ts_ns": 57980687100,
+          "ts_wall": 1788739975874,
+          "json": "{\"tsNs\":57980196000,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 116,
+          "ts_ns": 56972764600,
+          "ts_wall": 1788739974866,
+          "json": "{\"tsNs\":56972688800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 115,
+          "ts_ns": 55961835600,
+          "ts_wall": 1788739973855,
+          "json": "{\"tsNs\":55956683500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 114,
+          "ts_ns": 54961242000,
+          "ts_wall": 1788739972854,
+          "json": "{\"tsNs\":54961162600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 113,
+          "ts_ns": 53962975500,
+          "ts_wall": 1788739971856,
+          "json": "{\"tsNs\":53957764600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 112,
+          "ts_ns": 52956719100,
+          "ts_wall": 1788739970850,
+          "json": "{\"tsNs\":52956632000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 111,
+          "ts_ns": 51962890200,
+          "ts_wall": 1788739969856,
+          "json": "{\"tsNs\":51956445600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 110,
+          "ts_ns": 50956798300,
+          "ts_wall": 1788739968850,
+          "json": "{\"tsNs\":50956714300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 109,
+          "ts_ns": 49970928000,
+          "ts_wall": 1788739967864,
+          "json": "{\"tsNs\":49965819600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 108,
+          "ts_ns": 48958697600,
+          "ts_wall": 1788739966852,
+          "json": "{\"tsNs\":48958604900,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 107,
+          "ts_ns": 47956651500,
+          "ts_wall": 1788739965849,
+          "json": "{\"tsNs\":47956576500,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 106,
+          "ts_ns": 46957128700,
+          "ts_wall": 1788739964850,
+          "json": "{\"tsNs\":46956999200,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 105,
+          "ts_ns": 45958889000,
+          "ts_wall": 1788739963852,
+          "json": "{\"tsNs\":45958819800,\"nav\":4999.743044305699,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2992.45,\"unrealized\":-0.1769556943006972,\"notionalUsd\":199.8230443056993}]}"
+        },
+        {
+          "id": 104,
+          "ts_ns": 44958532500,
+          "ts_wall": 1788739962851,
+          "json": "{\"tsNs\":44958441500,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 103,
+          "ts_ns": 43958771500,
+          "ts_wall": 1788739961852,
+          "json": "{\"tsNs\":43958602500,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 102,
+          "ts_ns": 42964258700,
+          "ts_wall": 1788739960857,
+          "json": "{\"tsNs\":42958549800,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 101,
+          "ts_ns": 41959412900,
+          "ts_wall": 1788739959852,
+          "json": "{\"tsNs\":41959337300,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 100,
+          "ts_ns": 40964225700,
+          "ts_wall": 1788739958857,
+          "json": "{\"tsNs\":40958627000,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 99,
+          "ts_ns": 39956177600,
+          "ts_wall": 1788739957849,
+          "json": "{\"tsNs\":39956091900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 98,
+          "ts_ns": 38942165800,
+          "ts_wall": 1788739956835,
+          "json": "{\"tsNs\":38942117400,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 97,
+          "ts_ns": 37941840000,
+          "ts_wall": 1788739955835,
+          "json": "{\"tsNs\":37941697600,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 96,
+          "ts_ns": 36945379500,
+          "ts_wall": 1788739954838,
+          "json": "{\"tsNs\":36945251700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 95,
+          "ts_ns": 35943325300,
+          "ts_wall": 1788739953836,
+          "json": "{\"tsNs\":35943229700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 94,
+          "ts_ns": 34925232200,
+          "ts_wall": 1788739952818,
+          "json": "{\"tsNs\":34925024200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 93,
+          "ts_ns": 33925857200,
+          "ts_wall": 1788739951819,
+          "json": "{\"tsNs\":33925739200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 92,
+          "ts_ns": 32926851200,
+          "ts_wall": 1788739950820,
+          "json": "{\"tsNs\":32926680000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 91,
+          "ts_ns": 31925960400,
+          "ts_wall": 1788739949819,
+          "json": "{\"tsNs\":31925768500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 90,
+          "ts_ns": 30925841800,
+          "ts_wall": 1788739948819,
+          "json": "{\"tsNs\":30925624800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 89,
+          "ts_ns": 29926099100,
+          "ts_wall": 1788739947819,
+          "json": "{\"tsNs\":29926034200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 88,
+          "ts_ns": 28924662100,
+          "ts_wall": 1788739946817,
+          "json": "{\"tsNs\":28924483500,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 87,
+          "ts_ns": 27909580600,
+          "ts_wall": 1788739945802,
+          "json": "{\"tsNs\":27909510300,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 86,
+          "ts_ns": 26894818700,
+          "ts_wall": 1788739944788,
+          "json": "{\"tsNs\":26894703400,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 85,
+          "ts_ns": 25890766200,
+          "ts_wall": 1788739943784,
+          "json": "{\"tsNs\":25890687200,\"nav\":4999.753060665754,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2992.6,\"unrealized\":-0.16693933424593504,\"notionalUsd\":199.83306066575406}]}"
+        },
+        {
+          "id": 84,
+          "ts_ns": 24902045000,
+          "ts_wall": 1788739942795,
+          "json": "{\"tsNs\":24901966300,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 83,
+          "ts_ns": 23892560900,
+          "ts_wall": 1788739941785,
+          "json": "{\"tsNs\":23892482100,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 82,
+          "ts_ns": 22904482900,
+          "ts_wall": 1788739940797,
+          "json": "{\"tsNs\":22904333200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 81,
+          "ts_ns": 21883600900,
+          "ts_wall": 1788739939776,
+          "json": "{\"tsNs\":21883439700,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 80,
+          "ts_ns": 20877831900,
+          "ts_wall": 1788739938771,
+          "json": "{\"tsNs\":20877684900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 79,
+          "ts_ns": 19876757100,
+          "ts_wall": 1788739937770,
+          "json": "{\"tsNs\":19876597100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 78,
+          "ts_ns": 18876944300,
+          "ts_wall": 1788739936770,
+          "json": "{\"tsNs\":18876877600,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 77,
+          "ts_ns": 17861087700,
+          "ts_wall": 1788739935754,
+          "json": "{\"tsNs\":17860919900,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 76,
+          "ts_ns": 16860166800,
+          "ts_wall": 1788739934753,
+          "json": "{\"tsNs\":16860107200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 75,
+          "ts_ns": 15842621700,
+          "ts_wall": 1788739933735,
+          "json": "{\"tsNs\":15842508200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 74,
+          "ts_ns": 14826962700,
+          "ts_wall": 1788739932720,
+          "json": "{\"tsNs\":14826826100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 73,
+          "ts_ns": 13841974500,
+          "ts_wall": 1788739931735,
+          "json": "{\"tsNs\":13841878100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 72,
+          "ts_ns": 12826957200,
+          "ts_wall": 1788739930720,
+          "json": "{\"tsNs\":12826793800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 71,
+          "ts_ns": 11827010100,
+          "ts_wall": 1788739929720,
+          "json": "{\"tsNs\":11826848400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 70,
+          "ts_ns": 10812840600,
+          "ts_wall": 1788739928706,
+          "json": "{\"tsNs\":10812725200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 69,
+          "ts_ns": 9821310700,
+          "ts_wall": 1788739927714,
+          "json": "{\"tsNs\":9821102100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 68,
+          "ts_ns": 8810652300,
+          "ts_wall": 1788739926703,
+          "json": "{\"tsNs\":8810479400,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 67,
+          "ts_ns": 7808603600,
+          "ts_wall": 1788739925701,
+          "json": "{\"tsNs\":7808566100,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 66,
+          "ts_ns": 6810767900,
+          "ts_wall": 1788739924704,
+          "json": "{\"tsNs\":6810647400,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 65,
+          "ts_ns": 5799918300,
+          "ts_wall": 1788739923693,
+          "json": "{\"tsNs\":5799858000,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 64,
+          "ts_ns": 4790841300,
+          "ts_wall": 1788739922684,
+          "json": "{\"tsNs\":4790805500,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 63,
+          "ts_ns": 3794253400,
+          "ts_wall": 1788739921687,
+          "json": "{\"tsNs\":3794223200,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 62,
+          "ts_ns": 2793754400,
+          "ts_wall": 1788739920687,
+          "json": "{\"tsNs\":2793477900,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 61,
+          "ts_ns": 1793038000,
+          "ts_wall": 1788739919686,
+          "json": "{\"tsNs\":1792904600,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 60,
+          "ts_ns": 60268319400,
+          "ts_wall": 1788739869555,
+          "json": "{\"tsNs\":60268304100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 59,
+          "ts_ns": 60037703800,
+          "ts_wall": 1788739869324,
+          "json": "{\"tsNs\":60037579900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 58,
+          "ts_ns": 59036343700,
+          "ts_wall": 1788739868323,
+          "json": "{\"tsNs\":59036300900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 57,
+          "ts_ns": 58038147900,
+          "ts_wall": 1788739867325,
+          "json": "{\"tsNs\":58038015300,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 56,
+          "ts_ns": 57036203400,
+          "ts_wall": 1788739866323,
+          "json": "{\"tsNs\":57036136700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 55,
+          "ts_ns": 56035620800,
+          "ts_wall": 1788739865322,
+          "json": "{\"tsNs\":56028454900,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 54,
+          "ts_ns": 55021434400,
+          "ts_wall": 1788739864308,
+          "json": "{\"tsNs\":55021348400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 53,
+          "ts_ns": 54023597100,
+          "ts_wall": 1788739863310,
+          "json": "{\"tsNs\":54018336900,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 52,
+          "ts_ns": 53019353900,
+          "ts_wall": 1788739862306,
+          "json": "{\"tsNs\":53019260600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 51,
+          "ts_ns": 52014750300,
+          "ts_wall": 1788739861301,
+          "json": "{\"tsNs\":52009689800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 50,
+          "ts_ns": 51000466900,
+          "ts_wall": 1788739860287,
+          "json": "{\"tsNs\":51000324200,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 49,
+          "ts_ns": 49974347400,
+          "ts_wall": 1788739859261,
+          "json": "{\"tsNs\":49969858500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 48,
+          "ts_ns": 48971482100,
+          "ts_wall": 1788739858258,
+          "json": "{\"tsNs\":48971353200,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 47,
+          "ts_ns": 47971744600,
+          "ts_wall": 1788739857258,
+          "json": "{\"tsNs\":47971634500,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 46,
+          "ts_ns": 46970718100,
+          "ts_wall": 1788739856257,
+          "json": "{\"tsNs\":46970593000,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 45,
+          "ts_ns": 45971472200,
+          "ts_wall": 1788739855258,
+          "json": "{\"tsNs\":45971392200,\"nav\":4999.773093385864,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2992.9,\"unrealized\":-0.14690661413641068,\"notionalUsd\":199.8530933858636}]}"
+        },
+        {
+          "id": 44,
+          "ts_ns": 44971066900,
+          "ts_wall": 1788739854257,
+          "json": "{\"tsNs\":44971021100,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 43,
+          "ts_ns": 43970782600,
+          "ts_wall": 1788739853257,
+          "json": "{\"tsNs\":43970618100,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 42,
+          "ts_ns": 42975451900,
+          "ts_wall": 1788739852262,
+          "json": "{\"tsNs\":42970599700,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 41,
+          "ts_ns": 41970180000,
+          "ts_wall": 1788739851257,
+          "json": "{\"tsNs\":41970106500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 40,
+          "ts_ns": 40975852700,
+          "ts_wall": 1788739850262,
+          "json": "{\"tsNs\":40970537500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 39,
+          "ts_ns": 39971912100,
+          "ts_wall": 1788739849258,
+          "json": "{\"tsNs\":39971818900,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 38,
+          "ts_ns": 38970947800,
+          "ts_wall": 1788739848257,
+          "json": "{\"tsNs\":38970921200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 37,
+          "ts_ns": 37970977100,
+          "ts_wall": 1788739847257,
+          "json": "{\"tsNs\":37970830400,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 36,
+          "ts_ns": 36976930800,
+          "ts_wall": 1788739846263,
+          "json": "{\"tsNs\":36972003400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 35,
+          "ts_ns": 35954523200,
+          "ts_wall": 1788739845241,
+          "json": "{\"tsNs\":35954436000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 34,
+          "ts_ns": 34944865500,
+          "ts_wall": 1788739844231,
+          "json": "{\"tsNs\":34944634400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 33,
+          "ts_ns": 33932067700,
+          "ts_wall": 1788739843218,
+          "json": "{\"tsNs\":33926808700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 32,
+          "ts_ns": 32912628400,
+          "ts_wall": 1788739842199,
+          "json": "{\"tsNs\":32912534700,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 31,
+          "ts_ns": 31891577000,
+          "ts_wall": 1788739841178,
+          "json": "{\"tsNs\":31888537300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 30,
+          "ts_ns": 30888664400,
+          "ts_wall": 1788739840175,
+          "json": "{\"tsNs\":30888589100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 29,
+          "ts_ns": 29893042300,
+          "ts_wall": 1788739839179,
+          "json": "{\"tsNs\":29888146500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 28,
+          "ts_ns": 28888263800,
+          "ts_wall": 1788739838175,
+          "json": "{\"tsNs\":28888190900,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 27,
+          "ts_ns": 27888525200,
+          "ts_wall": 1788739837175,
+          "json": "{\"tsNs\":27888467500,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 26,
+          "ts_ns": 26889057900,
+          "ts_wall": 1788739836175,
+          "json": "{\"tsNs\":26888884500,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 25,
+          "ts_ns": 25871740200,
+          "ts_wall": 1788739835158,
+          "json": "{\"tsNs\":25871652300,\"nav\":4999.773093385864,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2992.9,\"unrealized\":-0.14690661413641068,\"notionalUsd\":199.8530933858636}]}"
+        },
+        {
+          "id": 24,
+          "ts_ns": 24872355700,
+          "ts_wall": 1788739834159,
+          "json": "{\"tsNs\":24872304800,\"nav\":5000.006808453808,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2996.4,\"unrealized\":0.08680845380789837,\"notionalUsd\":200.08680845380792}]}"
+        },
+        {
+          "id": 23,
+          "ts_ns": 23860698000,
+          "ts_wall": 1788739833147,
+          "json": "{\"tsNs\":23860631400,\"nav\":5000.046873894027,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2997,\"unrealized\":0.1268738940269167,\"notionalUsd\":200.12687389402691}]}"
+        },
+        {
+          "id": 22,
+          "ts_ns": 22845794700,
+          "ts_wall": 1788739832132,
+          "json": "{\"tsNs\":22845649200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 21,
+          "ts_ns": 21831062600,
+          "ts_wall": 1788739831117,
+          "json": "{\"tsNs\":21830845200,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 20,
+          "ts_ns": 20806504300,
+          "ts_wall": 1788739830093,
+          "json": "{\"tsNs\":20806341800,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 19,
+          "ts_ns": 19805598800,
+          "ts_wall": 1788739829092,
+          "json": "{\"tsNs\":19805391100,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 18,
+          "ts_ns": 18806884600,
+          "ts_wall": 1788739828093,
+          "json": "{\"tsNs\":18806745500,\"nav\":5000.180425361424,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2999,\"unrealized\":0.26042536142366474,\"notionalUsd\":200.26042536142367}]}"
+        },
+        {
+          "id": 17,
+          "ts_ns": 17806280000,
+          "ts_wall": 1788739827093,
+          "json": "{\"tsNs\":17806197000,\"nav\":5000.173747788054,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2998.9,\"unrealized\":0.2537477880538334,\"notionalUsd\":200.25374778805383}]}"
+        },
+        {
+          "id": 16,
+          "ts_ns": 16806354400,
+          "ts_wall": 1788739826093,
+          "json": "{\"tsNs\":16806260400,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 15,
+          "ts_ns": 15806161500,
+          "ts_wall": 1788739825093,
+          "json": "{\"tsNs\":15806054000,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 14,
+          "ts_ns": 14805762100,
+          "ts_wall": 1788739824092,
+          "json": "{\"tsNs\":14805614100,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 13,
+          "ts_ns": 13807110000,
+          "ts_wall": 1788739823094,
+          "json": "{\"tsNs\":13806962500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 12,
+          "ts_ns": 12806514100,
+          "ts_wall": 1788739822093,
+          "json": "{\"tsNs\":12806371500,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 11,
+          "ts_ns": 11806137700,
+          "ts_wall": 1788739821093,
+          "json": "{\"tsNs\":11805991600,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 10,
+          "ts_ns": 10805801300,
+          "ts_wall": 1788739820092,
+          "json": "{\"tsNs\":10805689300,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 9,
+          "ts_ns": 9807668000,
+          "ts_wall": 1788739819094,
+          "json": "{\"tsNs\":9807470800,\"nav\":4999.859901839672,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.2,\"unrealized\":-0.060098160328542684,\"notionalUsd\":199.93990183967148}]}"
+        },
+        {
+          "id": 8,
+          "ts_ns": 8807385300,
+          "ts_wall": 1788739818094,
+          "json": "{\"tsNs\":8807203800,\"nav\":4999.853224266301,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.1,\"unrealized\":-0.06677573369837402,\"notionalUsd\":199.93322426630164}]}"
+        },
+        {
+          "id": 7,
+          "ts_ns": 7806679400,
+          "ts_wall": 1788739817093,
+          "json": "{\"tsNs\":7806627900,\"nav\":4999.866579413041,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2994.3,\"unrealized\":-0.053420586958680995,\"notionalUsd\":199.94657941304132}]}"
+        },
+        {
+          "id": 6,
+          "ts_ns": 6806121200,
+          "ts_wall": 1788739816093,
+          "json": "{\"tsNs\":6806043900,\"nav\":4999.92,\"cash\":4999.92,\"positions\":[{\"engine\":\"liqfade\",\"venue\":\"futures\",\"symbol\":\"ETHUSDT\",\"qty\":0.06677573369837402,\"entry\":2995.1,\"mark\":2995.1,\"unrealized\":0,\"notionalUsd\":200}]}"
+        },
+        {
+          "id": 5,
+          "ts_ns": 5806168400,
+          "ts_wall": 1788739815093,
+          "json": "{\"tsNs\":5806106900,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 4,
+          "ts_ns": 4805679700,
+          "ts_wall": 1788739814092,
+          "json": "{\"tsNs\":4805668200,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 3,
+          "ts_ns": 3807538400,
+          "ts_wall": 1788739813094,
+          "json": "{\"tsNs\":3807525700,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 2,
+          "ts_ns": 2807914400,
+          "ts_wall": 1788739812094,
+          "json": "{\"tsNs\":2807670800,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        },
+        {
+          "id": 1,
+          "ts_ns": 1806957300,
+          "ts_wall": 1788739811093,
+          "json": "{\"tsNs\":1806816600,\"nav\":5000,\"cash\":5000,\"positions\":[]}"
+        }
+      ]
+    },
+    {
+      "table": "pnl_daily",
+      "rowCount": 0,
+      "rows": []
+    },
+    {
+      "table": "llm_calls",
+      "rowCount": 0,
+      "rows": []
+    },
+    {
+      "table": "agent_runs",
+      "rowCount": 0,
+      "rows": []
+    },
+    {
+      "table": "payments",
+      "rowCount": 2,
+      "rows": [
+        {
+          "id": 2,
+          "ts_ns": 16478929300,
+          "ts_wall": 1788738958125,
+          "direction": "in",
+          "counterparty": "0x12bD75241f0aF363490EdB1992a00aCDE977B804",
+          "amount": 0.05,
+          "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+          "network": "eip155:84532",
+          "tx": "0x06ca93a7e63adcdfa924f02bbdeb01b892df8d732c0e32b9a0f28f6dff172e85",
+          "json": "{\"resource\":\"/v1/signals/basis\",\"facilitator\":\"mock\"}"
+        },
+        {
+          "id": 1,
+          "ts_ns": 15563566700,
+          "ts_wall": 1788738957210,
+          "direction": "in",
+          "counterparty": "0x7734A62e0a63e9762e34010c769F651d10cBa31C",
+          "amount": 0.05,
+          "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+          "network": "eip155:84532",
+          "tx": "0xe329cd29562d3d44cd704b6068956297f285d8cfc2ee476108005772866041bd",
+          "json": "{\"resource\":\"/v1/signals/liquidation\",\"facilitator\":\"mock\"}"
+        }
+      ]
+    },
+    {
+      "table": "config_changes",
+      "rowCount": 2,
+      "rows": [
+        {
+          "id": 2,
+          "ts_ns": 63766706900,
+          "ts_wall": 1788739657982,
+          "actor": "operator",
+          "path": "config\\agents.yaml",
+          "before_hash": "92c7461e1e1c29b516261bcedb969dae63c4e32e51c1ff11f8c69e0b5f2c7b84",
+          "after_hash": "e274ed98b8995b91d786ed07306cd49ccd2a02eb8bb51df540e64044e6ed6a16",
+          "diff": "{\"agents.supervisor.temperature\":{\"from\":0.15,\"to\":0}}"
+        },
+        {
+          "id": 1,
+          "ts_ns": 53493994800,
+          "ts_wall": 1788739647709,
+          "actor": "operator",
+          "path": "config\\agents.yaml",
+          "before_hash": "2a7975594e8f82a85c4fbec32f05f117a9fa914f5151f898a298a5b0aaf53fb0",
+          "after_hash": "92c7461e1e1c29b516261bcedb969dae63c4e32e51c1ff11f8c69e0b5f2c7b84",
+          "diff": "{\"agents.supervisor.temperature\":{\"from\":0,\"to\":0.15}}"
+        }
+      ]
+    }
+  ]
+}

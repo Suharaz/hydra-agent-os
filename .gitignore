@@ -1,0 +1,26 @@
+node_modules/
+state/
+reports/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.DS_Store
+.vscode/
+.cursor/
+
+# build output
+dist/
+
+# video production artifacts (rendered media, tts cache) — not part of the agent
+video/
+
+# python caches
+__pycache__/
+*.pyc
+
+# harness / agent scratch — not part of the project
+.omp/
+hackathon-form-answers.txt

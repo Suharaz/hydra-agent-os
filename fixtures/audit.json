@@ -1,0 +1,78 @@
+{
+  "0x55d398326f99059ff775485246999027b3197955": {
+    "hasResult": true,
+    "isSupported": true,
+    "riskLevelEnum": "LOW",
+    "riskLevel": 1,
+    "riskItems": [
+      {
+        "id": "contract",
+        "details": [
+          {
+            "title": "Open source",
+            "isHit": false,
+            "riskType": "RISK"
+          },
+          {
+            "title": "Proxy contract",
+            "isHit": true,
+            "riskType": "ATTENTION"
+          }
+        ]
+      },
+      {
+        "id": "trading",
+        "details": [
+          {
+            "title": "Honeypot",
+            "isHit": false,
+            "riskType": "RISK"
+          },
+          {
+            "title": "Buy tax",
+            "isHit": false,
+            "riskType": "RISK"
+          }
+        ]
+      }
+    ]
+  },
+  "0xdeadbeef00000000000000000000000000000001": {
+    "hasResult": true,
+    "isSupported": true,
+    "riskLevelEnum": "HIGH",
+    "riskLevel": 5,
+    "riskItems": [
+      {
+        "id": "contract",
+        "details": [
+          {
+            "title": "Open source",
+            "isHit": false,
+            "riskType": "RISK"
+          },
+          {
+            "title": "Owner can mint",
+            "isHit": true,
+            "riskType": "RISK"
+          }
+        ]
+      },
+      {
+        "id": "trading",
+        "details": [
+          {
+            "title": "Honeypot",
+            "isHit": true,
+            "riskType": "RISK"
+          },
+          {
+            "title": "Sell tax > 50%",
+            "isHit": true,
+            "riskType": "RISK"
+          }
+        ]
+      }
+    ]
+  }
+}

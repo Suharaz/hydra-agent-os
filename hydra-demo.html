@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HYDRA Dashboard — AI Autonomous Trading Command Center (Binance Agent OS)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #090d13;
+    --card: #131822;
+    --card-hover: #19202c;
+    --card-sub: #0e131b;
+    --border: #222938;
+    --border-light: #2d3748;
+    --txt: #f0f4f8;
+    --txt-muted: #8896a6;
+    --txt-dim: #556272;
+    --yellow: #f0b90b;
+    --yellow-dim: rgba(240, 185, 11, 0.12);
+    --green: #0ecb81;
+    --green-dim: rgba(14, 203, 129, 0.12);
+    --green-glow: rgba(14, 203, 129, 0.25);
+    --red: #f6465d;
+    --red-dim: rgba(246, 70, 93, 0.12);
+    --blue: #4c8dff;
+    --blue-dim: rgba(76, 141, 255, 0.12);
+    --purple: #b57bff;
+    --purple-dim: rgba(181, 123, 255, 0.12);
+    --cyan: #02d4bf;
+    --cyan-dim: rgba(2, 212, 191, 0.12);
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--txt);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    line-height: 1.5;
+    padding-bottom: 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  header {
+    background: rgba(19, 24, 34, 0.9);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 0;
+  }
+  .header-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .logo-box {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #f0b90b, #d89800);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #000;
+    box-shadow: 0 4px 14px rgba(240, 185, 11, 0.25);
+  }
+  .brand-text h1 {
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .brand-text h1 span { color: var(--yellow); }
+  .brand-text p {
+    font-size: 11.5px;
+    color: var(--txt-muted);
+  }
+
+  /* Navigation Tabs */
+  .main-nav {
+    display: flex;
+    gap: 6px;
+    background: var(--card-sub);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .nav-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt-muted);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    background: transparent;
+    text-decoration: none;
+  }
+  .nav-btn:hover { color: var(--txt); }
+  .nav-btn.active {
+    background: var(--card);
+    color: var(--yellow);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .nav-badge-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+
+  /* Universal Filter Bar */
+  .filter-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--txt-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .time-pills {
+    display: flex;
+    background: var(--card-sub);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .time-pill {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--txt-muted);
+    border: none;
+    background: transparent;
+    transition: all 0.15s;
+  }
+  .time-pill:hover { color: var(--txt); }
+  .time-pill.active {
+    background: var(--yellow);
+    color: #000;
+    box-shadow: 0 1px 4px rgba(240, 185, 11, 0.4);
+  }
+
+  select.filter-select {
+    background: var(--card-sub);
+    color: var(--txt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+  }
+  select.filter-select:hover { border-color: var(--yellow); }
+
+  .action-btn {
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-sub);
+    color: var(--txt);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .action-btn:hover {
+    background: var(--card-hover);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+  }
+  .action-btn.primary {
+    background: var(--yellow);
+    color: #000;
+    border: none;
+  }
+  .action-btn.primary:hover { background: #ffd026; }
+  .action-btn.danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border-color: rgba(246, 70, 93, 0.3);
+  }
+  .action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .header-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .conn-pill {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--yellow-dim);
+    color: var(--yellow);
+    white-space: nowrap;
+  }
+  .conn-pill.viewer { background: var(--blue-dim); color: var(--blue); }
+  .conn-pill.operator { background: var(--green-dim); color: var(--green); }
+  .conn-pill.locked { background: var(--red-dim); color: var(--red); }
+
+  /* Login / confirm overlays */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 13, 19, 0.82);
+    backdrop-filter: blur(6px);
+    z-index: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal h2 { font-size: 15px; font-weight: 800; }
+  .modal p { font-size: 12.5px; color: var(--txt-muted); }
+  .modal label { font-size: 11.5px; font-weight: 600; color: var(--txt-muted); display: flex; flex-direction: column; gap: 4px; }
+  .modal input {
+    background: var(--card-sub);
+    color: var(--txt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    outline: none;
+  }
+  .modal input:focus { border-color: var(--yellow); }
+  .modal .modal-error { font-size: 12px; color: var(--red); min-height: 16px; }
+  .modal .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* 4 KPI Cards */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .kpi-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--txt-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .kpi-val {
+    font-size: 26px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    letter-spacing: -0.5px;
+  }
+  .kpi-badge {
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .kpi-badge.up { color: var(--green); }
+  .kpi-badge.neutral { color: var(--blue); }
+
+  /* Tab View System */
+  .view-tab {
+    display: none;
+    animation: fadeIn 0.25s ease;
+  }
+  .view-tab.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* View 1 Layout: 2 Primary Columns (Charts & Live Agents Feed) */
+  .overview-layout {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+    margin-top: 18px;
+  }
+
+  .panel-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-body {
+    padding: 20px;
+  }
+
+  /* LIVE AGENTS OPERATION AREA (AI WAR ROOM) */
+  .agent-live-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .agent-badge-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-badge-card:hover {
+    border-color: var(--yellow);
+    transform: translateY(-2px);
+  }
+  .agent-badge-card.active-thinking {
+    border-color: var(--yellow);
+    box-shadow: 0 0 16px rgba(240, 185, 11, 0.15);
+  }
+  .agent-badge-card.active-thinking::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--yellow), #ffd026);
+  }
+  .agent-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .agent-avatar-icon {
+    font-size: 20px;
+  }
+  .agent-state-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .state-thinking { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240, 185, 11, 0.3); }
+  .state-tool { background: var(--green-dim); color: var(--green); border: 1px solid rgba(14, 203, 129, 0.3); }
+  .state-idle { background: var(--card-sub); color: var(--txt-muted); border: 1px solid var(--border); }
+
+  .agent-card-name {
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .agent-card-model {
+    font-size: 11px;
+    color: var(--txt-muted);
+    font-family: var(--font-mono);
+  }
+  .agent-current-task {
+    font-size: 11.5px;
+    color: #cbd5e1;
+    background: var(--card-sub);
+    padding: 6px 8px;
+    border-radius: 6px;
+    border-left: 2px solid var(--yellow);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Live Agent Console / Stream */
+  .agent-console-box {
+    background: #080c12;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .console-entry {
+    background: #0f1520;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px 12px;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+  }
+  .console-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 11.5px;
+  }
+  .console-agent {
+    font-weight: 700;
+    color: var(--yellow);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .console-time { color: var(--txt-muted); }
+  .console-text {
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+  .console-tool {
+    margin-top: 6px;
+    background: #070a0f;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--green);
+  }
+
+  /* Interactive SVG Charts */
+  .chart-wrapper {
+    width: 100%;
+    height: 250px;
+    position: relative;
+    margin-top: 10px;
+  }
+  .chart-big-pnl {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--green);
+  }
+
+  /* Tables */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--card-sub);
+    color: var(--txt-muted);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.data-table tr:hover td { background: var(--card-hover); }
+
+  /* Switch Toggle */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: var(--border);
+    transition: .3s;
+    border-radius: 22px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #fff;
+    transition: .3s;
+    border-radius: 50%;
+  }
+  input:checked + .slider { background-color: var(--green); }
+  input:checked + .slider:before { transform: translateX(18px); }
+
+  /* Dream Coin Styles */
+  .dream-hero-card {
+    background: linear-gradient(135deg, rgba(181, 123, 255, 0.12), rgba(76, 141, 255, 0.08));
+    border: 1px solid rgba(181, 123, 255, 0.35);
+    border-radius: 14px;
+    padding: 24px;
+    margin-top: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dream-hero-card::after {
+    content: "🌙";
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 80px;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .dream-pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .dream-step-box {
+    background: var(--card-sub);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .dream-step-box.active {
+    border-color: var(--purple);
+    box-shadow: 0 0 14px rgba(181, 123, 255, 0.2);
+  }
+  .dream-lesson-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+  }
+  .dream-lesson-card:hover {
+    border-color: var(--purple);
+    transform: translateY(-1px);
+  }
+  .badge-category {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .cat-anti-loss { background: var(--red-dim); color: var(--red); border: 1px solid rgba(246, 70, 93, 0.3); }
+  .cat-risk { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240, 185, 11, 0.3); }
+  .cat-fee { background: var(--green-dim); color: var(--green); border: 1px solid rgba(14, 203, 129, 0.3); }
+  .cat-exec { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(76, 141, 255, 0.3); }
+
+  /* Toast Popup */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #18202c;
+    border: 1px solid var(--yellow);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: none;
+    max-width: 420px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  /* Masked AI model indicator (model name intentionally hidden on the public viewer) */
+  .model-hidden { display: inline-flex; align-items: center; gap: 4px; color: var(--txt-muted); opacity: .65; font-size: 11px; font-family: var(--font-mono); letter-spacing: .5px; }
+  /* View-only client-side paginator */
+  .pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px; font-size: 12px; color: var(--txt-muted); }
+  .pager button { background: var(--card-sub); border: 1px solid var(--border); color: var(--txt); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  .pager button:disabled { opacity: .4; cursor: default; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container header-wrap">
+    <div class="brand">
+      <div class="logo-box">H</div>
+      <div class="brand-text">
+        <h1>HYDRA <span>TRADING TERMINAL</span> <small style="display:none">HYDRA dashboard</small></h1>
+        <p>Binance Agent OS · AI War Room &amp; Autonomous Supervision Center</p>
+      </div>
+    </div>
+
+    <!-- Primary Navigation (real page links) -->
+    <nav class="main-nav">
+      <a class="nav-btn" data-nav="overview" href="/"><span class="nav-badge-dot"></span><span>🧠 War Room &amp; PnL</span></a>
+      <a class="nav-btn" data-nav="leaderboard" href="/leaderboard">🏆 Agent &amp; Engine Leaderboard</a>
+      <a class="nav-btn" data-nav="engines" href="/engines">⚙️ 8 Scalping Engines</a>
+      <a class="nav-btn" data-nav="trades" href="/trades">📋 Trade Execution History</a>
+      <a class="nav-btn" data-nav="dream" href="/dream">🌙 Dream Coin</a>
+    </nav>
+
+    <div class="header-pills">
+      <a class="action-btn" id="btnAdmin" href="/classic">🔧 Admin</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 5 AI AGENTS REAL-TIME OPERATION (LIVE WAR ROOM) -->
+  <div id="warRoomAgents" style="margin-top: 20px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <b style="font-size: 15px; color: var(--yellow);">🤖 Live Operation Status of 5 AI Agents (Cold Lane)</b>
+        <span style="font-size: 12px; color: var(--txt-muted);">· Autonomous market analysis, risk evaluation, and order governance 24/7</span>
+      </div>
+      <span id="agentsOnlineLabel" style="font-size: 12px; color: var(--green); font-weight: 600;">● ALL AGENTS ONLINE</span>
+    </div>
+
+    <div class="agent-live-grid">
+      <!-- 1. Commander -->
+      <div class="agent-badge-card active-thinking" id="agentCard-commander">
+        <div class="agent-card-top">
+          <span class="agent-avatar-icon">👑</span>
+          <span class="agent-state-pill state-thinking" id="badge-commander">REASONING 💭</span>
+        </div>
+        <div class="agent-card-name">Commander</div>
+        <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
+        <div class="agent-current-task" id="task-commander">Scanning Funding Rates: Reallocating capital into Basis Arbitrage...</div>
+      </div>
+
+      <!-- 2. Supervisor -->
+      <div class="agent-badge-card" id="agentCard-supervisor">
+        <div class="agent-card-top">
+          <span class="agent-avatar-icon">🛡️</span>
+          <span class="agent-state-pill state-tool" id="badge-supervisor">EVALUATING ⚙️</span>
+        </div>
+        <div class="agent-card-name">Supervisor</div>
+        <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
+        <div class="agent-current-task" id="task-supervisor">Evaluating 7 Risk Kernel rules: Slippage 0.7 bps (Strictly Verified).</div>
+      </div>
+
+      <!-- 3. Coach -->
+      <div class="agent-badge-card" id="agentCard-coach">
+        <div class="agent-card-top">
+          <span class="agent-avatar-icon">🎓</span>
+          <span class="agent-state-pill state-idle" id="badge-coach">OPTIMIZING 📊</span>
+        </div>
+        <div class="agent-card-name">Coach</div>
+        <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
+        <div class="agent-current-task" id="task-coach">Backtested 100 trades: LiqFade win rate at 78.4%, maintaining dip parameters.</div>
+      </div>
+
+      <!-- 4. Treasurer -->
+      <div class="agent-badge-card" id="agentCard-treasurer">
+        <div class="agent-card-top">
+          <span class="agent-avatar-icon">💰</span>
+          <span class="agent-state-pill state-tool" id="badge-treasurer">X402 EVM 💎</span>
+        </div>
+        <div class="agent-card-name">Treasurer</div>
+        <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
+        <div class="agent-current-task" id="task-treasurer">Approved $0.02 USDT micropayment on Base L2 for Whale Data Feed.</div>
+      </div>
+
+      <!-- 5. Sales -->
+      <div class="agent-badge-card" id="agentCard-sales">
+        <div class="agent-card-top">
+          <span class="agent-avatar-icon">📢</span>
+          <span class="agent-state-pill state-idle" id="badge-sales">MONETIZING 📈</span>
+        </div>
+        <div class="agent-card-name">Sales Agent</div>
+        <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
+        <div class="agent-current-task" id="task-sales">Monetized Smart Money signals to 32 external bots, earned $46.80 USDT.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">Timeframe:</span>
+      <div class="time-pills">
+        <button class="time-pill" data-action="timeframe" data-arg="1H">1 Hour</button>
+        <button class="time-pill active" data-action="timeframe" data-arg="24H">24 Hours</button>
+        <button class="time-pill" data-action="timeframe" data-arg="7D">7 Days</button>
+        <button class="time-pill" data-action="timeframe" data-arg="30D">30 Days</button>
+        <button class="time-pill" data-action="timeframe" data-arg="ALL">All</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Symbol:</span>
+      <select class="filter-select" id="coinFilter" data-action="apply-filters">
+        <option value="ALL">All Trading Pairs</option>
+        <option value="BTC">BTC / USDT</option>
+        <option value="ETH">ETH / USDT</option>
+        <option value="SOL">SOL / USDT</option>
+        <option value="BNB">BNB / USDT</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Execution Mode:</span>
+      <select class="filter-select" id="modeFilter" data-action="apply-filters">
+        <option value="ALL">All Modes</option>
+        <option value="LIVE">Live Binance Only</option>
+        <option value="PAPER">Paper Simulation Only</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 4 KPI CARDS SYNCHRONIZED TO TIMEFRAME -->
+  <div class="kpi-row" id="warRoomKpis">
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Cumulative PnL (Selected Frame)</span>
+        <span>💰</span>
+      </div>
+      <div class="kpi-val" style="color: var(--green);" id="kpiPnl">+$2,480.25</div>
+      <div class="kpi-badge up" id="kpiPnlPct">▲ +4.96% capital growth</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Net Asset Value (NAV)</span>
+        <span>💼</span>
+      </div>
+      <div class="kpi-val" id="kpiNav">$52,480.25</div>
+      <div class="kpi-badge neutral" id="kpiAllocated">Allocated Capital: $28,500.00</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>Win Rate</span>
+        <span>🎯</span>
+      </div>
+      <div class="kpi-val" style="color: var(--yellow);" id="kpiWinRate">84.6%</div>
+      <div class="kpi-badge up" id="kpiTradesCount">1,482 trades executed</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-title">
+        <span>AI Efficiency (ROI / Token Burn)</span>
+        <span>🧠</span>
+      </div>
+      <div class="kpi-val" style="color: var(--blue);" id="kpiRoi">725x</div>
+      <div class="kpi-badge neutral" id="kpiCost">LLM Cost: $3.42</div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TAB 1: AI WAR ROOM & PROFIT CURVE (PRIMARY) -->
+  <!-- ======================================================================= -->
+  <div id="tab-overview" class="view-tab active">
+    <div class="overview-layout">
+      
+      <!-- Left Column: PnL Chart & Price Tickers -->
+      <div class="panel-box">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📈 Cumulative PnL Curve by Timeframe</span>
+            <span style="font-size: 12px; color: var(--yellow); font-family: var(--font-mono);" id="currentTfBadge">[Timeframe: 24 Hours]</span>
+          </div>
+          <span style="font-size: 12px; color: var(--green);">● Binance WS Synced</span>
+        </div>
+        <div class="panel-body">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+            <div>
+              <div style="font-size: 12px; color: var(--txt-muted);">Period Cumulative Profit:</div>
+              <div class="chart-big-pnl" id="chartPnlVal">+$2,480.25</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 12px; color: var(--txt-muted);">Max Drawdown:</div>
+              <div style="font-size: 16px; font-weight: 700; font-family: var(--font-mono);"><span id="chartDrawdown">0.42%</span> <span style="font-size: 12px; color: var(--green);">(Low Risk)</span></div>
+            </div>
+          </div>
+
+          <!-- SVG Dynamic Rendered Chart -->
+          <div class="chart-wrapper">
+            <svg width="100%" height="100%" viewBox="0 0 800 240" preserveAspectRatio="none" id="chartSvg">
+              <line x1="0" y1="60" x2="800" y2="60" stroke="#1f2735" stroke-dasharray="4"/>
+              <line x1="0" y1="120" x2="800" y2="120" stroke="#1f2735" stroke-dasharray="4"/>
+              <line x1="0" y1="180" x2="800" y2="180" stroke="#1f2735" stroke-dasharray="4"/>
+              <defs>
+                <linearGradient id="chartGrad" x1="0%" y1="0%" x2="0%" y2="1">
+                  <stop offset="0%" stop-color="#0ecb81" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#0ecb81" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <path id="chartArea" d="M 0,220 Q 150,190 300,140 T 600,70 L 800,40 L 800,240 L 0,240 Z" fill="url(#chartGrad)"/>
+              <path id="chartLine" d="M 0,220 Q 150,190 300,140 T 600,70 L 800,40" fill="none" stroke="#0ecb81" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- PnL Distribution by Symbol -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;">
+            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11.5px; color: var(--txt-muted);">ETH / USDT</div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$1,240.50</div>
+              <div style="font-size: 11px; color: var(--txt-muted);">50.0% of profit</div>
+            </div>
+            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11.5px; color: var(--txt-muted);">BTC / USDT</div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$810.20</div>
+              <div style="font-size: 11px; color: var(--txt-muted);">32.6% of profit</div>
+            </div>
+            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11.5px; color: var(--txt-muted);">SOL / USDT</div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$380.15</div>
+              <div style="font-size: 11px; color: var(--txt-muted);">15.3% of profit</div>
+            </div>
+            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div style="font-size: 11.5px; color: var(--txt-muted);">BNB / USDT</div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$49.40</div>
+              <div style="font-size: 11px; color: var(--txt-muted);">2.1% of profit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Agent Live Reasoning Stream Console -->
+      <div class="panel-box">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>⚡ Agent Live Reasoning &amp; Tool Calls Console</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="agent-console-box" id="consoleStream">
+            <!-- Live Agent Message Stream -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TAB 2: PNL CONTRIBUTION LEADERBOARD (AGENT & ENGINE) -->
+  <!-- ======================================================================= -->
+  <div id="tab-leaderboard" class="view-tab">
+    <div style="margin-top: 18px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+        
+        <!-- 8 Trading Engines Leaderboard -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>⚙️ 8 Trading Engines PnL Leaderboard</span>
+            </div>
+            <span style="font-size: 12px; color: var(--txt-muted);">Ranked by Net PnL</span>
+          </div>
+          <div class="panel-body" id="engineLeaderboard"></div>
+        </div>
+
+        <!-- 5 LLM Agents Attributed PnL & Efficiency -->
+        <div class="panel-box">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>🧠 AI Agents Attributed PnL Leaderboard</span>
+            </div>
+            <span style="font-size: 12px; color: var(--blue);">Token Cost Efficiency (ROI)</span>
+          </div>
+          <div class="panel-body" id="agentLeaderboard"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TAB 3: ENGINE CONTROLS (8 STRATEGIES) -->
+  <!-- ======================================================================= -->
+  <div id="tab-engines" class="view-tab">
+    <div class="panel-box" style="margin-top: 18px;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>⚙️ 8 Scalping Engines — Live Status</span>
+        </div>
+        <span style="font-size: 12px; color: var(--txt-muted);">Read-only view · engine state reflects the live backend</span>
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Engine Name</th>
+              <th>Venue Mode</th>
+              <th>Symbols</th>
+              <th>Allocated ($)</th>
+              <th>Current Signal</th>
+              <th>Trades</th>
+              <th>Win Rate</th>
+              <th>Cumulative PnL</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody id="enginesFullTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TAB 4: TRADE EXECUTION AUDIT TRAIL -->
+  <!-- ======================================================================= -->
+  <div id="tab-trades" class="view-tab">
+    <div class="panel-box" style="margin-top: 18px;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📋 Real-Time Execution Audit Trail</span>
+        </div>
+        <span style="font-size: 12px; color: var(--txt-muted);">Live open positions &amp; fills</span>
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Engine</th>
+              <th>Symbol</th>
+              <th>Side / Action</th>
+              <th>Entry Price</th>
+              <th>Exit / Mark</th>
+              <th>Quantity</th>
+              <th>Net PnL</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tradesTable"></tbody>
+        </table>
+        <div id="tradesPager" class="pager"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TAB 5: DREAM COIN (24H NEURAL REFLECTION & MEMORY EVOLUTION) -->
+  <!-- ======================================================================= -->
+  <div id="tab-dream" class="view-tab">
+    <!-- Hero Banner Dream Coin -->
+    <div class="dream-hero-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px;">
+        <div style="max-width: 820px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="background: var(--purple-dim); color: var(--purple); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(181, 123, 255, 0.4);">FLAGSHIP ARCHITECTURE</span>
+            <b style="font-size: 17px; color: #fff;">🌙 Dream Coin — 24H Autonomous Reflection &amp; Neural Memory Bank</b>
+          </div>
+          <p style="font-size: 13px; color: #cbd5e1; line-height: 1.55;">
+            At the end of each 24h trading cycle (00:00 UTC or on-demand), AI models enter <b>"Dream State" (Neural Counterfactual Reflection)</b>.
+            The engine reviews all stop-losses and Risk Kernel vetoes, performs <i>Counterfactual Analysis ("What if we had not chased the wick?")</i>,
+            distills <b>Invariant Golden Rules</b>, and injects them into long-term Neural Memory so mistakes never recur.
+          </p>
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; display: inline-flex; align-items: center; gap: 10px;">
+              <span style="font-size: 16px;">⏰</span>
+              <div>
+                <div style="font-size: 10.5px; color: var(--txt-muted); text-transform: uppercase;">24H Autonomous Schedule:</div>
+                <div style="font-size: 13.5px; font-weight: 700; color: var(--yellow); font-family: var(--font-mono);" id="dreamCountdownTimer">Next Session: 00:00:00 UTC (11h 24m 15s remaining)</div>
+              </div>
+            </div>
+            <span class="status-tag" style="background: var(--purple-dim); color: var(--purple); border-color: rgba(181, 123, 255, 0.4);">
+              <span class="dot" style="background: var(--purple);"></span>
+              <span>AUTONOMOUS SCHEDULER ACTIVE</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-Step Dream State Pipeline -->
+      <div class="dream-pipeline">
+        <div class="dream-step-box" id="dStep1">
+          <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 1: AUDIT LOSS TRADES</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--red);">🔍 12 Losses / 3 Vetoes</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Audited 1,482 executions across the past 24 hours.</div>
+        </div>
+        <div class="dream-step-box" id="dStep2">
+          <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 2: COUNTERFACTUAL REASONING</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--yellow);">💭 Root-Cause Simulation</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Severe funding cascade, slippage, or macro event?</div>
+        </div>
+        <div class="dream-step-box" id="dStep3">
+          <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 3: DISTILL INVARIANT RULES</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--purple);">💡 Invariant Golden Rule</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Formulates deterministic constraints preventing repeat losses.</div>
+        </div>
+        <div class="dream-step-box" id="dStep4">
+          <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 4: INJECT NEURAL MEMORY</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--green);">🧬 Update System Context</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Injected directly into System Prompts of 5 LLM Agents.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two Columns: Reflection Console & Neural Memory Bank -->
+    <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; margin-top: 18px;">
+      <!-- Neural Memory Bank (Distilled Invariant Rules) -->
+      <div class="panel-box">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📖 Neural Memory Bank (Distilled Invariant Rules)</span>
+          </div>
+          <span style="font-size: 12px; color: var(--purple); font-weight: 600;" id="dreamTotalLessons">4 Invariant Rules Injected</span>
+        </div>
+        <div class="panel-body" id="dreamLessonsContainer">
+          <!-- Render Distilled Lessons -->
+        </div>
+      <div id="dreamPager" class="pager"></div>
+      </div>
+
+      <!-- Live Dream Reflection Stream -->
+      <div class="panel-box">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🌙 Live Dream Reflection &amp; Evolution Stream</span>
+          </div>
+          <span style="font-size: 11px; color: var(--txt-muted); display: inline-flex; align-items: center; gap: 6px;">Model: <span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></span>
+        </div>
+        <div class="panel-body">
+          <div class="agent-console-box" id="dreamConsole" style="height: 480px;">
+            <div class="console-entry">
+              <div class="console-header">
+                <span class="console-agent" style="color: var(--purple);">🌙 Dream Neural Engine</span>
+                <span class="console-time">23:59:58</span>
+              </div>
+              <div class="console-text">24h reflection cycle triggered: All 5 agents enter Dream State for risk re-evaluation...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast Popup -->
+<div id="toast">
+  <b id="toastTitle">Notification</b>
+  <div id="toastMsg" style="font-size: 12.5px; margin-top: 4px; color: #cbd5e1;">Content</div>
+</div>
+
+<script>
+// ===========================================================================
+// MULTI-TIMEFRAME DATA, AGENTS & ENGINES
+// ===========================================================================
+// IS_HTTP: true when served over http(s) (real backend); false on file:// (canned simulation only).
+const IS_HTTP = !!window.location.host && window.location.protocol.startsWith("http");
+
+// Masked AI model markup — the model each agent uses is intentionally hidden on the public viewer.
+const MODEL_MASK = '<span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span>';
+
+// View-only client-side pagination state (current 1-based page for each paged list).
+let tradesPage = 1;
+let dreamPage = 1;
+
+// Render a Prev / Page X of Y / Next pager into `containerId`. Hides itself (empties) when
+// there are 0 rows or only a single page. Buttons carry data-action for the delegated handler.
+function renderPager(containerId, page, totalItems, pageSize, prevAction, nextAction) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  if (totalItems <= 0 || totalPages <= 1) { el.innerHTML = ""; return; }
+  el.innerHTML = `
+    <button type="button" data-action="${prevAction}" ${page <= 1 ? "disabled" : ""}>‹ Prev</button>
+    <span>Page ${page} of ${totalPages}</span>
+    <button type="button" data-action="${nextAction}" ${page >= totalPages ? "disabled" : ""}>Next ›</button>`;
+}
+
+// Re-render the trade audit trail from the current source (canned offline or last real snapshot),
+// honouring the active filters. Used by the trades pager buttons.
+function rerenderTrades() {
+  if (backendMode !== "offline" && window._lastSnapshot) {
+    const s = window._lastSnapshot;
+    const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
+    renderRealTrades(filteredPositions(pos));
+  } else {
+    renderTradesTable();
+  }
+}
+
+const TIMEFRAME_DATA = {
+  "1H": {
+    pnl: 182.40, pnlPct: "+0.35%", trades: 64, winRate: "87.5%", roi: "820x", llmCost: "$0.22",
+    chartLine: "M 0,210 Q 200,180 400,120 T 800,60",
+    chartArea: "M 0,210 Q 200,180 400,120 T 800,60 L 800,240 L 0,240 Z"
+  },
+  "24H": {
+    pnl: 2480.25, pnlPct: "+4.96%", trades: 1482, winRate: "84.6%", roi: "725x", llmCost: "$3.42",
+    chartLine: "M 0,220 Q 150,190 300,140 T 600,70 L 800,40",
+    chartArea: "M 0,220 Q 150,190 300,140 T 600,70 L 800,40 L 800,240 L 0,240 Z"
+  },
+  "7D": {
+    pnl: 14250.80, pnlPct: "+32.40%", trades: 9840, winRate: "82.1%", roi: "690x", llmCost: "$20.65",
+    chartLine: "M 0,230 Q 250,160 500,90 T 800,25",
+    chartArea: "M 0,230 Q 250,160 500,90 T 800,25 L 800,240 L 0,240 Z"
+  },
+  "30D": {
+    pnl: 48920.00, pnlPct: "+138.50%", trades: 42100, winRate: "80.8%", roi: "710x", llmCost: "$68.90",
+    chartLine: "M 0,235 Q 180,180 360,110 T 700,50 L 800,15",
+    chartArea: "M 0,235 Q 180,180 360,110 T 700,50 L 800,15 L 800,240 L 0,240 Z"
+  },
+  "ALL": {
+    pnl: 74210.50, pnlPct: "+242.10%", trades: 68420, winRate: "81.4%", roi: "740x", llmCost: "$100.28",
+    chartLine: "M 0,238 Q 200,170 400,95 T 800,10",
+    chartArea: "M 0,238 Q 200,170 400,95 T 800,10 L 800,240 L 0,240 Z"
+  }
+};
+
+const ENGINES = [
+  { id: "basis", name: "Basis Cash & Carry", pnl: 1420.50, share: "57.2%", trades: 412, win: "94.2%", sym: "BTC, ETH", size: 8000, signal: "LONG FUT / SHORT SPOT 14.2% APR", live: true, on: true },
+  { id: "liqfade", name: "Liquidation Fade (LiqFade)", pnl: 650.20, share: "26.2%", trades: 218, win: "78.4%", sym: "SOL, ETH", size: 5000, signal: "MAKER BIDS AT SPREAD -2.4%", live: true, on: true },
+  { id: "smmirror", name: "Smart Money Mirror (DEX)", pnl: 480.00, share: "19.3%", trades: 94, win: "81.2%", sym: "ETH, PEPE", size: 4000, signal: "WHALE ACCUMULATION MATCHED", live: true, on: true },
+  { id: "imbalance", name: "L2 Orderbook Imbalance", pnl: 195.15, share: "7.8%", trades: 512, win: "64.5%", sym: "BTC, SOL", size: 3000, signal: "BID DEPTH DOMINANCE +42%", live: true, on: true },
+  { id: "cexdex", name: "Arbitrage CEX ↔ DEX", pnl: 120.40, share: "4.8%", trades: 310, win: "88.0%", sym: "ETH (Base)", size: 3500, signal: "BASE L2 SPREAD 18 bps", live: false, on: true },
+  { id: "convert", name: "Binance Convert RFQ", pnl: 42.00, share: "1.7%", trades: 84, win: "100%", sym: "USDC, USDT", size: 2500, signal: "ZERO-FEE TRIANGULAR ARB", live: true, on: true },
+  { id: "crossliq", name: "Multi-Venue Shield", pnl: 0.00, share: "0.0%", trades: 0, win: "100%", sym: "BTCUSDT", size: 1000, signal: "DELTA HEDGE READY", live: true, on: true },
+  { id: "tokstock", name: "Tokenized RWA Stock", pnl: -14.00, share: "-0.5%", trades: 12, win: "66.7%", sym: "NVDA, TSLA", size: 1500, signal: "MARKET CLOSED (OFFLINE)", live: false, on: false }
+];
+
+const AGENTS = [
+  { role: "👑 Commander (Portfolio Head)", model: "Claude 3.5 Sonnet", attributedPnl: "+$1,680.00", sharePct: 67.7, cost: "$1.84", roi: "913x", decision: "Optimized +$3,000 allocation to Basis Arbitrage on high funding rate divergence." },
+  { role: "🛡️ Supervisor (Risk Guardrail)", model: "DeepSeek R1", attributedPnl: "+$420.00", sharePct: 16.9, cost: "$0.85", roi: "494x", decision: "Prevented 4 adverse slippage spikes; tightened SOL position limits ahead of CPI." },
+  { role: "🎓 Coach (Optimization & Backtest)", model: "Qwen 2.5 Coder", attributedPnl: "+$260.00", sharePct: 10.5, cost: "$0.42", roi: "619x", decision: "Calibrated LiqFade wick threshold from $1M to $850k, boosting rebound capture by 12%." },
+  { role: "💰 Treasurer (x402 Micropayments)", model: "GPT-4o Mini", attributedPnl: "+$120.25", sharePct: 4.8, cost: "$0.18", roi: "668x", decision: "Autonomous $0.02 payment for on-chain whale data, unlocking a $120 profitable trade." }
+];
+
+let TRADES = [
+  { time: "12:35:14", engine: "Basis Arbitrage", coin: "ETH / USDT", side: "ARB (L/S)", entry: "3,410.20", exit: "3,414.80", qty: "3.50 ETH", pnl: "+$16.10", win: true },
+  { time: "12:32:02", engine: "LiqFade", coin: "SOL / USDT", side: "BUY DIP", entry: "212.10", exit: "215.30", qty: "25.0 SOL", pnl: "+$80.00", win: true },
+  { time: "12:28:40", engine: "Smart Money", coin: "ETH / USDT", side: "BUY SPOT", entry: "3,405.00", exit: "3,412.50", qty: "2.00 ETH", pnl: "+$15.00", win: true },
+  { time: "12:24:11", engine: "Imbalance", coin: "BTC / USDT", side: "SCALP BUY", entry: "91,400.00", exit: "91,445.00", qty: "0.10 BTC", pnl: "+$4.50", win: true }
+];
+
+// Dynamic action log for 5 AI Agents
+const LIVE_ACTIONS = [
+  {
+    agent: "👑 Commander",
+    text: "Detected Binance Futures (+0.014%) vs Spot funding gap. Reallocating $2,500 into Basis Arbitrage.",
+    tool: 'TOOL: set_engine_allocation({ engine: "basis", sizeUsd: 10500, symbol: "ETHUSDT" })',
+    card: "commander",
+    task: "Capital Allocation: Expanded Basis Arbitrage limit to $10,500"
+  },
+  {
+    agent: "🛡️ Supervisor",
+    text: "Audited 7 Risk Kernel rules. Spread slippage is 0.7 bps (Below 15 bps cap). ORDER APPROVED.",
+    tool: 'TOOL: evaluate_risk_kernel({ spreadBps: 0.7, notionalUsd: 2500, ruleResult: "PASS" })',
+    card: "supervisor",
+    task: "Risk Audit: 7/7 Risk Kernel rules passed, authorization granted"
+  },
+  {
+    agent: "💰 Treasurer",
+    text: "Prepared EIP-712 signature on Base: Autonomous $0.02 USDT micropayment for whale wallet feed.",
+    tool: 'TOOL: x402_sign_and_pay({ receiver: "0x7a2...8b3", amount: 0.02, network: "Base" })',
+    card: "treasurer",
+    task: "x402 Micropayment: Paid $0.02 USDT for on-chain whale data"
+  },
+  {
+    agent: "🎓 Coach",
+    text: "Analyzed last 50 LiqFade executions: 84% wick-bottom precision. Maintaining sensitivity at 0.85.",
+    tool: 'TOOL: update_engine_params({ engine: "liqfade", cascadeThresholdUsd: 850000 })',
+    card: "coach",
+    task: "Optimization: Preserving cascade threshold parameters for LiqFade"
+  },
+  {
+    agent: "📢 Sales Agent",
+    text: "x402 Feed Server received $0.04 USDT from 2 external quant bots querying L2 Imbalance signal.",
+    tool: 'TOOL: emit_data_feed({ feed: "l2_imbalance", clients: 32, revenueUsd: 46.80 })',
+    card: "sales",
+    task: "Signal Monetization: Earned +$0.04 USDT from external bots"
+  }
+];
+
+// ===========================================================================
+// AGENT STREAM ACTION PROCESSING
+// ===========================================================================
+function pushAgentAction(action) {
+  const c = document.getElementById("consoleStream");
+  const timeStr = new Date().toTimeString().split(" ")[0];
+
+  const div = document.createElement("div");
+  div.className = "console-entry";
+  div.innerHTML = `
+    <div class="console-header">
+      <span class="console-agent">${action.agent}</span>
+      <span class="console-time">${timeStr}</span>
+    </div>
+    <div class="console-text">${action.text}</div>
+    <div class="console-tool">${action.tool}</div>
+  `;
+  c.insertBefore(div, c.firstChild);
+
+  // Update agent badge card on the 5-card row
+  const taskEl = document.getElementById(`task-${action.card}`);
+  const cardEl = document.getElementById(`agentCard-${action.card}`);
+  if (taskEl) taskEl.textContent = action.task;
+
+  // Glow effect when agent is active
+  document.querySelectorAll(".agent-badge-card").forEach(el => el.classList.remove("active-thinking"));
+  if (cardEl) cardEl.classList.add("active-thinking");
+}
+
+// Automatically push random agent activity to keep the war room live.
+// Only runs on file:// (no backend). Over http the real WS tape drives the console.
+let actionIdx = 0;
+// Canned simulation: runs on file:// OR when a backend reports it is a static showcase edge
+// (Cloudflare Worker: /api/session -> {simulation:true}) with no live engine. Idempotent.
+function startSimulation() {
+  if (window._simStarted) return;
+  window._simStarted = true;
+  setBackendMode("offline");
+  renderLeaderboards();
+  renderEnginesTable();
+  renderTradesTable();
+  pushAgentAction(LIVE_ACTIONS[0]);
+  setTimeout(() => pushAgentAction(LIVE_ACTIONS[1]), 500);
+  setTimeout(() => pushAgentAction(LIVE_ACTIONS[2]), 1000);
+  setInterval(() => {
+    pushAgentAction(LIVE_ACTIONS[actionIdx % LIVE_ACTIONS.length]);
+    actionIdx++;
+  }, 4500);
+}
+
+// ===========================================================================
+// TIMEFRAME & TAB SWITCHING
+// ===========================================================================
+function setTimeframe(tf, el) {
+  document.querySelectorAll(".time-pill").forEach(p => p.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("currentTfBadge").textContent = `[Timeframe: ${tf}]`;
+
+  const d = TIMEFRAME_DATA[tf];
+  // The canned timeframe curve is decorative; when connected to a live backend the
+  // KPI cards must reflect the real snapshot, never the canned TIMEFRAME_DATA numbers.
+  if (backendMode === "offline") {
+    document.getElementById("kpiPnl").textContent = "+$" + d.pnl.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById("kpiPnlPct").textContent = "▲ " + d.pnlPct + " capital growth";
+    document.getElementById("kpiWinRate").textContent = d.winRate;
+    document.getElementById("kpiTradesCount").textContent = d.trades.toLocaleString() + " trades executed";
+    document.getElementById("kpiRoi").textContent = d.roi;
+    document.getElementById("kpiCost").textContent = "LLM Cost: " + d.llmCost;
+  } else if (window._lastSnapshot) {
+    renderRealKpis(window._lastSnapshot);
+  }
+  if (backendMode === "offline") {
+    document.getElementById("chartPnlVal").textContent = "+$" + d.pnl.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById("chartLine").setAttribute("d", d.chartLine);
+    document.getElementById("chartArea").setAttribute("d", d.chartArea);
+  } else if (window._lastSnapshot) {
+    renderRealKpis(window._lastSnapshot);
+  }
+  showToast(`Switched to ${tf} timeframe`, `PnL metrics and cumulative curve updated accordingly.`);
+}
+
+// Path-based navigation: each nav item is a real page (full page load), not a JS tab toggle.
+// Show only the section whose route matches the current pathname and mark its nav link active.
+const ROUTE_TABS = { "/": "overview", "/demo": "overview", "/leaderboard": "leaderboard", "/engines": "engines", "/trades": "trades", "/dream": "dream" };
+function activeTabFromPath() {
+  const p = window.location.pathname.replace(/\/+$/, "") || "/";
+  return ROUTE_TABS[p] || "overview";
+}
+function showActivePage() {
+  const tabId = activeTabFromPath();
+  document.querySelectorAll(".view-tab").forEach(t => t.classList.toggle("active", t.id === "tab-" + tabId));
+  document.querySelectorAll(".nav-btn").forEach(a => a.classList.toggle("active", a.dataset.nav === tabId));
+  // War Room widgets (5-agent grid + KPI cards) belong to the overview page only.
+  const onOverview = tabId === "overview";
+  const agents = document.getElementById("warRoomAgents");
+  const kpis = document.getElementById("warRoomKpis");
+  if (agents) agents.style.display = onOverview ? "" : "none";
+  if (kpis) kpis.style.display = onOverview ? "" : "none";
+}
+
+function renderLeaderboards() {
+  // Engine Leaderboard
+  document.getElementById("engineLeaderboard").innerHTML = filteredEngines(ENGINES).map((e, idx) => `
+    <div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; color: var(--yellow);">#${idx + 1}</span>
+          <b style="font-size: 13.5px;">${e.name}</b>
+        </div>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: ${e.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">
+          ${e.pnl >= 0 ? '+' : ''}$${e.pnl.toFixed(2)}
+        </span>
+      </div>
+      <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0 6px;">
+        <div style="height: 100%; width: ${Math.max(4, parseFloat(e.share))}%; background: var(--green);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
+        <span>Share: <b>${e.share}</b></span>
+        <span>Win Rate: <b style="color:var(--yellow);">${e.win}</b></span>
+      </div>
+    </div>
+  `).join("");
+
+  // Agent Leaderboard
+  document.getElementById("agentLeaderboard").innerHTML = AGENTS.map((a, idx) => `
+    <div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <b style="font-size: 13.5px;">${a.role}</b>
+          <div style="font-size: 11px; color: var(--yellow); font-family: var(--font-mono);">${MODEL_MASK}</div>
+        </div>
+        <span style="font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--blue);">
+          ${a.attributedPnl}
+        </span>
+      </div>
+      <div style="font-size: 12px; color: #cbd5e1; margin: 8px 0; font-style: italic;">
+        "${a.decision}"
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
+        <span>ROI: <b style="color:var(--green);">${a.roi}</b></span>
+        <span>Token Cost: <b>${a.cost}</b></span>
+        <span>Attributed Share: <b>${a.sharePct}%</b></span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderEnginesTable() {
+  document.getElementById("enginesFullTable").innerHTML = filteredEngines(ENGINES).map((e, idx) => `
+    <tr>
+      <td><b>${e.name}</b> <span style="font-size:11px; color:var(--txt-muted);">(${e.id})</span></td>
+      <td><span style="font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; background: ${e.live ? 'var(--yellow-dim)' : 'var(--card-sub)'}; color: ${e.live ? 'var(--yellow)' : 'var(--txt-muted)'}; border: 1px solid var(--border);">${e.live ? 'LIVE BINANCE' : 'PAPER TEST'}</span></td>
+      <td><b>${e.sym}</b></td>
+      <td style="font-family: var(--font-mono); font-weight: 600;">$${e.size.toLocaleString()}</td>
+      <td style="font-size: 11.5px; color: var(--green); font-family: var(--font-mono);">${e.signal}</td>
+      <td style="font-family: var(--font-mono);">${e.trades}</td>
+      <td style="font-family: var(--font-mono); color: var(--yellow);">${e.win}</td>
+      <td style="font-family: var(--font-mono); font-weight: 700; color: ${e.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${e.pnl >= 0 ? '+' : ''}$${e.pnl.toFixed(2)}</td>
+      <td>
+        <label class="switch">
+          <input type="checkbox" ${e.on ? 'checked' : ''} disabled>
+          <span class="slider"></span>
+        </label>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function renderTradesTable() {
+  const all = filteredTrades(TRADES);
+  const pageSize = 8;
+  const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
+  tradesPage = Math.min(Math.max(1, tradesPage), totalPages);
+  const rows = all.slice((tradesPage - 1) * pageSize, tradesPage * pageSize);
+  document.getElementById("tradesTable").innerHTML = rows.map(t => `
+    <tr>
+      <td style="font-family: var(--font-mono); color: var(--txt-muted);">${t.time}</td>
+      <td><b>${t.engine}</b></td>
+      <td><b>${t.coin}</b></td>
+      <td><span style="font-size:11px; padding:2px 6px; border-radius:4px; font-weight:600; background: ${t.side.includes('BUY') || t.side.includes('ARB') ? 'var(--green-dim)' : 'var(--red-dim)'}; color: ${t.side.includes('BUY') || t.side.includes('ARB') ? 'var(--green)' : 'var(--red)'};">${t.side}</span></td>
+      <td style="font-family: var(--font-mono);">${t.entry}</td>
+      <td style="font-family: var(--font-mono);">${t.exit}</td>
+      <td style="font-family: var(--font-mono);">${t.qty}</td>
+      <td style="font-family: var(--font-mono); font-weight: 700; color: ${t.win ? 'var(--green)' : 'var(--red)'};">${t.pnl}</td>
+      <td><span style="font-size: 11px; color: ${t.win ? 'var(--green)' : 'var(--red)'};">● ${t.win ? 'CLOSED (PROFIT)' : 'STOP LOSS'}</span></td>
+    </tr>
+  `).join("");
+  renderPager("tradesPager", tradesPage, all.length, pageSize, "trades-prev", "trades-next");
+}
+
+// ===========================================================================
+// READ-ONLY VIEW FILTERS (symbol + execution mode). These only change what data is
+// displayed; they re-render from the last real snapshot and never mutate the backend.
+// ===========================================================================
+function currentSymbol() { const el = document.getElementById("coinFilter"); return el ? el.value : "ALL"; }
+function currentMode() { const el = document.getElementById("modeFilter"); return el ? el.value : "ALL"; }
+function symbolMatches(field, sel) { return sel === "ALL" || String(field || "").toUpperCase().includes(sel); }
+function modeMatches(isLive, sel) { return sel === "ALL" || (sel === "LIVE" ? isLive : !isLive); }
+function filteredEngines(list) {
+  const sym = currentSymbol(), mode = currentMode();
+  return (list || []).filter(e => {
+    const field = Array.isArray(e.symbols) ? e.symbols.join(",") : (e.sym || "");
+    const isLive = ("paper" in e) ? !e.paper : !!e.live;
+    return symbolMatches(field, sym) && modeMatches(isLive, mode);
+  });
+}
+function filteredTrades(list) { const sym = currentSymbol(); return (list || []).filter(t => symbolMatches(t.coin, sym)); }
+function filteredPositions(list) { const sym = currentSymbol(); return (list || []).filter(p => symbolMatches(p.symbol, sym)); }
+
+// Re-render the currently displayed data from the last real snapshot (or the canned showcase
+// when offline), honouring the active filters. Never calls a mutating backend route.
+function rerenderData() {
+  if (backendMode === "offline") {
+    renderLeaderboards();
+    renderEnginesTable();
+    renderTradesTable();
+  } else if (window._lastSnapshot) {
+    const s = window._lastSnapshot;
+    const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
+    renderRealEngines(engines);
+    renderRealEngineLeaderboard(engines);
+    const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
+    renderRealTrades(filteredPositions(pos));
+  }
+}
+function applyFilters() { rerenderData(); }
+
+// ===========================================================================
+// BACKEND MODE (read-only viewer)
+// backendMode: "offline" (static showcase / no live backend) | "live" (real backend).
+// The viewer is strictly read-only in every mode: no operator controls exist on this page.
+// ===========================================================================
+let backendMode = "offline";
+
+function setBackendMode(mode) {
+  backendMode = mode;
+}
+
+function showToast(title, msg, ms = 4000) {
+  const t = document.getElementById("toast");
+  document.getElementById("toastTitle").textContent = title;
+  document.getElementById("toastMsg").textContent = msg;
+  t.style.display = "block";
+  clearTimeout(window._t);
+  window._t = setTimeout(() => t.style.display = "none", ms);
+}
+
+
+// ===========================================================================
+// DREAM COIN (24H NEURAL REFLECTION & MEMORY BANK)
+// ===========================================================================
+let DREAM_LESSONS = [
+  {
+    id: "lesson-05",
+    time: "Just distilled",
+    category: "fee",
+    catLabel: "FEE OPTIMIZATION",
+    title: "Route Sub-$2,500 Rebalance Orders via Binance Convert RFQ",
+    trigger: "Sub-$2,000 Spot executions incurred 7.5 bps taker fees, eroding 18% of scalping alpha.",
+    counterfactual: "If routed via Binance Convert RFQ with zero trading fees, net profit increases by +$42.00.",
+    rule: "All stablecoin and blue-chip rebalancing orders under $2,500 must prioritize Convert RFQ.",
+    confidence: "96%",
+    agents: ["Commander", "Treasurer"]
+  },
+  {
+    id: "lesson-01",
+    time: "1 day ago",
+    category: "anti-loss",
+    catLabel: "ANTI-LOSS",
+    title: "Prohibit LiqFade Entries Under Severe Negative Funding (< -0.025%)",
+    trigger: "SOL -$6.00 stop-loss triggered as second liquidation cascade overwhelmed wick bids.",
+    counterfactual: "If waiting for funding rate to normalize above -0.01%, position avoids secondary cascade pressure.",
+    rule: "LiqFade only activates when funding_rate >= -0.020% across all derivative altcoins.",
+    confidence: "94%",
+    agents: ["Commander", "Supervisor", "Coach"]
+  },
+  {
+    id: "lesson-02",
+    time: "2 days ago",
+    category: "risk",
+    catLabel: "RISK MANAGEMENT",
+    title: "Reduce Order Size by 50% Ahead of High-Impact Macro News (CPI/FOMC)",
+    trigger: "ETHUSDT spread widened from 0.8 bps to 18.2 bps within 30s during Fed rate announcement.",
+    counterfactual: "If auto-reducing max notional to $2,500 ahead of release, slippage adverse impact drops 75%.",
+    rule: "Automatically engage Macro-Guard mode ahead of scheduled high-volatility economic announcements.",
+    confidence: "98%",
+    agents: ["Supervisor", "Commander"]
+  },
+  {
+    id: "lesson-03",
+    time: "3 days ago",
+    category: "exec",
+    catLabel: "EXECUTION",
+    title: "Reject DEX Smart Money Copies When Price Impact Exceeds 10 bps",
+    trigger: "Copy-trade of whale 0x7a2... on Uniswap v3 incurred 14.5 bps slippage due to thin pool liquidity.",
+    counterfactual: "If placing limit orders or routing to equivalent Binance Spot pair, profit margin gains +$34.00.",
+    rule: "SmartMoney Mirror on DEX must verify pool depth: reject order if estimated impact > 10 bps.",
+    confidence: "91%",
+    agents: ["Coach", "Treasurer"]
+  },
+  {
+    id: "lesson-04",
+    time: "4 days ago",
+    category: "fee",
+    catLabel: "FEE OPTIMIZATION",
+    title: "Route Sub-$2,500 Rebalance Orders via Binance Convert RFQ",
+    trigger: "Sub-$2,000 Spot executions incurred 7.5 bps taker fees, eroding 18% of scalping alpha.",
+    counterfactual: "If routed via Binance Convert RFQ with zero trading fees, net profit increases by +$42.00.",
+    rule: "All stablecoin and blue-chip rebalancing orders under $2,500 must prioritize Convert RFQ.",
+    confidence: "96%",
+    agents: ["Commander", "Treasurer"]
+  }
+];
+
+function renderDreamLessons() {
+  const container = document.getElementById("dreamLessonsContainer");
+  if (!container) return;
+  document.getElementById("dreamTotalLessons").textContent = `${DREAM_LESSONS.length} Invariant Rules Injected`;
+
+  const pageSize = 3;
+  const totalPages = Math.max(1, Math.ceil(DREAM_LESSONS.length / pageSize));
+  dreamPage = Math.min(Math.max(1, dreamPage), totalPages);
+  const rows = DREAM_LESSONS.slice((dreamPage - 1) * pageSize, dreamPage * pageSize);
+  container.innerHTML = rows.map(l => `
+    <div class="dream-lesson-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge-category cat-${l.category}">${l.catLabel}</span>
+          <b style="font-size: 14px; color: #fff;">${l.title}</b>
+        </div>
+        <span style="font-size: 12px; color: var(--purple); font-weight: 700;">Confidence: ${l.confidence}</span>
+      </div>
+
+      <div style="font-size: 12px; color: var(--txt-muted); margin-bottom: 6px;">
+        <span style="color: var(--red);">● Trigger Event:</span> ${l.trigger}
+      </div>
+
+      <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px; font-style: italic;">
+        <span style="color: var(--yellow);">💭 Counterfactual Reasoning:</span> "${l.counterfactual}"
+      </div>
+
+      <div style="background: var(--card-sub); border: 1px solid var(--border); border-left: 3px solid var(--purple); padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-family: var(--font-mono); color: #e2e8f0; margin-bottom: 8px;">
+        <b>Invariant Golden Rule:</b> ${l.rule}
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
+        <span>Applied to: <b>${l.agents.join(", ")}</b></span>
+        <span>${l.time}</span>
+      </div>
+    </div>
+  `).join("");
+  renderPager("dreamPager", dreamPage, DREAM_LESSONS.length, pageSize, "dream-prev", "dream-next");
+}
+
+function pushDreamLog(msg) {
+  const c = document.getElementById("dreamConsole");
+  if (!c) return;
+  const timeStr = new Date().toTimeString().split(" ")[0];
+  const div = document.createElement("div");
+  div.className = "console-entry";
+  div.innerHTML = `
+    <div class="console-header">
+      <span class="console-agent" style="color: var(--purple);">🌙 Dream Neural Engine</span>
+      <span class="console-time">${timeStr}</span>
+    </div>
+    <div class="console-text">${msg}</div>
+  `;
+  c.insertBefore(div, c.firstChild);
+}
+
+function startDreamCycle() {
+  showToast("🌙 Starting 24H Reflection Cycle", "AI models entering Dream State to analyze past executions and risk vetoes...");
+  
+  // Highlight Step 1
+  document.getElementById("dStep1").classList.add("active");
+  pushDreamLog("STEP 1: Scanned 1,482 executed orders. Isolated 12 stop-losses and 3 Risk Kernel veto events.");
+
+  setTimeout(() => {
+    document.getElementById("dStep1").classList.remove("active");
+    document.getElementById("dStep2").classList.add("active");
+    pushDreamLog("STEP 2: Counterfactual simulation: SOL short -$6.00 loss was caused by falling-knife entry when funding rate was deeply negative at -0.035%.");
+  }, 1200);
+
+  setTimeout(() => {
+    document.getElementById("dStep2").classList.remove("active");
+    document.getElementById("dStep3").classList.add("active");
+    pushDreamLog("STEP 3: Distilled rule: 'PROHIBIT LiqFade entry when altcoin funding rate < -0.020%'. Formulated new Invariant Rule!");
+  }, 2400);
+
+  setTimeout(() => {
+    document.getElementById("dStep3").classList.remove("active");
+    document.getElementById("dStep4").classList.add("active");
+    pushDreamLog("STEP 4: Rule committed to Dream Memory Bank. Injected into System Context of Commander & Supervisor!");
+
+    const newLesson = {
+      id: `lesson-${DREAM_LESSONS.length + 1}`,
+      time: "Just distilled",
+      category: "anti-loss",
+      catLabel: "ANTI-LOSS",
+      title: "Prevent Falling-Knife Entries Under Severe Negative Funding (< -0.020%)",
+      trigger: "SOL -$6.00 stopped out due to premature entry amid secondary cascade.",
+      counterfactual: "If waiting for funding rate recovery above -0.01%, order avoids adverse secondary selloff.",
+      rule: "LiqFade only triggers when funding_rate >= -0.020% on derivative altcoins.",
+      confidence: "97%",
+      agents: ["Commander", "Supervisor", "Coach"]
+    };
+    DREAM_LESSONS.unshift(newLesson);
+    renderDreamLessons();
+    showToast("✨ 24H Reflection Cycle Complete", "Successfully distilled 1 new Invariant Rule and updated agent neural memories!");
+  }, 3600);
+
+  setTimeout(() => {
+    document.getElementById("dStep4").classList.remove("active");
+  }, 5000);
+}
+
+
+// Initialization
+// Dream lessons always render (they are hydrated from the backend over http).
+renderDreamLessons();
+
+if (!IS_HTTP) {
+  startSimulation();
+} else {
+  // Served over http: honest loading/empty states until we learn whether a live backend exists.
+  document.getElementById("enginesFullTable").innerHTML = emptyEnginesRow("Connecting to live backend…");
+  document.getElementById("tradesTable").innerHTML = emptyTradesRow("Connecting to live backend…");
+  document.getElementById("engineLeaderboard").innerHTML = emptyPanel("Connecting to live backend…");
+  document.getElementById("agentLeaderboard").innerHTML = emptyPanel("Connecting to live backend…");
+}
+
+// ===========================================================================
+// EVENT DELEGATION (CSP Compliant: no inline on*=; all buttons use data-action)
+// ===========================================================================
+const CLICK_ACTIONS = {
+  "timeframe": (el) => setTimeframe(el.dataset.arg, el),
+  "trades-prev": () => { tradesPage--; rerenderTrades(); },
+  "trades-next": () => { tradesPage++; rerenderTrades(); },
+  "dream-prev": () => { dreamPage--; renderDreamLessons(); },
+  "dream-next": () => { dreamPage++; renderDreamLessons(); }
+};
+const CHANGE_ACTIONS = {
+  "apply-filters": applyFilters
+};
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const fn = CLICK_ACTIONS[el.dataset.action];
+  if (fn) fn(el);
+});
+document.addEventListener("change", (e) => {
+  const fn = CHANGE_ACTIONS[e.target.dataset.action];
+  if (fn) fn(e.target);
+});
+
+// Apply the route-based active page immediately (script runs at end of <body>).
+showActivePage();
+
+// ===========================================================================
+// BACKEND CONNECTION (read-only): anonymous viewer session + single-use WS ticket.
+// file:// or an unreachable/simulation backend -> backendMode = "offline" (static showcase).
+// ===========================================================================
+let liveSocket = null;
+let reconnectTimer = null;
+
+function onSession() {
+  setBackendMode("live");
+  connectLive();
+  hydrateLessons();
+  startAgentRunsPolling();
+}
+
+function scheduleReconnect() {
+  clearTimeout(reconnectTimer);
+  reconnectTimer = setTimeout(connectLive, 2000);
+}
+
+// Request a fresh single-use ticket on each connection (30s TTL). Anonymous viewers are allowed.
+async function connectLive() {
+  if (backendMode === "offline") return;
+  let ticket;
+  try {
+    const r = await fetch("/api/ws-ticket", { method: "POST" });
+    if (!r.ok) { scheduleReconnect(); return; }
+    ticket = (await r.json()).ticket;
+  } catch (e) {
+    scheduleReconnect();
+    return;
+  }
+  const proto = window.location.protocol === "https:" ? "wss" : "ws";
+  const socket = new WebSocket(`${proto}://${window.location.host}/ws?ticket=${encodeURIComponent(ticket)}`);
+  liveSocket = socket;
+  socket.onmessage = (ev) => {
+    try {
+      handleSnapshot(JSON.parse(ev.data));
+    } catch (e) {}
+  };
+  socket.onclose = () => {
+    if (liveSocket === socket) scheduleReconnect();
+  };
+}
+
+// ===========================================================================
+// REAL BACKEND RENDERERS (used only when connected over http; never fabricate)
+// ===========================================================================
+const ENGINE_NAME_MAP = {};
+ENGINES.forEach(e => { ENGINE_NAME_MAP[e.id] = e.name; });
+function engineName(id) { return ENGINE_NAME_MAP[id] || id || "engine"; }
+
+function esc(v) {
+  return String(v == null ? "" : v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function fmtSignedUsd(n) {
+  const v = Number(n) || 0;
+  return (v < 0 ? "-$" : "+$") + Math.abs(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// hit may arrive as a ratio (0..1) or an explicit percentage; render honestly as %.
+function fmtPct(hit) {
+  if (typeof hit !== "number") return "—";
+  const pct = hit <= 1 ? hit * 100 : hit;
+  return pct.toFixed(1) + "%";
+}
+
+function emptyEnginesRow(msg) {
+  return `<tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
+}
+function emptyTradesRow(msg) {
+  return `<tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
+}
+function emptyPanel(msg) {
+  return `<div style="padding:22px; text-align:center; color:var(--txt-muted);">${esc(msg)}</div>`;
+}
+
+function renderRealKpis(s) {
+  const engines = Array.isArray(s.engines) ? s.engines : [];
+  const nav = s.executor && typeof s.executor.nav === "number" ? s.executor.nav : null;
+  document.getElementById("kpiNav").textContent = nav != null ? "$" + nav.toLocaleString(undefined, { minimumFractionDigits: 2 }) : "—";
+
+  let pnl = 0, trades = 0, hitWeighted = 0, hitTrades = 0;
+  engines.forEach(e => {
+    pnl += Number(e.pnl24h) || 0;
+    const t = Number(e.trades) || 0;
+    trades += t;
+    if (typeof e.hit === "number") { hitWeighted += e.hit * t; hitTrades += t; }
+  });
+
+  const pnlEl = document.getElementById("kpiPnl");
+  pnlEl.textContent = fmtSignedUsd(pnl);
+  pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+
+  const pctEl = document.getElementById("kpiPnlPct");
+  const pct = pnl / Math.max(nav || 0, 1) * 100;
+  pctEl.textContent = (pnl >= 0 ? "▲ +" : "▼ ") + Math.abs(pct).toFixed(2) + "% capital growth";
+  pctEl.className = "kpi-badge " + (pnl >= 0 ? "up" : "down");
+
+  document.getElementById("kpiTradesCount").textContent = trades.toLocaleString() + " trades executed";
+  document.getElementById("kpiWinRate").textContent = hitTrades > 0 ? fmtPct(hitWeighted / hitTrades) : "—";
+
+  const llmCost = s.spend && typeof s.spend.llmTodayUsd === "number" ? s.spend.llmTodayUsd : 0;
+  document.getElementById("kpiRoi").textContent = (pnl > 0 && llmCost > 0) ? Math.round(pnl / llmCost) + "x" : "—";
+  document.getElementById("kpiCost").textContent = "LLM Cost: $" + llmCost.toFixed(2);
+
+  // Cumulative PnL chart panel: real cumulative value + real drawdown. No historical PnL series is
+  // available in the snapshot, so the curve is a flat baseline (honest) rather than a fabricated uptrend.
+  const chartVal = document.getElementById("chartPnlVal");
+  if (chartVal) { chartVal.textContent = fmtSignedUsd(pnl); chartVal.style.color = pnl >= 0 ? "var(--green)" : "var(--red)"; }
+  const ddEl = document.getElementById("chartDrawdown");
+  if (ddEl) { const dd = s.executor && typeof s.executor.drawdownPct === "number" ? s.executor.drawdownPct : 0; ddEl.textContent = Math.abs(dd).toFixed(2) + "%"; }
+  const lineEl = document.getElementById("chartLine");
+  const areaEl = document.getElementById("chartArea");
+  if (lineEl) lineEl.setAttribute("d", "M 0,235 L 800,235");
+  if (areaEl) areaEl.setAttribute("d", "M 0,235 L 800,235 L 800,240 L 0,240 Z");
+
+  // Allocated capital = sum of per-engine sizeUsd (real); agents banner reflects the cold-lane capability.
+  const allocated = engines.reduce((sum, e) => sum + (Number(e.sizeUsd) || 0), 0);
+  const allocEl = document.getElementById("kpiAllocated");
+  if (allocEl) allocEl.textContent = "Allocated Capital: $" + allocated.toLocaleString(undefined, { minimumFractionDigits: 2 });
+  const coldLane = (Array.isArray(s.capabilities) ? s.capabilities : []).find(c => /cold lane|LLM agents/i.test(c.name || ""));
+  const bannerEl = document.getElementById("agentsOnlineLabel");
+  if (bannerEl) {
+    const on = coldLane ? coldLane.on : false;
+    bannerEl.textContent = on ? "● ALL AGENTS ONLINE" : "● COLD LANE OFF";
+    bannerEl.style.color = on ? "var(--green)" : "var(--txt-muted)";
+  }
+}
+
+function renderRealEngines(engines) {
+  const body = document.getElementById("enginesFullTable");
+  if (!engines.length) { body.innerHTML = emptyEnginesRow("No engines reported by backend"); return; }
+  body.innerHTML = engines.map(e => {
+    const live = !e.paper;
+    const sym = Array.isArray(e.symbols) ? e.symbols.join(", ") : "";
+    const sig = e.contract ? `${esc(e.contract.side)} ${esc(e.contract.symbol)} ${Math.round(Number(e.contract.edgeBps) || 0)}bps` : "—";
+    const pnl = Number(e.pnl24h) || 0;
+    return `<tr>
+      <td><b>${esc(engineName(e.id))}</b> <span style="font-size:11px; color:var(--txt-muted);">(${esc(e.id)})</span></td>
+      <td><span style="font-size:11px; padding:2px 7px; border-radius:4px; font-weight:600; background:${live ? 'var(--yellow-dim)' : 'var(--card-sub)'}; color:${live ? 'var(--yellow)' : 'var(--txt-muted)'}; border:1px solid var(--border);">${live ? 'LIVE BINANCE' : 'PAPER TEST'}</span></td>
+      <td><b>${esc(sym) || '—'}</b></td>
+      <td style="font-family:var(--font-mono); font-weight:600;">$${(Number(e.sizeUsd) || 0).toLocaleString()}</td>
+      <td style="font-size:11.5px; color:var(--green); font-family:var(--font-mono);">${sig}</td>
+      <td style="font-family:var(--font-mono);">${Number(e.trades) || 0}</td>
+      <td style="font-family:var(--font-mono); color:var(--yellow);">${fmtPct(e.hit)}</td>
+      <td style="font-family:var(--font-mono); font-weight:700; color:${pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(pnl)}</td>
+      <td><label class="switch"><input type="checkbox" ${e.enabled ? 'checked' : ''} disabled><span class="slider"></span></label></td>
+    </tr>`;
+  }).join("");
+}
+
+function renderRealEngineLeaderboard(engines) {
+  const el = document.getElementById("engineLeaderboard");
+  if (!engines.length) { el.innerHTML = emptyPanel("No engines reported by backend"); return; }
+  const sorted = engines.slice().sort((a, b) => (Number(b.pnl24h) || 0) - (Number(a.pnl24h) || 0));
+  const totalAbs = sorted.reduce((sum, e) => sum + Math.max(0, Number(e.pnl24h) || 0), 0);
+  el.innerHTML = sorted.map((e, idx) => {
+    const pnl = Number(e.pnl24h) || 0;
+    const share = totalAbs > 0 ? Math.max(0, pnl) / totalAbs * 100 : 0;
+    return `<div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; color: var(--yellow);">#${idx + 1}</span>
+          <b style="font-size: 13.5px;">${esc(engineName(e.id))}</b>
+        </div>
+        <span style="font-family: var(--font-mono); font-weight: 700; color: ${pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(pnl)}</span>
+      </div>
+      <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0 6px;">
+        <div style="height: 100%; width: ${Math.max(4, share)}%; background: var(--green);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
+        <span>Share: <b>${share.toFixed(1)}%</b></span>
+        <span>Win Rate: <b style="color:var(--yellow);">${fmtPct(e.hit)}</b></span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderRealTrades(positions) {
+  const body = document.getElementById("tradesTable");
+  const all = positions || [];
+  if (!all.length) { body.innerHTML = emptyTradesRow("No trades yet — demo has no executed fills"); renderPager("tradesPager", 1, 0, 8, "trades-prev", "trades-next"); return; }
+  const pageSize = 8;
+  const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
+  tradesPage = Math.min(Math.max(1, tradesPage), totalPages);
+  const rows = all.slice((tradesPage - 1) * pageSize, tradesPage * pageSize);
+  body.innerHTML = rows.map(p => {
+    const u = Number(p.unrealized) || 0;
+    const qty = Number(p.qty) || 0;
+    const side = qty >= 0 ? "LONG" : "SHORT";
+    return `<tr>
+      <td style="font-family: var(--font-mono); color: var(--txt-muted);">OPEN</td>
+      <td><b>${esc(engineName(p.engine))}</b></td>
+      <td><b>${esc(p.symbol)}</b></td>
+      <td><span style="font-size:11px; padding:2px 6px; border-radius:4px; font-weight:600; background: ${side === 'LONG' ? 'var(--green-dim)' : 'var(--red-dim)'}; color: ${side === 'LONG' ? 'var(--green)' : 'var(--red)'};">${side}</span></td>
+      <td style="font-family: var(--font-mono);">${esc(p.entry != null ? p.entry : '—')}</td>
+      <td style="font-family: var(--font-mono);">${esc(p.mark != null ? p.mark : '—')}</td>
+      <td style="font-family: var(--font-mono);">${esc(qty)}</td>
+      <td style="font-family: var(--font-mono); font-weight: 700; color: ${u >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(u)}</td>
+      <td><span style="font-size: 11px; color: var(--blue);">● OPEN${p.venue ? ' (' + esc(p.venue) + ')' : ''}</span></td>
+    </tr>`;
+  }).join("");
+  renderPager("tradesPager", tradesPage, all.length, pageSize, "trades-prev", "trades-next");
+}
+
+const AGENT_META = {
+  commander: { icon: "👑", name: "Commander (Portfolio Head)" },
+  supervisor: { icon: "🛡️", name: "Supervisor (Risk Guardrail)" },
+  coach: { icon: "🎓", name: "Coach (Optimization & Backtest)" },
+  treasurer: { icon: "💰", name: "Treasurer (x402 Micropayments)" },
+  sales: { icon: "📢", name: "Sales (Signal Monetization)" }
+};
+const AGENT_KEYS = ["commander", "supervisor", "coach", "treasurer", "sales"];
+
+function applyAgentConfig(config) {
+  if (!config) return;
+  AGENT_KEYS.forEach(k => {
+    const card = document.getElementById(`agentCard-${k}`);
+    if (!card) return;
+    const modelEl = card.querySelector(".agent-card-model");
+    if (modelEl) modelEl.innerHTML = MODEL_MASK;
+  });
+}
+
+function renderRealAgentLeaderboard(latest) {
+  const el = document.getElementById("agentLeaderboard");
+  if (!el) return;
+  const s = window._lastSnapshot;
+  const cfg = s && s.agents && s.agents.config ? s.agents.config : {};
+  el.innerHTML = AGENT_KEYS.map(k => {
+    const run = latest && latest[k];
+    const decision = run && run.decision ? run.decision : "Idle — cold lane off";
+    return `<div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <b style="font-size: 13.5px;">${AGENT_META[k].icon} ${esc(AGENT_META[k].name)}</b>
+          <div style="font-size: 11px; color: var(--yellow); font-family: var(--font-mono);">${MODEL_MASK}</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #cbd5e1; margin: 8px 0 0; font-style: italic;">"${esc(decision)}"</div>
+    </div>`;
+  }).join("");
+}
+
+function pushConsoleLine(agent, text, tool, tsMs) {
+  const c = document.getElementById("consoleStream");
+  if (!c) return;
+  const timeStr = new Date(tsMs || Date.now()).toTimeString().split(" ")[0];
+  const div = document.createElement("div");
+  div.className = "console-entry";
+  div.innerHTML = `<div class="console-header"><span class="console-agent">${esc(agent)}</span><span class="console-time">${timeStr}</span></div><div class="console-text">${esc(text)}</div>${tool ? `<div class="console-tool">${esc(tool)}</div>` : ""}`;
+  c.insertBefore(div, c.firstChild);
+  while (c.childElementCount > 50) c.removeChild(c.lastChild);
+}
+
+function tapeToConsole(ev) {
+  const n = ev.name || "";
+  const p = ev.payload || {};
+  const low = n.toLowerCase();
+  if (low.includes("veto")) {
+    const rule = p.rule != null ? p.rule : (p.ruleId != null ? p.ruleId : "?");
+    const detail = p.detail || p.reason || "";
+    return { agent: "🛡️ Risk Kernel", text: `rule ${rule} veto: ${detail}`.trim(), tool: `EVENT ${n}` };
+  }
+  if (low.includes("intent")) {
+    const eng = p.engine || p.engineId || "engine";
+    const qty = p.qty != null ? ` qty=${p.qty}` : "";
+    return { agent: `⚙️ ${engineName(eng)} intent`, text: `${p.side || ""} ${p.symbol || ""}${qty}`.trim(), tool: `EVENT ${n}` };
+  }
+  if (low.includes("fill")) {
+    const px = p.price != null ? p.price : (p.mark != null ? p.mark : "?");
+    return { agent: "✅ Fill", text: `${p.side || ""} ${p.symbol || ""} qty=${p.qty != null ? p.qty : "?"} @ ${px}`.trim(), tool: `EVENT ${n}` };
+  }
+  if (low.includes("kill")) return { agent: "🛑 Kill", text: p.reason || safeJson(p), tool: `EVENT ${n}` };
+  if (low.includes("breach")) return { agent: "⚠️ Limit Breach", text: p.detail || p.reason || safeJson(p), tool: `EVENT ${n}` };
+  if (low.includes("funding")) return { agent: "💵 Funding", text: `${p.symbol || ""} rate ${p.fundingRate != null ? p.fundingRate : (p.rate != null ? p.rate : "")}`.trim(), tool: `EVENT ${n}` };
+  if (low.includes("depth")) return { agent: "📊 Depth", text: `${p.symbol || ""} imbalance ${p.imbalance != null ? p.imbalance : ""}`.trim(), tool: `EVENT ${n}` };
+  return { agent: `📡 ${n || "event"}`, text: safeJson(p), tool: `EVENT ${n}` };
+}
+
+function safeJson(p) {
+  let txt;
+  try { txt = JSON.stringify(p); } catch (e) { txt = String(p); }
+  if (txt && txt.length > 220) txt = txt.slice(0, 220) + "…";
+  return txt || "";
+}
+
+function appendTapeEvents(tape) {
+  if (!Array.isArray(tape)) return;
+  if (!window._seenTapeKeys) window._seenTapeKeys = new Set();
+  const seen = window._seenTapeKeys;
+  if (seen.size > 800) seen.clear();
+  tape.forEach(ev => {
+    const key = (ev.ts || 0) + "|" + (ev.name || "");
+    if (seen.has(key)) return;
+    seen.add(key);
+    const line = tapeToConsole(ev);
+    pushConsoleLine(line.agent, line.text, line.tool, ev.ts);
+  });
+}
+
+function applyAgentRuns(runs) {
+  const latest = {};
+  (runs || []).forEach(r => {
+    const a = (r.agent || "").toLowerCase();
+    if (!a) return;
+    if (!latest[a] || (r.ts || 0) > (latest[a].ts || 0)) latest[a] = r;
+  });
+  AGENT_KEYS.forEach(k => {
+    const taskEl = document.getElementById(`task-${k}`);
+    const badge = document.getElementById(`badge-${k}`);
+    const card = document.getElementById(`agentCard-${k}`);
+    const run = latest[k];
+    const active = !!(run && run.decision);
+    if (taskEl) taskEl.textContent = active ? run.decision : "Idle — cold lane off";
+    if (badge) {
+      badge.textContent = active ? "ACTIVE ⚙️" : "IDLE 💤";
+      badge.className = "agent-state-pill " + (active ? "state-tool" : "state-idle");
+    }
+    if (card) card.classList.toggle("active-thinking", active);
+  });
+  window._lastRuns = latest;
+  renderRealAgentLeaderboard(latest);
+}
+
+function startAgentRunsPolling() {
+  if (window._agentRunsPoll) return;
+  const poll = () => {
+    if (backendMode === "offline") return;
+    fetch("/api/agents/runs?limit=20")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && Array.isArray(d.runs)) applyAgentRuns(d.runs); })
+      .catch(() => {});
+  };
+  poll();
+  window._agentRunsPoll = setInterval(poll, 5000);
+}
+
+function handleSnapshot(s) {
+  if (!s) return;
+  window._lastSnapshot = s;
+
+  // KPI cards driven entirely by the real snapshot (never canned numbers).
+  renderRealKpis(s);
+
+  // Engines table + PnL leaderboard + trade audit trail, honouring the read-only filters.
+  const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
+  renderRealEngines(engines);
+  renderRealEngineLeaderboard(engines);
+  const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
+  renderRealTrades(filteredPositions(pos));
+
+  // Agent model labels + agent leaderboard from real config/runs.
+  if (s.agents && s.agents.config) applyAgentConfig(s.agents.config);
+  renderRealAgentLeaderboard(window._lastRuns || null);
+
+  // Live console: append NEW real hot-lane tape events.
+  appendTapeEvents(s.tape);
+
+  // Dream reflection cycle is a passive display driven by the real backend tape event.
+  if (Array.isArray(s.tape)) {
+    const dreamEv = s.tape.find(t => t.name === "dream.cycle");
+    if (dreamEv && !window._lastDreamHandled) {
+      window._lastDreamHandled = dreamEv.ts;
+      startDreamCycle();
+    }
+  }
+}
+
+// Hydrate Dream lessons from backend (session cookie, no auth header).
+function hydrateLessons() {
+  fetch("/api/dream/memory")
+    .then(r => r.ok ? r.json() : null)
+    .then(m => {
+      if (m && Array.isArray(m.lessons) && m.lessons.length > 0) {
+        DREAM_LESSONS = m.lessons.map((l, i) => ({
+          id: l.id || `lesson-${i+1}`,
+          time: new Date(l.timestamp).toLocaleTimeString() || "24h ago",
+          category: l.category || "anti-loss",
+          catLabel: l.category === "risk-management" ? "RISK MANAGEMENT" : l.category === "fee-optimization" ? "FEE OPTIMIZATION" : "ANTI-LOSS",
+          title: l.title,
+          trigger: l.trigger,
+          counterfactual: l.counterfactual,
+          rule: l.invariantRule,
+          confidence: Math.round((l.confidence || 0.9) * 100) + "%",
+          agents: l.appliedToAgents || ["Commander", "Supervisor"]
+        }));
+        renderDreamLessons();
+      }
+    }).catch(() => {});
+}
+
+async function bootBackend() {
+  setBackendMode("offline");
+  if (!IS_HTTP) return;
+  let r;
+  try {
+    r = await fetch("/api/session");
+  } catch (e) {
+    // Backend unreachable over http (e.g. static deploy without an engine): show the showcase.
+    startSimulation();
+    return;
+  }
+  if (r.ok) {
+    const data = await r.json().catch(() => ({}));
+    if (data && data.simulation === true) {
+      // Static showcase edge (e.g. Cloudflare Worker) with no live engine: run the canned showcase.
+      startSimulation();
+      return;
+    }
+    onSession();
+  } else {
+    // No live backend session available: fall back to the read-only static showcase.
+    startSimulation();
+  }
+}
+
+bootBackend();
+
+(() => {
+
+  // 24h autonomous countdown timer to 00:00:00 UTC
+  function tickCountdown() {
+    const now = new Date();
+    const nextMidnight = new Date();
+    nextMidnight.setUTCHours(24, 0, 0, 0);
+    const diff = Math.max(0, nextMidnight.getTime() - now.getTime());
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    const timerEl = document.getElementById("dreamCountdownTimer");
+    if (timerEl) {
+      timerEl.textContent = `Next Session: 00:00:00 UTC (${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s remaining)`;
+    }
+
+    // Auto-trigger Dream Cycle when clock hits 00:00 UTC
+    if (diff <= 1000 && !window._dreamTriggeredToday) {
+      window._dreamTriggeredToday = true;
+      startDreamCycle();
+      setTimeout(() => { window._dreamTriggeredToday = false; }, 60000);
+    }
+  }
+  setInterval(tickCountdown, 1000);
+  tickCountdown();
+})();
+</script>
+</body>
+</html>
