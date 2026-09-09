@@ -174,32 +174,55 @@ async function runPath<Out>(ctx: PathCtx<Out>): Promise<PathResult> {
     { role: "user", content: ctx.user },
   ];
 
-  const call = (withTools: boolean): Promise<ChatResult> => {
+  const fallbackCandidates = role === "primary" && cfg.fallback_models && cfg.fallback_models.length > 0
+    ? [model, ...cfg.fallback_models]
+    : [model];
+
+  const call = async (withTools: boolean): Promise<ChatResult> => {
     if (!(deps.risk.llm_daily_budget_usd > 0) || deps.ledger.llmCostToday() >= deps.risk.llm_daily_budget_usd) {
       return Promise.reject(new Error("daily LLM budget cap exceeded"));
     }
-    return withDeadline(
-      chatFn(
-        {
-          agent: mod.name,
-          model,
-          models: role === "primary" ? cfg.fallback_models : undefined,
-          provider: cfg.provider,
-          temperature: cfg.temperature,
-          maxTokens: MAX_TOKENS,
-          messages,
-          tools: withTools && defs.length > 0 ? defs : undefined,
-          schema: { name: `${mod.name}_out`, json: ctx.schemaJson },
-        },
-        chatDeps,
-      ),
-      signal,
-      role,
-    ).then((r) => {
-      acc.costUsd += r.usage.costUsd;
-      acc.model = r.modelUsed;
-      return r;
-    });
+    let lastErr: unknown;
+    for (let i = 0; i < fallbackCandidates.length; i++) {
+      const currentModel = fallbackCandidates[i]!;
+      try {
+        const r = await withDeadline(
+          chatFn(
+            {
+              agent: mod.name,
+              model: currentModel,
+              provider: cfg.provider,
+              temperature: cfg.temperature,
+              maxTokens: MAX_TOKENS,
+              messages,
+              tools: withTools && defs.length > 0 ? defs : undefined,
+              schema: { name: `${mod.name}_out`, json: ctx.schemaJson },
+            },
+            chatDeps,
+          ),
+          signal,
+          role,
+        );
+        acc.costUsd += r.usage.costUsd;
+        acc.model = r.modelUsed;
+        return r;
+      } catch (err) {
+        lastErr = err;
+        if (err instanceof LlmError && err.code === "credits") throw err;
+        if (err instanceof Error && err.message.includes("budget cap")) throw err;
+        if (i < fallbackCandidates.length - 1) {
+          log.warn("model attempt failed; failing over to next model", {
+            agent: mod.name,
+            role,
+            failedModel: currentModel,
+            nextModel: fallbackCandidates[i + 1],
+            error: err instanceof Error ? err.message : String(err),
+          });
+          continue;
+        }
+      }
+    }
+    throw lastErr;
   };
 
   try {

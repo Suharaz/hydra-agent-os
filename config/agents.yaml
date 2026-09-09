@@ -15,10 +15,10 @@ agents:
     temperature: 0.1
     fallback_models: [gpt-4.1-mini, claude-sonnet-4-5]
   coach:
-    model: gpt-6-astra
+    model: claude-opus-4-5
     cron: "0 0 * * *"
     temperature: 0.4
-    fallback_models: [claude-opus-4-5]
+    fallback_models: [claude-sonnet-4-5, gpt-4.1]
   sales:
     model: deepseek-v4-pro
     interval: 30m
