@@ -10,7 +10,7 @@ import type { AgentConfig, Config, RiskConfig } from "../core/config.ts";
 import type { Env } from "../core/env.ts";
 import type { Ledger } from "../core/ledger.ts";
 import { logger } from "../core/log.ts";
-import { atomicWriteSync } from "../core/state.ts";
+import { atomicWriteSync, readBudgets } from "../core/state.ts";
 import type { AgentDecision, AgentName, AgentRole, EngineId, OpportunityContract } from "../core/types.ts";
 import { agreement } from "./ab.ts";
 import { type ChatResult, chat as defaultChat, LlmError, type LlmErrorCode, type Message, type ToolCall } from "./llm.ts";
@@ -165,6 +165,7 @@ async function runPath<Out>(ctx: PathCtx<Out>): Promise<PathResult> {
     runId,
     role,
     bus: deps.bus,
+    baseUrl: deps.env.llmBaseUrl,
     signal,
     fetch: ((url: string | URL | Request, init?: RequestInit) => realFetch(url, { ...init, signal })) as typeof fetch,
   };
@@ -173,8 +174,11 @@ async function runPath<Out>(ctx: PathCtx<Out>): Promise<PathResult> {
     { role: "user", content: ctx.user },
   ];
 
-  const call = (withTools: boolean): Promise<ChatResult> =>
-    withDeadline(
+  const call = (withTools: boolean): Promise<ChatResult> => {
+    if (!(deps.risk.llm_daily_budget_usd > 0) || deps.ledger.llmCostToday() >= deps.risk.llm_daily_budget_usd) {
+      return Promise.reject(new Error("daily LLM budget cap exceeded"));
+    }
+    return withDeadline(
       chatFn(
         {
           agent: mod.name,
@@ -196,6 +200,7 @@ async function runPath<Out>(ctx: PathCtx<Out>): Promise<PathResult> {
       acc.model = r.modelUsed;
       return r;
     });
+  };
 
   try {
     let toolCalls = 0;
@@ -442,4 +447,156 @@ export async function applyEnginePatches(patches: EnginePatch[], tools: ToolSet)
   if (list.length === 0) return { applied: true, toolRejections: tools.rejections };
   const r = await tools.call("engines.patch", { patches: list.map((p) => ({ ...p, rationale: sanitize(p.rationale, 300) })) });
   return { applied: r.ok, toolRejections: tools.rejections };
+}
+
+// ---- novelty / meaningful work gating --------------------------------------------
+
+/** Material novelty snapshot used to gate automatic scheduled agent runs without calling LLMs. */
+export interface AgentNoveltySnapshot {
+  tradeMaxId: number;
+  tradeCount: number;
+  vetoMaxId: number;
+  vetoCount: number;
+  vetoFingerprint: string;
+  navUsd: number;
+  killLocked: boolean;
+  hasExposure: boolean;
+  netDeltaUsd: number;
+  leverage: number;
+  drawdownPct: number;
+  openOrdersCount: number;
+  budgetsJson: string;
+  limitsHash: string;
+  enginesHash: string;
+  riskHash: string;
+}
+
+/** Result of checking whether an agent has meaningful work to execute. */
+export interface NoveltyGateResult {
+  hasWork: boolean;
+  reason: string;
+}
+
+/** Extracts material ledger, config, and position state into a comparable snapshot. */
+export function extractNoveltySnapshot(deps: AgentDeps): AgentNoveltySnapshot {
+  const t = deps.ledger.db.query<{ maxId: number; cnt: number }, []>(
+    "SELECT COALESCE(MAX(id), 0) AS maxId, COUNT(*) AS cnt FROM trades",
+  ).get()!;
+  const v = deps.ledger.db.query<{ maxId: number; cnt: number }, []>(
+    "SELECT COALESCE(MAX(id), 0) AS maxId, COUNT(*) AS cnt FROM vetoes",
+  ).get()!;
+  // Repeated rejects from the same blocked rule are not new work for an LLM.
+  const vetoFingerprint = deps.ledger.db.query<{ rule: number }, []>(
+    "SELECT DISTINCT rule FROM (SELECT rule FROM vetoes ORDER BY id DESC LIMIT 20) ORDER BY rule",
+  ).all().map(row => row.rule).join(",");
+  const pos = deps.positions;
+  const netDeltaUsd = pos?.netDeltaUsd() ?? 0;
+  const leverage = pos?.leverage() ?? 0;
+  const openOrdersCount = deps.ledger.openOrders().length;
+  const lim = deps.toolDeps.limits();
+  return {
+    tradeMaxId: t.maxId, tradeCount: t.cnt, vetoMaxId: v.maxId, vetoCount: v.cnt, vetoFingerprint,
+    killLocked: deps.toolDeps.killLocked(),
+    hasExposure: Math.abs(netDeltaUsd) > 1e-4 || (Number.isFinite(leverage) && leverage > 1e-4) || openOrdersCount > 0,
+    navUsd: pos?.nav() ?? deps.toolDeps.nav(),
+    netDeltaUsd, leverage, drawdownPct: pos?.drawdownPct() ?? 0, openOrdersCount,
+    budgetsJson: JSON.stringify(readBudgets(deps.stateDir)),
+    limitsHash: JSON.stringify({
+      caps: lim.per_engine_max_notional_usd, paused: lim.engines_paused, navCap: lim.nav_usd_cap,
+      deltaPct: lim.max_net_delta_pct, maxLev: lim.max_leverage, ddKill: lim.daily_drawdown_kill_pct,
+    }),
+    enginesHash: JSON.stringify(deps.toolDeps.engines().engines),
+    riskHash: JSON.stringify({
+      allowed: deps.risk.allowed_symbols, llmBudget: deps.risk.llm_daily_budget_usd,
+      dataBudget: deps.risk.data_daily_budget_usd, transferMax: deps.risk.transfer_max_usd_per_day,
+    }),
+  };
+}
+
+/** Pure gating decision per agent before automatic scheduled invocation. */
+export function checkNoveltyGate(
+  agent: AgentName,
+  current: AgentNoveltySnapshot,
+  lastRecorded: Partial<AgentNoveltySnapshot> | undefined,
+  meta: { bootstrapped?: boolean; lastRunMs?: number; nowMs?: number; starvationMs?: number } = {},
+): NoveltyGateResult {
+  const last = lastRecorded ?? {};
+  switch (agent) {
+    case "supervisor": {
+      // supervisor no exposure/new actionable events => no spend
+      const hasNewVetoes = current.vetoMaxId > (last.vetoMaxId ?? 0) && current.vetoFingerprint !== (last.vetoFingerprint ?? "");
+      const killLockChanged = last.killLocked !== undefined && current.killLocked !== last.killLocked;
+      const drawdownShift = last.drawdownPct !== undefined && Math.abs(current.drawdownPct - last.drawdownPct) >= 0.5;
+      if (current.hasExposure) {
+        return { hasWork: true, reason: "active exposure or open orders" };
+      }
+      if (hasNewVetoes) {
+        return { hasWork: true, reason: `new vetoes recorded (id ${current.vetoMaxId} > ${last.vetoMaxId ?? 0})` };
+      }
+      if (killLockChanged) {
+        return { hasWork: true, reason: `kill lock status changed to ${current.killLocked}` };
+      }
+      if (drawdownShift) {
+        return { hasWork: true, reason: `drawdown changed significantly (${current.drawdownPct}% vs ${last.drawdownPct}%)` };
+      }
+      return { hasWork: false, reason: "no exposure and no new actionable events" };
+    }
+    case "coach": {
+      // coach no new completed trade evidence => skip
+      if (current.tradeCount === 0 || current.tradeMaxId <= (last.tradeMaxId ?? 0)) {
+        return { hasWork: false, reason: "no new completed trade evidence" };
+      }
+      return { hasWork: true, reason: `new completed trades (max id ${current.tradeMaxId} > ${last.tradeMaxId ?? 0})` };
+    }
+    case "treasurer": {
+      // treasurer no budget/exposure/new trade changes => skip
+      const newTrades = current.tradeMaxId > (last.tradeMaxId ?? 0);
+      const budgetChanged = last.budgetsJson !== undefined && current.budgetsJson !== last.budgetsJson;
+      const limitsChanged = last.limitsHash !== undefined && current.limitsHash !== last.limitsHash;
+      const riskBudgetChanged = last.riskHash !== undefined && current.riskHash !== last.riskHash;
+      const exposureChanged =
+        (last.netDeltaUsd !== undefined && Math.abs(current.netDeltaUsd - last.netDeltaUsd) > 50) ||
+        (last.navUsd !== undefined && Math.abs(current.navUsd - last.navUsd) > Math.max(1, Math.abs(last.navUsd) * 0.02)) ||
+        (last.openOrdersCount !== undefined && current.openOrdersCount !== last.openOrdersCount);
+      if (newTrades) return { hasWork: true, reason: "new completed trades landed" };
+      if (budgetChanged || limitsChanged || riskBudgetChanged) return { hasWork: true, reason: "budget or limits config changed" };
+      if (exposureChanged) return { hasWork: true, reason: "exposure or position state changed" };
+      if (lastRecorded === undefined && current.hasExposure) return { hasWork: true, reason: "initial exposure review" };
+      return { hasWork: false, reason: "no budget, exposure, or trade changes" };
+    }
+    case "sales": {
+      // sales no new report evidence => skip
+      if (current.tradeCount === 0 || current.tradeMaxId <= (last.tradeMaxId ?? 0)) {
+        return { hasWork: false, reason: "no new trade or fill report evidence" };
+      }
+      return { hasWork: true, reason: `new trade evidence to report (max id ${current.tradeMaxId} > ${last.tradeMaxId ?? 0})` };
+    }
+    case "commander": {
+      // Commander may bootstrap once then changed meaningful inputs with bounded cadence. Avoid permanently starving cold lane.
+      if (!meta.bootstrapped) {
+        return { hasWork: true, reason: "initial bootstrap run" };
+      }
+      const starvationMs = meta.starvationMs ?? 6 * 3_600_000;
+      if (meta.nowMs !== undefined && meta.lastRunMs !== undefined && meta.nowMs - meta.lastRunMs >= starvationMs) {
+        return { hasWork: true, reason: "starvation prevention cadence reached" };
+      }
+      const enginesChanged = last.enginesHash !== undefined && current.enginesHash !== last.enginesHash;
+      const riskChanged = last.riskHash !== undefined && current.riskHash !== last.riskHash;
+      const newTrades = current.tradeMaxId > (last.tradeMaxId ?? 0);
+      const newVetoes = current.vetoMaxId > (last.vetoMaxId ?? 0) && current.vetoFingerprint !== (last.vetoFingerprint ?? "");
+      const killLockChanged = last.killLocked !== undefined && current.killLocked !== last.killLocked;
+      const exposureChanged =
+        (last.netDeltaUsd !== undefined && Math.abs(current.netDeltaUsd - last.netDeltaUsd) > 50) ||
+        (last.drawdownPct !== undefined && Math.abs(current.drawdownPct - last.drawdownPct) >= 0.5);
+
+      if (enginesChanged) return { hasWork: true, reason: "engine configurations changed" };
+      if (riskChanged) return { hasWork: true, reason: "risk configuration or allowed symbols changed" };
+      if (newTrades) return { hasWork: true, reason: "new completed trades landed" };
+      if (newVetoes) return { hasWork: true, reason: "new vetoes recorded" };
+      if (killLockChanged) return { hasWork: true, reason: "kill lock state changed" };
+      if (exposureChanged) return { hasWork: true, reason: "market exposure or drawdown shifted materially" };
+
+      return { hasWork: false, reason: "no changed meaningful inputs" };
+    }
+  }
 }

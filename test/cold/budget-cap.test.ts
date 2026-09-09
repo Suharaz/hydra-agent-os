@@ -56,10 +56,10 @@ describe("daily LLM budget gates", () => {
     expect(s.due(NOW)).toEqual(["commander", "supervisor", "treasurer"]);
     spend(r, 0.5); // 90%: treasurer paused
     expect(s.due(NOW)).toEqual(["commander", "supervisor"]);
-    spend(r, 0.5); // 100%: only the supervisor
-    expect(s.due(NOW)).toEqual(["supervisor"]);
-    spend(r, 10); // far over: supervisor never gated
-    expect(s.due(NOW)).toEqual(["supervisor"]);
+    spend(r, 0.5); // 100%: no further LLM requests, including supervisor
+    expect(s.due(NOW)).toEqual([]);
+    spend(r, 10);
+    expect(s.due(NOW)).toEqual([]);
   });
 
   test("shadow disabled at >= 70%: the shadow model is never called", async () => {
@@ -103,7 +103,7 @@ describe("daily LLM budget gates", () => {
   test("402 credits pauses every agent (supervisor included) until the next UTC day", async () => {
     const { chat } = fakeChat({
       "test/primary": () => {
-        throw new LlmError("credits", 402, "openrouter: insufficient credits");
+        throw new LlmError("credits", 402, "yescale: insufficient credits");
       },
     });
     const r = rig({ chat });

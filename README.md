@@ -243,7 +243,9 @@ HYDRA derives venue configurations automatically from `HYDRA_MODE`, but allows g
 | `DASHBOARD_PORT` | Local dashboard HTTP/WebSocket port (default `8787`) |
 | `X402_PORT` | Dedicated public port for x402 signal monetization (default `8788`) |
 | `X402_DEMO_PRIVATE_KEY` | Hex private key for demo x402 buyer signature generation |
-| `OPENROUTER_API_KEY` | OpenRouter API authentication token for cold-lane LLM agents |
+| `YESCALE_API_KEY` | YEScale AI Gateway API authentication key for cold-lane LLM agents |
+| `YESCALE_MCP_KEY` | YEScale MCP User Access Key for control plane & quota management (optional) |
+| `LLM_BASE_URL` | Gateway base URL (default `https://api.yescale.io/v1`) |
 | `TELEGRAM_BOT_TOKEN` | Telegram Bot API token for dispatching high-priority safety alerts |
 | `TELEGRAM_CHAT_ID` | Telegram chat identifier receiving safety alerts |
 | `ALERT_WEBHOOK_URL` | Generic HTTP POST fallback endpoint for alerting |

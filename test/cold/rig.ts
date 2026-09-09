@@ -26,7 +26,7 @@ export interface Rig {
 
 export function makeEnv(mode: Mode): Env {
   const env = loadEnv({ source: { HYDRA_MODE: "demo" }, warn: () => {}, notice: () => {} });
-  return { ...env, mode, openrouterApiKey: "test-key" };
+  return { ...env, mode, yescaleApiKey: "test-key" };
 }
 
 export function rig(opts: { mode?: Mode; chat?: AgentDeps["chat"]; nav?: number } = {}): Rig {

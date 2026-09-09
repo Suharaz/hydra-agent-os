@@ -1,6 +1,6 @@
 // Cold-lane scheduler: interval / 5-field cron per agent, per-agent mutex, daily LLM budget gates
-// (shadow off at 70%, coach/sales off at 80%, treasurer off at 90%, commander off at 100%,
-// supervisor never gated), agents.yaml hot-reload, hourly pnl_1h back-fill, and a full pause until
+// (shadow off at 70%, coach/sales off at 80%, treasurer off at 90%, commander/supervisor off at 100%),
+// agents.yaml hot-reload, hourly pnl_1h back-fill, and a full pause until
 // the next UTC day when OpenRouter reports no credits. `createAgentsModule` wires it into boot.
 
 import { bus as defaultBus, type Bus } from "../core/bus.ts";
@@ -18,7 +18,16 @@ import type { Module } from "../main.ts";
 import type { Catalog } from "../pay/catalog.ts";
 import type { Signer } from "../pay/client.ts";
 import { backfillPnl1h } from "./ab.ts";
-import { type AgentDeps, type AgentModule, type AgentRunResult, runAgent } from "./agent.ts";
+import {
+  type AgentDeps,
+  type AgentModule,
+  type AgentNoveltySnapshot,
+  type AgentRunResult,
+  checkNoveltyGate,
+  extractNoveltySnapshot,
+  type NoveltyGateResult,
+  runAgent,
+} from "./agent.ts";
 import { coach } from "./agents/coach.ts";
 import { commander } from "./agents/commander.ts";
 import { sales } from "./agents/sales.ts";
@@ -30,9 +39,10 @@ const log = logger("cold.scheduler");
 export const TICK_MS = 5_000;
 const HOUR_MS = 3_600_000;
 const DAY_MS = 86_400_000;
+export const STARVATION_MS = 6 * HOUR_MS;
 
 /** Budget fraction (spent / daily cap) at which each gate closes. */
-export const BUDGET_GATES = { shadow: 0.7, coach: 0.8, sales: 0.8, treasurer: 0.9, commander: 1.0 } as const;
+export const BUDGET_GATES = { shadow: 0.7, coach: 0.8, sales: 0.8, treasurer: 0.9, commander: 1.0, supervisor: 1.0 } as const;
 
 // biome-ignore lint/suspicious/noExplicitAny: heterogeneous module map keyed by agent name
 export const AGENT_MODULES: Record<AgentName, AgentModule<any>> = { commander, supervisor, treasurer, coach, sales };
@@ -101,11 +111,14 @@ export interface SchedulerDeps extends AgentDeps {
 export class Scheduler {
   private readonly deps: SchedulerDeps;
   private readonly lastRun: Partial<Record<AgentName, number>> = {};
+  private readonly lastActualRun: Partial<Record<AgentName, number>> = {};
   private readonly running: Partial<Record<AgentName, Promise<AgentRunResult>>> = {};
   private timer: Timer | null = null;
   private unwatch: (() => void) | null = null;
   private agentsCfg: AgentsConfig;
   private lastBackfill = 0;
+  private readonly lastSnapshots: Partial<Record<AgentName, AgentNoveltySnapshot>> = {};
+  private commanderBootstrapped = false;
   /** Wall ms until which every agent is paused (402 from OpenRouter); 0 = not paused. */
   pausedUntil = 0;
 
@@ -125,10 +138,20 @@ export class Scheduler {
     return this.deps.ledger.llmCostToday() / cap;
   }
 
+  /** Operator "start again": clear the credits pause so agents resume before the UTC-day boundary. */
+  resume(): void {
+    this.pausedUntil = 0;
+  }
+
+  /** Cold-lane health for the operator dashboard (OpenRouter pause + daily-budget usage). */
+  coldLaneStatus(): { enabled: boolean; paused: boolean; pausedUntil: number; budgetPct: number } {
+    return { enabled: true, paused: this.pausedUntil > this.now(), pausedUntil: this.pausedUntil, budgetPct: Math.min(1, this.budgetFraction()) };
+  }
+
   /** True when the daily budget gate lets `name` run at `fraction` spent. */
   static allowed(name: AgentName, fraction: number): boolean {
-    if (name === "supervisor") return true;
-    return fraction < BUDGET_GATES[name];
+    if (fraction >= 1.0) return false;
+    return fraction < (BUDGET_GATES[name] ?? 1.0);
   }
 
   private scheduled(name: AgentName, cfg: AgentConfig, nowMs: number): boolean {
@@ -141,8 +164,46 @@ export class Scheduler {
     return false;
   }
 
+  /** Evaluates whether an agent has meaningful work to do before an automatic scheduled invocation. */
+  hasMeaningfulWork(name: AgentName, nowMs: number = this.now()): NoveltyGateResult {
+    const current = extractNoveltySnapshot(this.deps);
+    const last = this.lastSnapshots[name];
+    const meta = {
+      bootstrapped: this.commanderBootstrapped,
+      lastRunMs: this.lastActualRun[name],
+      nowMs,
+      starvationMs: STARVATION_MS,
+    };
+    return checkNoveltyGate(name, current, last, meta);
+  }
+
+  /** Records the current material state baseline after an agent runs. */
+  recordNoveltyBaseline(name: AgentName, snap?: AgentNoveltySnapshot): void {
+    const s = snap ?? extractNoveltySnapshot(this.deps);
+    this.lastSnapshots[name] = s;
+    this.lastActualRun[name] = (this.deps.now ?? Date.now)();
+    if (name === "commander") {
+      this.commanderBootstrapped = true;
+    }
+  }
+
+  /** Runtime service status for dashboard bridge. Active means scheduled service is enabled (not thinking). */
+  runtimeStatus(): Record<AgentName, { active: boolean }> {
+    const isPaused = this.pausedUntil > this.now();
+    const out = {} as Record<AgentName, { active: boolean }>;
+    for (const name of AGENT_NAMES) {
+      const cfg = this.agentsCfg.agents[name];
+      const hasModule = this.deps.modules[name] !== undefined;
+      const isConfigured = cfg !== undefined && (cfg.interval !== undefined || cfg.cron !== undefined);
+      out[name] = {
+        active: this.timer !== null && hasModule && isConfigured && !isPaused && Scheduler.allowed(name, this.budgetFraction()),
+      };
+    }
+    return out;
+  }
+
   /** Agents whose schedule fires at `nowMs` and whom the budget / pause / mutex gates let run. */
-  due(nowMs: number = this.now()): AgentName[] {
+  due(nowMs: number = this.now(), opts?: { filterNovelty?: boolean }): AgentName[] {
     if (this.pausedUntil > nowMs) return [];
     if (this.pausedUntil !== 0) this.pausedUntil = 0;
     const fraction = this.budgetFraction();
@@ -152,7 +213,12 @@ export class Scheduler {
       const cfg = this.agentsCfg.agents[name];
       if (cfg === undefined || this.running[name] !== undefined) continue;
       if (!Scheduler.allowed(name, fraction)) continue;
-      if (this.scheduled(name, cfg, nowMs)) out.push(name);
+      if (this.scheduled(name, cfg, nowMs)) {
+        if (opts?.filterNovelty && !this.hasMeaningfulWork(name, nowMs).hasWork) {
+          continue;
+        }
+        out.push(name);
+      }
     }
     return out;
   }
@@ -167,14 +233,21 @@ export class Scheduler {
     return cfg;
   }
 
-  /** Runs `name` now (ignores schedule and budget gates; honours the per-agent mutex by joining an in-flight run). */
+  /** Manual runs bypass schedule/novelty, never the daily cap or credit pause. */
   runNow(name: AgentName): Promise<AgentRunResult> {
     const inflight = this.running[name];
     if (inflight !== undefined) return inflight;
+    if (this.pausedUntil > this.now()) {
+      return Promise.reject(new Error("cold lane paused: yescale credits exhausted"));
+    }
+    if (this.budgetFraction() >= 1.0) {
+      return Promise.reject(new Error("daily LLM budget cap exceeded"));
+    }
     const mod = this.deps.modules[name];
     if (mod === undefined) return Promise.reject(new Error(`unknown agent ${name}`));
     const cfg = this.configFor(name);
     this.lastRun[name] = this.now();
+    this.recordNoveltyBaseline(name);
     const p = runAgent(mod, cfg, this.deps)
       .then((r) => {
         if (r.primary.errorCode === "credits" || r.shadow?.errorCode === "credits") this.pauseForCredits();
@@ -191,12 +264,19 @@ export class Scheduler {
     const until = utcDayStartMs(this.now()) + DAY_MS;
     if (this.pausedUntil >= until) return;
     this.pausedUntil = until;
-    log.error("openrouter credits exhausted: cold lane paused until next UTC day", { until: new Date(until).toISOString() });
+    log.error("yescale credits exhausted: cold lane paused until next UTC day", { until: new Date(until).toISOString() });
     this.deps.ledger.event("agent.paused", JSON.stringify({ reason: "credits", until }));
   }
 
   tick(nowMs: number = this.now()): void {
     for (const name of this.due(nowMs)) {
+      const novelty = this.hasMeaningfulWork(name, nowMs);
+      if (!novelty.hasWork) {
+        this.lastRun[name] = nowMs;
+        this.lastSnapshots[name] ??= extractNoveltySnapshot(this.deps);
+        log.info("scheduled agent run skipped: no meaningful work", { agent: name, reason: novelty.reason });
+        continue;
+      }
       this.runNow(name).catch((err) => log.error("agent run failed", { agent: name, error: err instanceof Error ? err.message : String(err) }));
     }
     if (nowMs - this.lastBackfill >= HOUR_MS) {
@@ -325,9 +405,9 @@ export function createAgentsModule(ctx: AgentsModuleContext): Module & { schedul
       return scheduler;
     },
     start() {
-      const apiKey = ctx.env.openrouterApiKey;
+      const apiKey = ctx.env.yescaleApiKey;
       if (apiKey === null) {
-        log.warn("OPENROUTER_API_KEY not set: cold lane (LLM agents) disabled");
+        log.warn("YESCALE_API_KEY not set: cold lane (LLM agents) disabled");
         return;
       }
       const built = buildAgentDeps(ctx, apiKey);

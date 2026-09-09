@@ -147,7 +147,21 @@ export function hotLaneModules(ctx: ModuleContext): HotLane {
       dreamScheduler = null;
     },
   };
-  const dashboard = createDashboard({ ...ctx, hot: { feed, registry: engines.registry, executor } });
+  const dashboard = createDashboard({
+    ...ctx,
+    hot: { feed, registry: engines.registry, executor },
+    agentRuntime: () => agents.scheduler?.runtimeStatus() ?? {
+      commander: { active: false }, supervisor: { active: false },
+      treasurer: { active: false }, coach: { active: false }, sales: { active: false },
+    },
+    coldLane: () => (agents.scheduler ? agents.scheduler.coldLaneStatus() : { enabled: false, paused: false, pausedUntil: 0, budgetPct: 0 }),
+    resumeColdLane: () => {
+      const s = agents.scheduler;
+      if (s === null) return false;
+      s.resume();
+      return true;
+    },
+  });
   return {
     modules: [feed, executor, userdata, engines, agents, seller, dream, dashboard.module],
     feed,

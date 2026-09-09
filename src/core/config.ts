@@ -31,12 +31,12 @@ export class ConfigError extends Error {
 
 // ---- schemas --------------------------------------------------------------
 
-export const MODEL_ID = /^[a-z0-9-]+\/[a-z0-9._:-]+$/;
+export const MODEL_ID = /^([a-z0-9-]+\/)?[a-z0-9._:-]+$/;
 /** `5m`, `30s`, `1h`, `250ms`, `1d`. */
 export const DURATION = /^[1-9]\d*(ms|s|m|h|d)$/;
 const CRON = /^\s*\S+\s+\S+\s+\S+\s+\S+\s+\S+\s*$/;
 
-const modelId = z.string().regex(MODEL_ID, "expected OpenRouter model id provider/model[:variant]");
+const modelId = z.string().regex(MODEL_ID, "expected model id [provider/]model[:variant]");
 
 export const ProviderSchema = z.looseObject({
   order: z.array(z.string()).optional(),

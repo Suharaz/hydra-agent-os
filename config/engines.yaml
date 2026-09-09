@@ -7,61 +7,61 @@ engines:
   liqfade:
     enabled: true
     paper: false
-    symbols: [ETHUSDT, BTCUSDT]
+    symbols: [ ETHUSDT, BTCUSDT ]
     sizeUsd: 200
     params:
-      windowMs: 3000        # 1000-5000  cascade window for consecutive forceOrder samples
-      minSnapshots: 2       # 2-5        same-side samples inside the window
-      minSampleUsd: 200000  # 5e4-1e6    each sample's notional
-      minGapBps: 8          # 2-30       |mark - index| in the cascade direction
-      minBurstRatio: 3      # 1-10       one-sided taker USD 1 s / (ADV / 86400)
-      minDispBps: 40        # 10-100     price displacement vs 1-min VWAP
-      tpBps: 35             # 10-100
-      slBps: 25             # 10-100
-      maxHoldMs: 120000     # 3e4-3e5    time stop
-      chaseMs: 400          # 100-2000   LIMIT ttl before the executor gives up
-      allowMarket: true     #            MARKET when the book is not usable for a LIMIT
+      windowMs: 3000 # 1000-5000  cascade window for consecutive forceOrder samples
+      minSnapshots: 2 # 2-5        same-side samples inside the window
+      minSampleUsd: 200000 # 5e4-1e6    each sample's notional
+      minGapBps: 8 # 2-30       |mark - index| in the cascade direction
+      minBurstRatio: 3 # 1-10       one-sided taker USD 1 s / (ADV / 86400)
+      minDispBps: 40 # 10-100     price displacement vs 1-min VWAP
+      tpBps: 35 # 10-100
+      slBps: 25 # 10-100
+      maxHoldMs: 120000 # 3e4-3e5    time stop
+      chaseMs: 400 # 100-2000   LIMIT ttl before the executor gives up
+      allowMarket: true #            MARKET when the book is not usable for a LIMIT
   basis:
     enabled: true
     paper: false
-    symbols: [BTCUSDT]
+    symbols: [ BTCUSDT ]
     sizeUsd: 200
     params:
-      lookbackSec: 300      # 60-900     z-score window (1 s samples)
-      zEntry: 2             # 1-4
-      zExit: 0.5            # 0-1
-      maxHoldMs: 120000     # 3e4-3e5
+      lookbackSec: 300 # 60-900     z-score window (1 s samples)
+      zEntry: 2 # 1-4
+      zExit: 0.5 # 0-1
+      maxHoldMs: 120000 # 3e4-3e5
   convert:
     enabled: false
     paper: true
     symbols: []
     sizeUsd: 100
     params:
-      minEdgeBps: 20        # 5-100
-      pollMs: 5000          # 1000-60000
+      minEdgeBps: 20 # 5-100
+      pollMs: 5000 # 1000-60000
   smmirror:
     enabled: false
     paper: true
     symbols: []
     sizeUsd: 100
     params:
-      minScore: 80          # 50-100     leaderboard score of the source wallet
-      slipBps: 10           # 0-50       spot LIMIT above the ask
-      tpBps: 40             # 10-100
-      slBps: 30             # 10-100
-      exitOnSellPct: 40     # 10-100     close when the source wallet sells this share of its entry
-      maxTokenAgeSec: 3600  # 60-86400   ignore tracker events older than this
+      minScore: 80 # 50-100     leaderboard score of the source wallet
+      slipBps: 10 # 0-50       spot LIMIT above the ask
+      tpBps: 40 # 10-100
+      slBps: 30 # 10-100
+      exitOnSellPct: 40 # 10-100     close when the source wallet sells this share of its entry
+      maxTokenAgeSec: 3600 # 60-86400   ignore tracker events older than this
   cexdex:
     enabled: false
     paper: true
     symbols: []
     sizeUsd: 100
     params:
-      minEdgeBps: 25        # 5-100      net of 10 bps fees + gas + DEX half-spread
+      minEdgeBps: 25 # 5-100      net of 10 bps fees + gas + DEX half-spread
   tokstock:
     enabled: false
     paper: true
     symbols: []
     sizeUsd: 100
     params:
-      devBps: 60            # 20-200     token vs reference deviation
+      devBps: 60 # 20-200     token vs reference deviation

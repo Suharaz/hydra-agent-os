@@ -697,6 +697,8 @@ export interface ExecutorStack {
   onchain: OnchainAdapter | null;
   symbols: SymbolFilters;
   killDeps: KillDeps;
+  /** Where the book's starting equity came from; set once by the module after boot reconcile. */
+  funding: { initialUsd: number | null; source: string };
   kill(reason: string): Promise<KillResult>;
   /** Loads exchange filters; tolerant of offline venues. */
   loadSymbols(): Promise<void>;
@@ -791,6 +793,7 @@ export function buildExecutor(ctx: ExecutorContext): ExecutorStack {
     onchain,
     symbols,
     killDeps,
+    funding: { initialUsd: null, source: "not reconciled yet" },
     kill: killFn,
     async loadSymbols() {
       if (futuresRest !== null) {
@@ -846,6 +849,18 @@ export function createExecutorModule(ctx: ExecutorContext): Module & { stack: Ex
       await recoverBoot({ futuresRest: stack.futuresRest, spotRest: stack.spotRest, ledger: ctx.ledger, executor: stack.executor, positions: stack.positions, stateDir: ctx.stateDir });
       await recoverFills({ ledger: ctx.ledger, futuresRest: stack.futuresRest ?? undefined, spotRest: stack.spotRest ?? undefined, futuresSymbols: ctx.config.risk.allowed_symbols.futures, spotSymbols: ctx.config.risk.allowed_symbols.spot, bus });
       await stack.positions.reconcile();
+      // Pure paper means no venue REST at all: seed the configured NAV cap so engines can trade
+      // against the live feed. Any connected venue (testnet, demo, live) — keyed or not — keeps its
+      // reconciled balance, even when zero; seeding on top would fight reconcile and trip the breakers.
+      if (stack.futuresRest === null && stack.spotRest === null) {
+        stack.positions.setCash(ctx.config.risk.nav_usd_cap);
+        stack.positions.resetDayAnchor();
+        stack.positions.dayStartNav();
+        stack.funding = { initialUsd: ctx.config.risk.nav_usd_cap, source: "Paper seed from risk.nav_usd_cap (no exchange account configured)" };
+        log.info("paper book funded for demo trading", { navUsd: ctx.config.risk.nav_usd_cap });
+      } else {
+        stack.funding = { initialUsd: stack.positions.nav(), source: `Binance spot=${ctx.env.spot} futures=${ctx.env.futures} account balance, reconciled at boot` };
+      }
       const s = stack;
       offKill = bus.on("system.kill", (e) => {
         if (e.actor === "kill") return; // emitted by kill() itself

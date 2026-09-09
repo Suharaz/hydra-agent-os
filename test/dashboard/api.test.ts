@@ -1,4 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { writeFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 import { loadConfig } from "../../src/core/config.ts";
 import { authed, type Rig, startRig } from "./helpers.ts";
 
@@ -38,13 +40,12 @@ describe("PUT /api/config/agents", () => {
     const cfg = loadConfig(rig.dir).agents.agents.commander;
     expect(cfg.model).toBe("anthropic/claude-sonnet-4.6");
     expect(cfg.temperature).toBe(0.3);
-    expect(cfg.shadow_model).toBe("openai/gpt-5.6-sol");
 
     const rows = configChanges();
     expect(rows).toHaveLength(1);
     expect(rows[0]?.actor).toBe("operator:bearer");
     expect(rows[0]?.path).toContain("agents.yaml");
-    expect(JSON.parse(rows[0]?.diff ?? "{}")).toMatchObject({ "agents.commander.model": { from: "anthropic/claude-fable-5.1", to: "anthropic/claude-sonnet-4.6" } });
+    expect(JSON.parse(rows[0]?.diff ?? "{}")).toMatchObject({ "agents.commander.model": { from: "claude-fable-5-1", to: "anthropic/claude-sonnet-4.6" } });
 
     const get = (await (await fetch(`${rig.base}/api/config/agents`, authed())).json()) as { agents: { commander: { model: string } } };
     expect(get.agents.commander.model).toBe("anthropic/claude-sonnet-4.6");
@@ -88,6 +89,7 @@ describe("POST /api/kill", () => {
 
 describe("POST /api/config/agents/:agent/promote-shadow", () => {
   test("swaps shadow into primary (old primary becomes the shadow); agent without a shadow is 400", async () => {
+    await put("/api/config/agents", { commander: { shadow_model: "openai/gpt-5.6-sol" } });
     const before = loadConfig(rig.dir).agents.agents.commander;
     expect(before.shadow_model).toBeDefined();
     const res = await post("/api/config/agents/commander/promote-shadow", {});
@@ -125,5 +127,28 @@ describe("reads", () => {
     expect(models.models).toEqual(["openai/gpt-5.6-luna"]);
     const pnl = (await (await fetch(`${rig.base}/api/ledger/pnl?days=7`, authed())).json()) as { days: number; total: { net: number } };
     expect(pnl).toMatchObject({ days: 7, total: { net: 0 } });
+  });
+});
+
+describe("truthful dashboard data", () => {
+  test("order sizing cannot become account equity when the executor is unavailable", async () => {
+    const state = (await (await fetch(`${rig.base}/api/state`)).json()) as { capital: { navUsd: number | null; initialUsd: number | null }; executor: { started: boolean } };
+    expect(state.capital.navUsd).toBeNull();
+    expect(state.capital.initialUsd).toBeNull();
+    expect(state.executor.started).toBe(false);
+  });
+
+  test("dream memory uses this dashboard's state directory and excludes unverified legacy lessons", async () => {
+    const file = join(rig.stateDir, "dream-memory.json");
+    writeFileSync(file, JSON.stringify({
+      updatedAt: Date.now(), totalCycles: 3, history: [],
+      lessons: [{ id: "lesson-01", title: "Synthetic loss", invariantRule: "Always trade", confidence: 0.96 }],
+    }));
+    const res = await fetch(`${rig.base}/api/dream/memory`);
+    expect(res.status).toBe(200);
+    const memory = (await res.json()) as { lessons: unknown[]; totalCycles: number };
+    expect(memory.lessons).toEqual([]);
+    expect(memory.totalCycles).toBe(0);
+    expect(existsSync(`${file}.quarantine`)).toBe(true);
   });
 });

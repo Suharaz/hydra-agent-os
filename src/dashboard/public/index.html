@@ -129,6 +129,7 @@
   </section>
   <section class="c6"><h2><span class="n">7</span>payments &amp; spend</h2>
     <div class="kv"><b>LLM today</b><span id="llmSpend">-</span><b>data today</b><span id="dataSpend">-</span></div>
+    <div class="kv" style="margin-top:6px"><b>cold lane (LLM)</b><span id="coldLaneStatus">-</span> <button id="resumeCold" class="op" style="display:none;margin-left:8px">▶ Resume</button></div>
     <div class="scroll" style="max-height:200px;margin-top:6px"><table><thead><tr><th>t</th><th>dir</th><th>counterparty</th><th class="num">amount</th><th>asset</th><th>network</th><th>tx</th></tr></thead><tbody id="payments"></tbody></table></div>
   </section>
   <section class="c6"><h2><span class="n">9</span>settings</h2>
@@ -165,7 +166,7 @@
 </main>
 <script>
 (() => {
-  const MODEL_ID = /^[a-z0-9-]+\/[a-z0-9._:-]+$/;
+  const MODEL_ID = /^([a-z0-9-]+\/)?[a-z0-9._:-]+$/;
   const DURATION = /^[1-9]\d*(ms|s|m|h|d)$/;
   const AGENTS = ["commander", "supervisor", "treasurer", "coach", "sales"];
   const $ = (id) => document.getElementById(id);
@@ -270,6 +271,11 @@
     else banner.className = "";
     $("llmSpend").innerHTML = spend(s.spend.llmTodayUsd, s.spend.llmBudgetUsd);
     $("dataSpend").innerHTML = spend(s.spend.dataTodayUsd, s.spend.dataBudgetUsd);
+    { const llm = s.llm || {}; const cl = $("coldLaneStatus"); const rb = $("resumeCold");
+      if (!llm.enabled) { cl.innerHTML = '<span class="pill bad">DISABLED — set YESCALE_API_KEY in panel 12</span>'; rb.style.display = "none"; }
+      else if (llm.paused) { cl.innerHTML = `<span class="pill bad">PAUSED — YEScale credits/limit; auto-retry ${llm.pausedUntil ? new Date(llm.pausedUntil).toLocaleString() : "next UTC day"}</span>`; rb.style.display = role === "operator" ? "inline-block" : "none"; }
+      else if ((llm.budgetPct || 0) >= 1) { cl.innerHTML = '<span class="pill warn">DAILY BUDGET CAP reached — raise llm_daily_budget_usd (panel 9)</span>'; rb.style.display = "none"; }
+      else { cl.innerHTML = `<span class="pill ok">OK</span> <span class="mut">${Math.round((llm.budgetPct || 0) * 100)}% of daily budget</span>`; rb.style.display = "none"; } }
     $("payments").innerHTML = s.payments.map((p) => `<tr><td>${time(p.ts_wall)}</td><td class="${p.direction === "in" ? "pos" : "neg"}">${p.direction}</td><td class="mut">${esc(p.counterparty.slice(0, 12))}…</td><td class="num">${fmt(p.amount, 4)}</td><td>${p.asset}</td><td>${p.network}</td><td class="mut">${esc(p.tx.slice(0, 14))}…</td></tr>`).join("") || '<tr><td colspan="7" class="mut">no payments yet</td></tr>';
     if (!settingsDirty && JSON.stringify(s.agents.config) !== JSON.stringify(lastAgents)) { lastAgents = s.agents.config; renderSettings(s.agents.config, s.agents.overrides, s.spend); }
     $("enginesYaml").textContent = JSON.stringify(Object.fromEntries(s.engines.map((e) => [e.id, { enabled: e.enabled, paper: e.paper, symbols: e.symbols, sizeUsd: e.sizeUsd, params: e.params }])), null, 2);
@@ -299,12 +305,12 @@
     for (const tr of $("agentRows").querySelectorAll("tr")) {
       const a = tr.dataset.agent; const prev = lastAgents[a]; const p = {};
       const val = (n) => { const i = tr.querySelector(`[name=${n}]`); return i ? i.value.trim() : undefined; };
-      const model = val("model"); if (!MODEL_ID.test(model)) problems.push(`${a}.model: expected provider/model`); else if (model !== prev.model) p.model = model;
+      const model = val("model"); if (!MODEL_ID.test(model)) problems.push(`${a}.model: expected model id`); else if (model !== prev.model) p.model = model;
       const shadow = val("shadow_model");
-      if (shadow) { if (!MODEL_ID.test(shadow)) problems.push(`${a}.shadow_model: expected provider/model`); else if (shadow !== prev.shadow_model) p.shadow_model = shadow; }
+      if (shadow) { if (!MODEL_ID.test(shadow)) problems.push(`${a}.shadow_model: expected model id`); else if (shadow !== prev.shadow_model) p.shadow_model = shadow; }
       else if (prev.shadow_model) problems.push(`${a}.shadow_model: clearing is not supported from the dashboard (edit agents.yaml); set a model or promote it`);
       const fb = val("fallback_models"); const fbList = fb ? fb.split(",").map((x) => x.trim()).filter(Boolean) : [];
-      if (fbList.some((x) => !MODEL_ID.test(x))) problems.push(`${a}.fallback_models: every entry must be provider/model`);
+      if (fbList.some((x) => !MODEL_ID.test(x))) problems.push(`${a}.fallback_models: every entry must be a valid model id`);
       else if (fbList.length > 0 && JSON.stringify(fbList) !== JSON.stringify(prev.fallback_models || [])) p.fallback_models = fbList;
       const t = Number(val("temperature")); if (!(t >= 0 && t <= 2)) problems.push(`${a}.temperature: 0..2`); else if (t !== prev.temperature) p.temperature = t;
       const iv = val("interval"); if (iv !== undefined) { if (!DURATION.test(iv)) problems.push(`${a}.interval: e.g. 5m, 30s`); else if (iv !== prev.interval) p.interval = iv; }
@@ -388,7 +394,8 @@
     ["BINANCE_SPOT_API_SECRET", "Binance Spot API secret"],
     ["BINANCE_FUTURES_API_KEY", "Binance Futures API key"],
     ["BINANCE_FUTURES_API_SECRET", "Binance Futures API secret"],
-    ["OPENROUTER_API_KEY", "OpenRouter API key (LLM agents)"],
+    ["YESCALE_API_KEY", "YEScale API key (LLM agents)"],
+    ["YESCALE_MCP_KEY", "YEScale MCP key (control plane)"],
     ["X402_DEMO_PRIVATE_KEY", "x402 demo signer private key"],
     ["TELEGRAM_BOT_TOKEN", "Telegram bot token (alerts)"],
     ["TELEGRAM_CHAT_ID", "Telegram chat id"],
@@ -439,6 +446,10 @@
     try { const r = await api("/api/secrets/unlock", { method: "POST", body: JSON.stringify({ passphrase }) }); msg.className = "msg ok"; msg.textContent = `passphrase OK — ${(r.present || []).length} keys currently stored`; }
     catch (err) { msg.className = "msg err"; msg.textContent = err.message; }
   });
+  $("resumeCold").addEventListener("click", async () => {
+    try { await api("/api/agents/resume", { method: "POST" }); $("coldLaneStatus").innerHTML = '<span class="pill ok">resuming…</span>'; }
+    catch (err) { alert(err.message || "resume failed"); }
+  });
 
   // ---- boot ---------------------------------------------------------------
   const boot = async () => {
@@ -446,7 +457,10 @@
     // Pre-session builds kept the operator token here; purge it from any browser that still has it.
     localStorage.removeItem("hydra.token");
     let session;
-    try { session = await api("/api/session"); } catch (err) { if (err.status !== 401) $("conn").textContent = err.message; return; }
+    try { session = await api("/api/session"); }
+    catch (err) { if (err.status !== 401) $("conn").textContent = err.message; showLogin(); return; }
+    // Admin console is operator-only: anonymous/viewer sees the login gate, never the dashboard.
+    if (!session || session.role !== "operator") { setRole(null); showLogin("Admin console — sign in with your operator account"); return; }
     setRole(session.role);
     try { render(await api("/api/state")); } catch (err) { if (err.status !== 401) $("conn").textContent = err.message; return; }
     connect(); loadRuns(); loadAb(); loadAudit();

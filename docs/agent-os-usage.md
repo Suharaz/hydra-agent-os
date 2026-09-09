@@ -285,12 +285,12 @@ Any attempt by an agent to execute an unapproved tool (e.g. `transfer_assets`, `
 
 ---
 
-## 6. OpenRouter Cold-Lane LLM Integration
+## 6. YEScale Cold-Lane LLM Integration
 
-The cold-lane supervisory agents (Commander, Supervisor, Treasurer, Coach, Sales) communicate with OpenRouter using a thin, direct `fetch` client with no heavy external agent SDKs.
+The cold-lane supervisory agents (Commander, Supervisor, Treasurer, Coach, Sales) communicate with YEScale AI Gateway using a thin, direct `fetch` client with no heavy external agent SDKs.
 
 **Implementation File:** `src/cold/llm.ts`  
-**Endpoint:** `POST https://openrouter.ai/api/v1/chat/completions`
+**Endpoint:** `POST https://api.yescale.io/v1/chat/completions`
 
 ### 6.1 Request Wire Format
 
@@ -298,18 +298,13 @@ Requests enforce structured outputs and parameter validation:
 
 ```json
 {
-  "model": "anthropic/claude-fable-5.1",
-  "models": ["deepseek/deepseek-v4-pro"],
+  "model": "claude-fable-5-1",
+  "models": ["gpt-5.6-sol"],
   "messages": [
     { "role": "system", "content": "..." },
     { "role": "user", "content": "..." }
   ],
   "temperature": 0.2,
-  "provider": {
-    "require_parameters": true,
-    "allow_fallbacks": true
-  },
-  "usage": { "include": true },
   "tools": [
     {
       "type": "function",
@@ -333,7 +328,7 @@ Requests enforce structured outputs and parameter validation:
 ### 6.2 Error Handling & Telemetry
 - **HTTP 429 (Rate Limit):** Inspects `Retry-After` header and retries once (clamped between 2,000 ms and 30,000 ms).
 - **HTTP 402 (Insufficient Credits):** Emits `system.llm_credits` over the event bus and halts further scheduled runs until the next UTC day. The hot execution lane remains entirely unaffected.
-- **Ledger Recording:** Every call is persisted to the `llm_calls` SQLite table recording prompt tokens, completion tokens, dollar cost, execution latency in milliseconds, and the actual model ID selected by OpenRouter's fallback router.
+- **Ledger Recording:** Every call is persisted to the `llm_calls` SQLite table recording prompt tokens, completion tokens, dollar cost, execution latency in milliseconds, and the actual model ID selected by YEScale's gateway router.
 
 ## 7. Dashboard Access
 

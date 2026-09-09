@@ -1,18 +1,29 @@
-// Dream Coin — 24-Hour Nightly AI Self-Reflection & Neural Memory Distillation
-// Each night at 00:00 (or triggered on demand), the system reviews all filled,
-// lost, and vetoed trades across the last 24h, analyzes root causes via counterfactual
-// reasoning, distills invariant lessons, and updates the Dream Memory Bank.
+// Dream Coin — 24-Hour Nightly Ledger Audit & Evidence-Backed Review
+// Each night at 00:00 UTC (or triggered on demand), the system reviews all filled,
+// lost, and vetoed trades across the last 24h from the authentic ledger.
+// Fabricated/synthetic lessons, counterfactual profits, and imaginary parameter
+// adjustments are strictly eliminated. Truthful ledger counts only.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { Bus } from "../core/bus.ts";
-import type { Ledger } from "../core/ledger.ts";
+import type { Ledger, LedgerReader } from "../core/ledger.ts";
 import { logger } from "../core/log.ts";
 import type { DreamCycleEvent } from "../core/types.ts";
 
 const log = logger("dream");
 
+export const DREAM_SCHEMA_VERSION = 2;
+export const DEFAULT_MEMORY_PATH = "state/dream-memory.json";
+
 export type LessonCategory = "anti-loss" | "risk-management" | "fee-optimization" | "execution";
+
+export interface DreamLessonProvenance {
+  source: "ledger" | "synthetic" | "manual";
+  evidenceCount?: number;
+  reviewedAt?: number;
+  [key: string]: unknown;
+}
 
 export interface DreamLesson {
   id: string;
@@ -24,6 +35,17 @@ export interface DreamLesson {
   invariantRule: string;
   confidence: number;
   appliedToAgents: string[];
+  verified?: boolean;
+  source?: "ledger" | "synthetic" | "manual";
+  provenance?: DreamLessonProvenance;
+}
+
+export interface DreamParameterAdjustment {
+  engine: string;
+  param: string;
+  from: number | string;
+  to: number | string;
+  reason: string;
 }
 
 export interface DreamCycleResult {
@@ -31,165 +53,224 @@ export interface DreamCycleResult {
   tradesReviewed: number;
   lossTradesCount: number;
   vetoCount: number;
+  fillsCount?: number;
   lessonsDistilled: DreamLesson[];
-  parameterAdjustments: Array<{
-    engine: string;
-    param: string;
-    from: number | string;
-    to: number | string;
-    reason: string;
-  }>;
+  parameterAdjustments: DreamParameterAdjustment[];
   narrative: string;
+  status?: "completed" | "skipped" | "empty";
 }
-
 export interface DreamMemoryStore {
+  version: number;
   updatedAt: number;
   totalCycles: number;
   lessons: DreamLesson[];
   history: DreamCycleResult[];
+  unverifiedLessons?: DreamLesson[];
+  unverifiedHistory?: DreamCycleResult[];
+  quarantineBackupPath?: string;
 }
 
-export const DEFAULT_MEMORY_PATH = "state/dream-memory.json";
 
-export const SEED_LESSONS: DreamLesson[] = [
-  {
-    id: "lesson-01",
-    timestamp: Date.now() - 86400000,
-    category: "anti-loss",
-    title: "Prohibit LiqFade Entries Under Severe Negative Funding (< -0.025%)",
-    trigger: "SOL -$6.00 stop-loss triggered as second liquidation cascade overwhelmed wick bids.",
-    counterfactual: "If waiting for funding rate to normalize above -0.01%, position avoids secondary cascade pressure.",
-    invariantRule: "LiqFade only activates when funding_rate >= -0.020% across all derivative altcoins.",
-    confidence: 0.94,
-    appliedToAgents: ["commander", "supervisor", "coach"]
-  },
-  {
-    id: "lesson-02",
-    timestamp: Date.now() - 172800000,
-    category: "risk-management",
-    title: "Reduce Order Size by 50% Ahead of High-Impact Macro News (CPI/FOMC)",
-    trigger: "ETHUSDT spread widened from 0.8 bps to 18.2 bps within 30s during Fed rate announcement.",
-    counterfactual: "If auto-reducing max notional to $2,500 ahead of release, slippage adverse impact drops 75%.",
-    invariantRule: "Automatically engage Macro-Guard mode ahead of scheduled high-volatility economic announcements.",
-    confidence: 0.98,
-    appliedToAgents: ["supervisor", "commander"]
-  },
-  {
-    id: "lesson-03",
-    timestamp: Date.now() - 259200000,
-    category: "execution",
-    title: "Reject DEX Smart Money Copies When Price Impact Exceeds 10 bps",
-    trigger: "Copy-trade of whale 0x7a2... on Uniswap v3 incurred 14.5 bps slippage due to thin pool liquidity.",
-    counterfactual: "If placing limit orders or routing to equivalent Binance Spot pair, profit margin gains +$34.00.",
-    invariantRule: "SmartMoney Mirror on DEX must verify pool depth: reject order if estimated impact > 10 bps.",
-    confidence: 0.91,
-    appliedToAgents: ["coach", "treasurer"]
-  }
-];
+/**
+ * Shape validation for loaded dream memory stores.
+ */
+function isValidStoreShape(parsed: unknown): parsed is Partial<DreamMemoryStore> {
+  return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+}
 
+function verifiedLesson(value: unknown): value is DreamLesson {
+  if (typeof value !== "object" || value === null) return false;
+  const l = value as DreamLesson;
+  return l.verified === true && l.source === "ledger"
+    && ["anti-loss", "risk-management", "fee-optimization", "execution"].includes(l.category)
+    && [l.id, l.title, l.trigger, l.counterfactual, l.invariantRule].every(v => typeof v === "string")
+    && Number.isFinite(l.timestamp) && Number.isFinite(l.confidence)
+    && l.confidence >= 0 && l.confidence <= 1
+    && Array.isArray(l.appliedToAgents) && l.appliedToAgents.every(v => typeof v === "string");
+}
+
+/**
+ * Safely loads Dream Memory. If synthetic or unversioned memory is encountered,
+ * it is migrated: original file preserved in a quarantine backup, legacy lessons
+ * marked as unverified and excluded from active memory / prompts / API.
+ */
 export function loadDreamMemory(filePath: string = DEFAULT_MEMORY_PATH): DreamMemoryStore {
-  try {
-    if (existsSync(filePath)) {
-      const content = readFileSync(filePath, "utf-8");
-      return JSON.parse(content);
-    }
-  } catch (err) {
-    log.warn("failed to read dream memory, creating new store", { error: String(err) });
+  if (!existsSync(filePath)) return createFreshStore(filePath);
+  // I/O errors must not be mistaken for malformed JSON or overwrite an unreadable file.
+  const raw = readFileSync(filePath, "utf-8");
+  let parsed: unknown;
+  try { parsed = JSON.parse(raw); } catch { parsed = null; }
+  if (isValidStoreShape(parsed) && typeof parsed.version === "number" && parsed.version > DREAM_SCHEMA_VERSION) {
+    throw new Error("unsupported future dream memory version");
   }
+  const current = isValidStoreShape(parsed) && parsed.version === DREAM_SCHEMA_VERSION
+    && Number.isSafeInteger(parsed.totalCycles) && (parsed.totalCycles ?? -1) >= 0
+    && Number.isFinite(parsed.updatedAt)
+    && Array.isArray(parsed.lessons) && parsed.lessons.every(verifiedLesson)
+    && Array.isArray(parsed.history) && parsed.history.every(h =>
+      h && Number.isFinite(h.timestamp) && ["empty", "completed"].includes(h.status ?? "")
+      && [h.tradesReviewed, h.lossTradesCount, h.vetoCount, h.fillsCount ?? 0].every(n => Number.isSafeInteger(n) && n >= 0)
+      && typeof h.narrative === "string" && Array.isArray(h.lessonsDistilled)
+      && h.lessonsDistilled.every(verifiedLesson) && Array.isArray(h.parameterAdjustments) && h.parameterAdjustments.length === 0);
+  if (current) return parsed as DreamMemoryStore;
+  // Preserve the exact legacy bytes before replacing any active state. Historical
+  // synthetic counters are not carried into the verified cycle count.
+  const quarantineBackupPath = quarantineFile(filePath, raw);
+  const store = createFreshStore(filePath);
+  store.quarantineBackupPath = quarantineBackupPath;
+  saveDreamMemory(store, filePath);
+  return store;
+}
 
+function quarantineFile(filePath: string, content: string): string {
+  const base = `${filePath}.quarantine`;
+  const quarantinePath = existsSync(base) ? `${base}.${crypto.randomUUID()}` : base;
+  mkdirSync(dirname(quarantinePath), { recursive: true });
+  writeFileSync(quarantinePath, content, { encoding: "utf-8", flag: "wx" });
+  return quarantinePath;
+}
+
+function createFreshStore(filePath: string): DreamMemoryStore {
   const initialStore: DreamMemoryStore = {
+    version: DREAM_SCHEMA_VERSION,
     updatedAt: Date.now(),
-    totalCycles: 3,
-    lessons: SEED_LESSONS,
-    history: []
+    totalCycles: 0,
+    lessons: [],
+    history: [],
+    unverifiedLessons: [],
   };
   saveDreamMemory(initialStore, filePath);
   return initialStore;
 }
 
 export function saveDreamMemory(store: DreamMemoryStore, filePath: string = DEFAULT_MEMORY_PATH): void {
-  try {
-    mkdirSync(dirname(filePath), { recursive: true });
-    writeFileSync(filePath, JSON.stringify(store, null, 2), "utf-8");
-  } catch (err) {
-    log.error("failed to save dream memory", { error: String(err) });
-  }
+  mkdirSync(dirname(filePath), { recursive: true });
+  writeFileSync(filePath, JSON.stringify(store, null, 2), "utf-8");
 }
 
-/** Formats distilled lessons into a strict prompt injection for all LLM agents */
+/**
+ * Formats distilled lessons into an advisory prompt for LLM agents.
+ * Strictly excludes unverified and synthetic lessons.
+ * Never injects synthetic lessons as mandatory trading rules.
+ */
 export function formatDreamMemoryPrompt(lessons: DreamLesson[]): string {
-  if (lessons.length === 0) return "";
-  const lines = lessons.slice(0, 10).map((l, idx) => {
-    return `${idx + 1}. [${l.category.toUpperCase()}] ${l.title}\n   - Invariant Rule: ${l.invariantRule}`;
+  if (!Array.isArray(lessons) || lessons.length === 0) return "";
+
+  // Strictly filter to verified ledger-backed lessons
+  const verified = lessons.filter(verifiedLesson);
+
+  if (verified.length === 0) return "";
+
+  const lines = verified.slice(0, 10).map((l, idx) => {
+    return `${idx + 1}. [${l.category.toUpperCase()}] ${l.title}\n   - Advisory Rule: ${l.invariantRule}`;
   });
-  return `\n## NEURAL MEMORY & LEARNED INVARIANT RULES (DREAM COIN - DO NOT VIOLATE)\nThese rules were distilled from past real trade losses and risk vetoes. You MUST strictly adhere to them in all decisions:\n${lines.join("\n")}\n`;
+
+  return `\n## LEDGER OBSERVATIONS & RISK ADVISORIES (DREAM COIN)\nThese advisories reflect empirical ledger observations. They are non-mandatory risk guidelines:\n${lines.join("\n")}\n`;
 }
 
-/** Runs a 24h Dream Reflection Cycle to review trades and extract lessons */
+/**
+ * Runs a truthful 24h Dream Reflection Cycle reviewing trades, fills, and vetoes
+ * from the authentic SQLite ledger.
+ *
+ * Missing ledger CANNOT claim completed review: returns skipped status without
+ * incrementing cycles or recording history.
+ */
 export function executeDreamCycle(
   filePath: string = DEFAULT_MEMORY_PATH,
   bus?: Bus,
-  ledger?: Ledger,
+  ledger?: Ledger | LedgerReader,
 ): DreamCycleResult {
-  const store = loadDreamMemory(filePath);
   const now = Date.now();
 
-  const newLesson: DreamLesson = {
-    id: `lesson-${String(store.lessons.length + 1).padStart(2, "0")}`,
-    timestamp: now,
-    category: "fee-optimization",
-    title: "Route Sub-$2,500 Rebalance Orders via Binance Convert RFQ",
-    trigger: "Sub-$2,000 Spot executions incurred 7.5 bps taker fees, eroding 18% of scalping alpha.",
-    counterfactual: "If routed via Binance Convert RFQ with zero trading fees, net profit increases by +$42.00.",
-    invariantRule: "All stablecoin and blue-chip rebalancing orders under $2,500 must prioritize Convert RFQ.",
-    confidence: 0.96,
-    appliedToAgents: ["commander", "treasurer"],
-  };
+  // Missing ledger cannot claim completed review
+  if (!ledger) {
+    log.warn("dream cycle skipped: missing ledger cannot claim completed review");
+    return {
+      timestamp: now,
+      tradesReviewed: 0,
+      lossTradesCount: 0,
+      vetoCount: 0,
+      fillsCount: 0,
+      lessonsDistilled: [],
+      parameterAdjustments: [],
+      narrative: "Dream cycle skipped: missing ledger cannot claim completed review.",
+      status: "skipped",
+    };
+  }
+  const db = ledger.db;
+  const store = loadDreamMemory(filePath);
+  const windowMs = 86_400_000;
+  const sinceMs = now - windowMs;
+
+  const tradeStats = db
+    .query<{ totalTrades: number; lossTrades: number }, [number]>(
+      `SELECT
+         COUNT(*) AS totalTrades,
+         COALESCE(SUM(CASE WHEN realized - fees < 0 THEN 1 ELSE 0 END), 0) AS lossTrades
+       FROM trades WHERE ts_wall >= ?`,
+    )
+    .get(sinceMs) ?? { totalTrades: 0, lossTrades: 0 };
+
+  const fillStats = db
+    .query<{ totalFills: number }, [number]>("SELECT COUNT(*) AS totalFills FROM fills WHERE ts_wall >= ?")
+    .get(sinceMs) ?? { totalFills: 0 };
+
+  const vetoStats = db
+    .query<{ totalVetoes: number }, [number]>("SELECT COUNT(*) AS totalVetoes FROM vetoes WHERE ts_wall >= ?")
+    .get(sinceMs) ?? { totalVetoes: 0 };
+
+  const tradesReviewed = tradeStats.totalTrades;
+  const fillsCount = fillStats.totalFills;
+  const lossTradesCount = tradeStats.lossTrades;
+  const vetoCount = vetoStats.totalVetoes;
+
+  // No invented lessons, confidence, counterfactual profits, or parameter changes
+  const lessonsDistilled: DreamLesson[] = [];
+  const parameterAdjustments: DreamParameterAdjustment[] = [];
+
+  const narrative =
+    tradesReviewed === 0 && fillsCount === 0 && vetoCount === 0
+      ? "Dream 24h review complete: 0 trades reviewed, 0 fills, 0 losses, 0 risk vetoes. Empty review: no evidence to analyze."
+      : `Dream 24h review complete: ${tradesReviewed} trades reviewed (${fillsCount} fills), ${lossTradesCount} losses, ${vetoCount} risk vetoes across past 24h. No automated parameter adjustments without verified policy evidence.`;
 
   const result: DreamCycleResult = {
     timestamp: now,
-    tradesReviewed: 1482,
-    lossTradesCount: 12,
-    vetoCount: 3,
-    lessonsDistilled: [newLesson],
-    parameterAdjustments: [
-      {
-        engine: "liqfade",
-        param: "cascadeThresholdUsd",
-        from: 1000000,
-        to: 850000,
-        reason: "Optimized threshold sensitivity following liquidation cascade wick absorption lesson",
-      },
-      {
-        engine: "basis",
-        param: "minFundingAprPct",
-        from: 12.0,
-        to: 13.5,
-        reason: "Tightened filter threshold to exclusively target pairs with dominant funding rate spreads",
-      },
-    ],
-    narrative: "Dream Coin 24h neural reflection cycle complete: Analyzed 1,482 executions, isolated 12 stop-loss events. Successfully distilled 1 new Invariant Golden Rule and injected into Commander & Supervisor Neural Memory.",
+    tradesReviewed,
+    lossTradesCount,
+    vetoCount,
+    fillsCount,
+    lessonsDistilled,
+    parameterAdjustments,
+    narrative,
+    status: tradesReviewed === 0 && fillsCount === 0 && vetoCount === 0 ? "empty" : "completed",
   };
 
-  store.lessons.unshift(newLesson);
   store.history.unshift(result);
   store.totalCycles += 1;
   store.updatedAt = now;
 
   saveDreamMemory(store, filePath);
-  log.info("dream cycle completed", { lessonsCount: store.lessons.length, totalCycles: store.totalCycles });
+  log.info("dream cycle completed", {
+    tradesReviewed,
+    lossTradesCount,
+    vetoCount,
+    fillsCount,
+    totalCycles: store.totalCycles,
+  });
 
   const eventPayload: DreamCycleEvent = {
     timestamp: now,
-    tradesReviewed: result.tradesReviewed,
-    lossTradesCount: result.lossTradesCount,
-    vetoCount: result.vetoCount,
-    newLessonTitle: newLesson.title,
-    narrative: result.narrative,
+    tradesReviewed,
+    lossTradesCount,
+    vetoCount,
+    newLessonTitle: "",
+    narrative,
   };
 
   bus?.emit("dream.cycle", eventPayload);
-  ledger?.event("dream.cycle", JSON.stringify(eventPayload));
+  if (ledger && typeof (ledger as { event?: unknown }).event === "function") {
+    (ledger as { event: (kind: string, json?: string | null) => void }).event("dream.cycle", JSON.stringify(eventPayload));
+  }
 
   return result;
 }
@@ -197,12 +278,11 @@ export function executeDreamCycle(
 export interface DreamSchedulerOptions {
   filePath?: string;
   bus?: Bus;
-  ledger?: Ledger;
+  ledger?: Ledger | LedgerReader;
   /** Check interval in ms (default: 30,000 ms) */
   intervalMs?: number;
 }
 
-/** Starts the autonomous background daemon that triggers Dream Reflection every 24h at 00:00 UTC */
 export interface AutonomousDreamScheduler {
   stop: () => void;
   runNow: () => DreamCycleResult;

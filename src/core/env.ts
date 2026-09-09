@@ -32,7 +32,9 @@ export interface Env {
   dashboardPort: number;
   x402Port: number;
   x402DemoPrivateKey: string | null;
-  openrouterApiKey: string | null;
+  yescaleApiKey: string | null;
+  yescaleMcpKey: string | null;
+  llmBaseUrl: string;
   telegramBotToken: string | null;
   telegramChatId: string | null;
   alertWebhook: string | null;
@@ -52,7 +54,7 @@ export interface Env {
   dashboardPasswordGenerated: boolean;
 }
 
-const MODEL_ID = /^[a-z0-9-]+\/[a-z0-9._:-]+$/;
+const MODEL_ID = /^([a-z0-9-]+\/)?[a-z0-9._:-]+$/;
 const blank = (v: unknown) => (typeof v === "string" && v.trim() === "" ? undefined : v);
 const optStr = z.preprocess(blank, z.string().optional());
 const port = (def: number) => z.preprocess(blank, z.coerce.number().int().min(1).max(65535).default(def));
@@ -77,7 +79,9 @@ const RawEnv = z.object({
   DASHBOARD_PORT: port(8787),
   X402_PORT: port(8788),
   X402_DEMO_PRIVATE_KEY: optStr,
-  OPENROUTER_API_KEY: optStr,
+  YESCALE_API_KEY: optStr,
+  YESCALE_MCP_KEY: optStr,
+  LLM_BASE_URL: z.preprocess(blank, z.string().url().default("https://api.yescale.io/v1")),
   TELEGRAM_BOT_TOKEN: optStr,
   TELEGRAM_CHAT_ID: optStr,
   ALERT_WEBHOOK_URL: z.preprocess(blank, z.string().url().optional()),
@@ -201,15 +205,17 @@ export function loadEnv(opts: LoadEnvOptions = {}): Env {
     warn("[env] no alert channel configured in live mode (TELEGRAM_BOT_TOKEN/CHAT_ID or ALERT_WEBHOOK_URL)");
   }
 
-  const openrouterApiKey = r.OPENROUTER_API_KEY ?? null;
-  if (openrouterApiKey === null) warn("[env] OPENROUTER_API_KEY absent; cold lane (LLM agents) disabled");
+  const yescaleApiKey = r.YESCALE_API_KEY ?? null;
+  const yescaleMcpKey = r.YESCALE_MCP_KEY ?? null;
+  const llmBaseUrl = r.LLM_BASE_URL;
+  if (yescaleApiKey === null) warn("[env] YESCALE_API_KEY absent; cold lane (LLM agents) disabled");
 
   const modelOverrides: Partial<Record<AgentName, string>> = {};
   for (const agent of AGENT_NAMES) {
     const raw = blank(source[`HYDRA_MODEL_${agent.toUpperCase()}`]);
     if (raw === undefined) continue;
     if (typeof raw !== "string" || !MODEL_ID.test(raw)) {
-      problems.push(`HYDRA_MODEL_${agent.toUpperCase()}: invalid OpenRouter model id "${String(raw)}"`);
+      problems.push(`HYDRA_MODEL_${agent.toUpperCase()}: invalid model id "${String(raw)}"`);
       continue;
     }
     modelOverrides[agent] = raw;
@@ -230,7 +236,9 @@ export function loadEnv(opts: LoadEnvOptions = {}): Env {
     dashboardPort: r.DASHBOARD_PORT,
     x402Port: r.X402_PORT,
     x402DemoPrivateKey: r.X402_DEMO_PRIVATE_KEY ?? null,
-    openrouterApiKey,
+    yescaleApiKey,
+    yescaleMcpKey,
+    llmBaseUrl,
     telegramBotToken,
     telegramChatId,
     alertWebhook,

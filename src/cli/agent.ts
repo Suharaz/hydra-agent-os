@@ -34,9 +34,9 @@ export default async function agent(args: string[]): Promise<number> {
   });
   let code = 1;
   try {
-    const apiKey = rt.env.openrouterApiKey;
+    const apiKey = rt.env.yescaleApiKey;
     if (apiKey === null) {
-      console.error("OPENROUTER_API_KEY not set; cold lane disabled");
+      console.error("YESCALE_API_KEY not set; cold lane disabled");
       return 1;
     }
     const lane = hot as HotLane | null;

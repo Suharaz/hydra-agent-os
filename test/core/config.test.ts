@@ -51,7 +51,7 @@ describe("schemas", () => {
   });
 
   test("bad model id rejected", () => {
-    for (const model of ["gpt-5", "OpenAI/gpt-5", "openai/", "openai/gpt 5", "a/b/c!"]) {
+    for (const model of ["OpenAI/gpt-5", "openai/", "openai/gpt 5", "a/b/c!"]) {
       const r = AgentsSchema.safeParse({ agents: { ...valid.agents, sales: { ...valid.agents.sales, model } } });
       expect(r.success).toBe(false);
     }
@@ -144,8 +144,8 @@ describe("writes", () => {
     expect(seen.map((s) => s.model)).toEqual(["x/y", "x/z"]);
     // YAML comments/structure preserved: file still parses and other agents untouched.
     const cfg = loadConfig(dir).agents.agents;
-    expect(cfg.commander.shadow_model).toBe("openai/gpt-5.6-sol");
-    expect(cfg.supervisor.model).toBe("deepseek/deepseek-v4-pro");
+    expect(cfg.treasurer.model).toBe("gpt-5.6-sol");
+    expect(cfg.supervisor.model).toBe("deepseek-v4-pro");
   });
 
   test("invalid patch is rejected and file untouched", async () => {

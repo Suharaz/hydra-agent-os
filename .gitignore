@@ -24,3 +24,5 @@ __pycache__/
 # harness / agent scratch — not part of the project
 .omp/
 hackathon-form-answers.txt
+hydra-survey-answers.txt
+hydra-x-post.txt

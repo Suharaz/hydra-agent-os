@@ -53,7 +53,7 @@ export const SNAPSHOT_MS = 250;
 export const WS_MAX_BUFFERED = 1024 * 1024;
 export const WS_MAX_CLIENTS = 8;
 export const BODY_LIMIT_BYTES = 64 * 1024;
-export const MODELS_URL = "https://openrouter.ai/api/v1/models";
+export const MODELS_URL = "https://api.yescale.io/v1/models";
 const MODELS_TTL_MS = 60_000;
 const TAPE_SIZE = 200;
 const LOG_LINES = 100;
@@ -96,6 +96,9 @@ export interface DashboardDeps {
   stateDir: string;
   configDir: string;
   hot: DashboardHot;
+  agentRuntime?: () => Record<AgentName, { active: boolean }>;
+  coldLane?: () => { enabled: boolean; paused: boolean; pausedUntil: number; budgetPct: number };
+  resumeColdLane?: () => boolean;
   port?: number;
   /** Loopback only; anything else throws DashboardBindError unless `allowNonLoopbackForTests`. */
   hostname?: string;
@@ -308,9 +311,9 @@ export function capabilities(env: Env): Capability[] {
     { name: "market data", on: true, detail: `${env.futures === "live" ? "fstream" : "demo-fstream"} + spot ${env.spot}` },
     cex("futures"),
     cex("spot"),
-    env.openrouterApiKey === null
-      ? { name: "LLM agents (cold lane)", on: false, detail: "off — set OPENROUTER_API_KEY" }
-      : { name: "LLM agents (cold lane)", on: true, detail: "OpenRouter" },
+    env.yescaleApiKey === null
+      ? { name: "LLM agents (cold lane)", on: false, detail: "off — set YESCALE_API_KEY" }
+      : { name: "LLM agents (cold lane)", on: true, detail: "YEScale" },
     env.onchain === "live"
       ? { name: "on-chain (baw)", on: true, detail: `live via ${env.bawBin}` }
       : { name: "on-chain (baw)", on: false, detail: "paper adapter — set ONCHAIN=live + BAW_BIN (Linux/WSL)" },
@@ -325,9 +328,12 @@ export function capabilities(env: Env): Capability[] {
   ];
 }
 
-async function fetchOpenRouterModels(): Promise<string[]> {
-  const res = await fetch(MODELS_URL, { signal: AbortSignal.timeout(8000) });
-  if (!res.ok) throw new Error(`openrouter ${res.status}`);
+async function fetchYescaleModels(apiKey?: string | null, baseUrl: string = MODELS_URL.replace(/\/models$/, "")): Promise<string[]> {
+  const headers: Record<string, string> = {};
+  if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+  const url = `${baseUrl}/models`;
+  const res = await fetch(url, { headers, signal: AbortSignal.timeout(8000) });
+  if (!res.ok) throw new Error(`yescale ${res.status}`);
   const body = (await res.json()) as { data?: Array<{ id?: unknown }> };
   const ids: string[] = [];
   for (const m of body.data ?? []) if (typeof m.id === "string") ids.push(m.id);
@@ -342,7 +348,7 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
   const viewerToken = deps.env.dashboardViewerToken;
   const dashboardUser = deps.env.dashboardUser;
   const dashboardPassword = deps.env.dashboardPassword;
-  const fetchModels = deps.fetchModels ?? fetchOpenRouterModels;
+  const fetchModels = deps.fetchModels ?? (() => fetchYescaleModels(deps.env.yescaleApiKey, deps.env.llmBaseUrl));
   const now = deps.now ?? Date.now;
   const sessions = new SessionStore({ idleMs: DEFAULT_IDLE_MS, absoluteMs: DEFAULT_ABSOLUTE_MS, max: DEFAULT_MAX_SESSIONS, now });
   const lockout = new Lockout({ ...DEFAULT_LOCKOUT, now });
@@ -457,6 +463,11 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
       venues: venueMatrix(deps.env).map(([venue, flag, realMoney]) => ({ venue, flag, realMoney })),
       capabilities: capabilities(deps.env),
       latency: db.latencyStats(now - DAY_MS),
+      capital: {
+        initialUsd: stack?.funding.initialUsd ?? null,
+        navUsd: stack?.positions.nav() ?? null,
+        source: stack?.funding.source ?? "executor not started",
+      },
       books,
       spot,
       tape,
@@ -473,12 +484,13 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
       engines: engineRows(now),
       agents:
         role === "operator"
-          ? { config: agents.agents, overrides: deps.env.modelOverrides }
+          ? { config: agents.agents, overrides: deps.env.modelOverrides, runtime: deps.agentRuntime?.() ?? {} }
           : {
               config: Object.fromEntries(
                 Object.entries(agents.agents).map(([k, c]) => [k, { ...c, model: "hidden", shadow_model: c.shadow_model === undefined ? undefined : "hidden", fallback_models: [] }]),
               ),
               overrides: {},
+              runtime: deps.agentRuntime?.() ?? {},
             },
       spend: {
         llmTodayUsd: db.llmCostToday(),
@@ -486,6 +498,7 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
         dataTodayUsd: db.dataSpendToday(),
         dataBudgetUsd: r.data_daily_budget_usd,
       },
+      llm: deps.coldLane?.() ?? { enabled: deps.env.yescaleApiKey !== null, paused: false, pausedUntil: 0, budgetPct: 0 },
       payments,
       vetoes: db.recentVetoes(20),
       // Log lines can echo config diffs, wallet labels and error bodies: operator only.
@@ -708,6 +721,13 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
     return c.json({ rows });
   });
 
+  app.post("/api/agents/resume", (c) => {
+    if (c.get("auth").role !== "operator") return c.json({ error: "operator role required" }, 403);
+    const ok = deps.resumeColdLane?.() ?? false;
+    log.info("cold lane resume requested via dashboard", { ok, session: c.get("auth").session });
+    return c.json({ ok, resumed: ok });
+  });
+
   // ---- secrets (operator-only): UI-managed credentials, AES-256-GCM encrypted at rest ----------
   // Values apply on the NEXT process start (see main.ts): saving never mutates the live process,
   // matching the fail-fast env model. The launch env must carry HYDRA_MASTER_PASSPHRASE for a saved
@@ -865,7 +885,11 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
   });
 
   app.get("/api/dream/memory", (c) => {
-    return c.json(loadDreamMemory());
+    const memory = loadDreamMemory(join(deps.stateDir, "dream-memory.json"));
+    return c.json({
+      version: memory.version, updatedAt: memory.updatedAt, totalCycles: memory.totalCycles,
+      lessons: memory.lessons, history: memory.history,
+    });
   });
 
   let dreamRunning = false;
@@ -875,7 +899,7 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
     if (dreamRunning) return c.json({ error: "dream cycle already running" }, 409);
     dreamRunning = true;
     try {
-      const result = executeDreamCycle();
+      const result = executeDreamCycle(join(deps.stateDir, "dream-memory.json"), deps.bus ?? globalBus, deps.ledger);
       c.set("auditDetail", { bodyDigest: c.get("auditDetail")?.bodyDigest });
       return c.json({ ok: true, result });
     } finally {
@@ -884,7 +908,7 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
   });
 
   app.get("/api/dream/status", (c) => {
-    const mem = loadDreamMemory();
+    const mem = loadDreamMemory(join(deps.stateDir, "dream-memory.json"));
     const now = Date.now();
     const tomorrow = new Date(now);
     tomorrow.setUTCHours(24, 0, 0, 0);

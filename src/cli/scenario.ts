@@ -5,7 +5,7 @@
 // lines and ends with `scenario N: OK|SKIPPED(reason)`; exit 0 on OK/SKIPPED, 1 on failure.
 //
 //   1 liquidation-fade replay -> engine intent -> kernel -> paper/demo order + fill + latency
-//   2 Commander cycle on OpenRouter (needs OPENROUTER_API_KEY) -> engines.yaml diff from config_changes
+//   2 Commander cycle on YEScale (needs YESCALE_API_KEY) -> engines.yaml diff from config_changes
 //   3 Supervisor tighten overlay -> injected drawdown -> Guardian kill -> per-venue flatten -> unkill
 //   4 real Skills HTTP token audit (FAIL) -> smart-money push -> kernel veto in `vetoes`
 //   5 external buyer pays for /v1/signals/liquidation over x402 (mock facilitator in demo)
@@ -43,7 +43,7 @@ export interface ScenarioSpec {
 
 export const SCENARIOS: readonly ScenarioSpec[] = [
   { n: 1, title: "liquidation-fade replay -> intent -> kernel -> order/fill + latency", needs: "" },
-  { n: 2, title: "Commander regime change -> engines.yaml diff", needs: "OPENROUTER_API_KEY" },
+  { n: 2, title: "Commander regime change -> engines.yaml diff", needs: "YESCALE_API_KEY" },
   { n: 3, title: "Supervisor tighten -> Guardian kill -> per-venue flatten -> kill.lock -> unkill", needs: "" },
   { n: 4, title: "smart-money mirror with real Skills HTTP audit FAIL -> kernel veto", needs: "network to web3.binance.com" },
   { n: 5, title: "external agent buys a signal over x402 (mock facilitator in demo)", needs: "" },
@@ -291,10 +291,10 @@ async function scenario1(b: Booted, live: boolean): Promise<Outcome> {
 
 async function scenario2(b: Booted): Promise<Outcome> {
   const say = narrator();
-  const apiKey = b.rt.env.openrouterApiKey;
+  const apiKey = b.rt.env.yescaleApiKey;
   const cfg = b.rt.config.agents.agents.commander;
   say(`commander config: model=${cfg.model} shadow=${cfg.shadow_model ?? "none"} interval=${cfg.interval ?? cfg.cron ?? "?"}`);
-  if (apiKey === null) return { skipped: "OPENROUTER_API_KEY not set; cold lane disabled (set it in .env to run the Commander on OpenRouter)" };
+  if (apiKey === null) return { skipped: "YESCALE_API_KEY not set; cold lane disabled (set it in .env to run the Commander on YEScale)" };
   const lastChange = b.rt.ledger.db.query<{ id: number | null }, []>("SELECT MAX(id) AS id FROM config_changes").get()?.id ?? 0;
   const { deps, stop } = buildAgentDeps(
     { env: b.rt.env, config: b.rt.config, ledger: b.rt.ledger, stateDir: STATE_DIR, configDir: CONFIG_DIR, stack: () => b.stack, registry: b.hot.registry },

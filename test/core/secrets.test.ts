@@ -28,14 +28,14 @@ const PASS = "correct horse battery";
 describe("secrets store", () => {
   test("round-trips a map under the passphrase", () => {
     const dir = scratch();
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: "sk-or-abc", BINANCE_SPOT_API_KEY: "k", BINANCE_SPOT_API_SECRET: "s" });
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: "sk-or-abc", BINANCE_SPOT_API_KEY: "k", BINANCE_SPOT_API_SECRET: "s" });
     expect(secretsExist(dir)).toBe(true);
-    expect(readSecrets(dir, PASS)).toEqual({ OPENROUTER_API_KEY: "sk-or-abc", BINANCE_SPOT_API_KEY: "k", BINANCE_SPOT_API_SECRET: "s" });
+    expect(readSecrets(dir, PASS)).toEqual({ YESCALE_API_KEY: "sk-or-abc", BINANCE_SPOT_API_KEY: "k", BINANCE_SPOT_API_SECRET: "s" });
   });
 
   test("a wrong passphrase cannot decrypt", () => {
     const dir = scratch();
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: "sk-or-abc" });
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: "sk-or-abc" });
     expect(() => readSecrets(dir, "wrong passphrase here")).toThrow(SecretsError);
     expect(verifyPassphrase(dir, "wrong passphrase here")).toBe(false);
     expect(verifyPassphrase(dir, PASS)).toBe(true);
@@ -44,7 +44,7 @@ describe("secrets store", () => {
   test("no secret value is written in the clear", () => {
     const dir = scratch();
     const secret = "sk-or-super-secret-value-xyz";
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: secret, TELEGRAM_BOT_TOKEN: "12345:tok" });
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: secret, TELEGRAM_BOT_TOKEN: "12345:tok" });
     const onDisk = readFileSync(secretsPath(dir), "utf8");
     expect(onDisk.includes(secret)).toBe(false);
     expect(onDisk.includes("12345:tok")).toBe(false);
@@ -52,22 +52,22 @@ describe("secrets store", () => {
 
   test("present lists stored key names without the passphrase", () => {
     const dir = scratch();
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: "x", BAW_BIN: "/usr/bin/baw" });
-    expect(secretsPresent(dir).sort()).toEqual(["BAW_BIN", "OPENROUTER_API_KEY"]);
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: "x", BAW_BIN: "/usr/bin/baw" });
+    expect(secretsPresent(dir).sort()).toEqual(["BAW_BIN", "YESCALE_API_KEY"]);
   });
 
   test("blank and whitespace-only values are not stored", () => {
     const dir = scratch();
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: "keep", BINANCE_SPOT_API_KEY: "", BINANCE_SPOT_API_SECRET: "   " });
-    expect(readSecrets(dir, PASS)).toEqual({ OPENROUTER_API_KEY: "keep" });
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: "keep", BINANCE_SPOT_API_KEY: "", BINANCE_SPOT_API_SECRET: "   " });
+    expect(readSecrets(dir, PASS)).toEqual({ YESCALE_API_KEY: "keep" });
   });
 
   test("merge preserves omitted keys, overrides provided, and clears on whitespace", () => {
     const dir = scratch();
-    writeSecrets(dir, PASS, { OPENROUTER_API_KEY: "old", BINANCE_SPOT_API_KEY: "keep-me" });
-    const present = mergeSecrets(dir, PASS, { OPENROUTER_API_KEY: "new", TELEGRAM_CHAT_ID: "42", BINANCE_SPOT_API_KEY: " " });
-    expect(present.sort()).toEqual(["OPENROUTER_API_KEY", "TELEGRAM_CHAT_ID"]);
-    expect(readSecrets(dir, PASS)).toEqual({ OPENROUTER_API_KEY: "new", TELEGRAM_CHAT_ID: "42" });
+    writeSecrets(dir, PASS, { YESCALE_API_KEY: "old", BINANCE_SPOT_API_KEY: "keep-me" });
+    const present = mergeSecrets(dir, PASS, { YESCALE_API_KEY: "new", TELEGRAM_CHAT_ID: "42", BINANCE_SPOT_API_KEY: " " });
+    expect(present.sort()).toEqual(["TELEGRAM_CHAT_ID", "YESCALE_API_KEY"]);
+    expect(readSecrets(dir, PASS)).toEqual({ TELEGRAM_CHAT_ID: "42", YESCALE_API_KEY: "new" });
   });
 
   test("reading or verifying a nonexistent store is a bootstrap, not an error", () => {

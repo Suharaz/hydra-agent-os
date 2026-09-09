@@ -74,6 +74,8 @@ export class Guardian {
   private drawdownTripped = false;
   private killPending = false;
   private jumpTripped = false;
+  /** Wall ms the loop started; the NAV-jump breaker is suppressed for one window while NAV establishes. */
+  private startedAtMs = 0;
 
   constructor(deps: GuardianDeps) {
     this.risk = deps.risk;
@@ -94,6 +96,7 @@ export class Guardian {
 
   start(): void {
     if (this.timer !== null) return;
+    this.startedAtMs = this.clock();
     this.timer = setInterval(() => this.tick(), this.intervalMs);
     this.tick();
   }
@@ -128,7 +131,9 @@ export class Guardian {
 
     const ref = this.oldestNavWithin(now);
     this.pushSample(now, nav);
-    if (ref > 0) {
+    // Suppress the jump breaker for the first window: cold start ramps NAV from 0 to the funded value
+    // (keys load, first reconcile) which is not a real anomaly. Real jumps after warmup still trip.
+    if (ref > 0 && now - this.startedAtMs >= JUMP_WINDOW_MS) {
       const jump = (Math.abs(nav - ref) / ref) * 100;
       if (jump > this.risk.nav_jump_alert_pct) {
         if (!this.jumpTripped) {

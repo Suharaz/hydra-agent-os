@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HYDRA Dashboard — AI Autonomous Trading Command Center (Binance Agent OS)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,15 +36,17 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--txt);
-    font-family: var(--font-sans);
-    font-size: 13.5px;
-    line-height: 1.5;
-    padding-bottom: 80px;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding-bottom: 80px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
+}
 
   .container {
     max-width: 1440px;
@@ -404,18 +407,8 @@
     border-color: var(--yellow);
     transform: translateY(-2px);
   }
-  .agent-badge-card.active-thinking {
-    border-color: var(--yellow);
-    box-shadow: 0 0 16px rgba(240, 185, 11, 0.15);
-  }
-  .agent-badge-card.active-thinking::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--yellow), #ffd026);
+  .agent-badge-card.is-active {
+    border-color: rgba(14, 203, 129, 0.4);
   }
   .agent-card-top {
     display: flex;
@@ -425,17 +418,48 @@
   .agent-avatar-icon {
     font-size: 20px;
   }
-  .agent-state-pill {
-    font-size: 10px;
+  .agent-status-badge {
+    font-size: 11px;
     font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
-  .state-thinking { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(240, 185, 11, 0.3); }
-  .state-tool { background: var(--green-dim); color: var(--green); border: 1px solid rgba(14, 203, 129, 0.3); }
-  .state-idle { background: var(--card-sub); color: var(--txt-muted); border: 1px solid var(--border); }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--txt-dim);
+  }
+  .status-dot.pulsing {
+    background: var(--green);
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 8px rgba(14, 203, 129, 0.5);
+  }
+  .agent-status-badge.status-active {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(14, 203, 129, 0.3);
+  }
+  .agent-status-badge.status-stopped {
+    background: var(--card-sub);
+    color: var(--txt-muted);
+    border: 1px solid var(--border);
+  }
+  .stale-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--yellow-dim);
+    color: var(--yellow);
+    border: 1px solid rgba(240, 185, 11, 0.3);
+    font-weight: 700;
+    display: none;
+  }
 
   .agent-card-name {
     font-size: 13.5px;
@@ -446,17 +470,8 @@
     color: var(--txt-muted);
     font-family: var(--font-mono);
   }
-  .agent-current-task {
-    font-size: 11.5px;
-    color: #cbd5e1;
-    background: var(--card-sub);
-    padding: 6px 8px;
-    border-radius: 6px;
-    border-left: 2px solid var(--yellow);
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
+  .console-more { margin-top: 6px; background: var(--card-sub); border: 1px solid var(--border); color: var(--yellow); border-radius: 6px; padding: 3px 10px; font-size: 11px; cursor: pointer; font-family: var(--font-mono); }
+  .console-more:hover { border-color: var(--yellow); }
 
   /* Live Agent Console / Stream */
   .agent-console-box {
@@ -499,6 +514,9 @@
     color: #e2e8f0;
     font-family: var(--font-sans);
     font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
   .console-tool {
     margin-top: 6px;
@@ -508,6 +526,9 @@
     padding: 6px 10px;
     font-size: 11px;
     color: var(--green);
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   /* Interactive SVG Charts */
@@ -546,35 +567,30 @@
   }
   table.data-table tr:hover td { background: var(--card-hover); }
 
-  /* Switch Toggle */
-  .switch {
-    position: relative;
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .status-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-family: var(--font-mono);
     display: inline-block;
-    width: 40px;
-    height: 22px;
+    letter-spacing: 0.3px;
   }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: var(--border);
-    transition: .3s;
-    border-radius: 22px;
+  .status-pill.pill-enabled {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid rgba(14, 203, 129, 0.3);
   }
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 4px;
-    bottom: 4px;
-    background-color: #fff;
-    transition: .3s;
-    border-radius: 50%;
+  .status-pill.pill-disabled {
+    background: var(--card-sub);
+    color: var(--txt-muted);
+    border: 1px solid var(--border);
   }
-  input:checked + .slider { background-color: var(--green); }
-  input:checked + .slider:before { transform: translateX(18px); }
 
   /* Dream Coin Styles */
   .dream-hero-card {
@@ -662,6 +678,51 @@
   .pager { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px; font-size: 12px; color: var(--txt-muted); }
   .pager button { background: var(--card-sub); border: 1px solid var(--border); color: var(--txt); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
   .pager button:disabled { opacity: .4; cursor: default; }
+  /* Responsive Media Queries across 360, 390, 768, 1440 widths */
+  @media (max-width: 1200px) {
+    .agent-live-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 1024px) {
+    .overview-layout { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .dream-pipeline { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    .header-wrap { flex-direction: column; align-items: stretch; gap: 12px; }
+    .main-nav {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+      padding: 4px;
+      justify-content: flex-start;
+      scrollbar-width: none;
+    }
+    .main-nav::-webkit-scrollbar { display: none; }
+    .nav-btn { flex-shrink: 0; min-height: 40px; padding: 8px 12px; }
+    .filter-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+    .filter-group { width: 100%; justify-content: space-between; }
+    .time-pills { overflow-x: auto; width: 100%; justify-content: space-between; }
+    .time-pill { min-height: 38px; padding: 6px 10px; }
+    .agent-live-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi-row { grid-template-columns: 1fr; gap: 12px; }
+    #tab-leaderboard > div > div { grid-template-columns: 1fr !important; }
+    #tab-dream > div:nth-child(2) { grid-template-columns: 1fr !important; }
+    #symbolPnlDistribution { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 0 12px; }
+    .brand-text h1 { font-size: 15px; }
+    .brand-text p { font-size: 10.5px; }
+    .agent-live-grid { grid-template-columns: 1fr; gap: 10px; }
+    .dream-pipeline { grid-template-columns: 1fr; }
+    #symbolPnlDistribution { grid-template-columns: 1fr !important; }
+    .time-pill { padding: 5px 8px; font-size: 11px; }
+    .kpi-val { font-size: 22px; }
+    .panel-header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .panel-body { padding: 14px 16px; }
+    .modal { width: calc(100vw - 24px); padding: 18px 16px; }
+  }
 </style>
 </head>
 <body>
@@ -681,13 +742,13 @@
     <nav class="main-nav">
       <a class="nav-btn" data-nav="overview" href="/"><span class="nav-badge-dot"></span><span>🧠 War Room &amp; PnL</span></a>
       <a class="nav-btn" data-nav="leaderboard" href="/leaderboard">🏆 Agent &amp; Engine Leaderboard</a>
-      <a class="nav-btn" data-nav="engines" href="/engines">⚙️ 8 Scalping Engines</a>
+      <a class="nav-btn" data-nav="engines" href="/engines">⚙️ <span id="navEnginesCount">Strategies</span></a>
       <a class="nav-btn" data-nav="trades" href="/trades">📋 Trade Execution History</a>
       <a class="nav-btn" data-nav="dream" href="/dream">🌙 Dream Coin</a>
     </nav>
 
     <div class="header-pills">
-      <a class="action-btn" id="btnAdmin" href="/classic">🔧 Admin</a>
+      <span id="cacheStaleBadge" class="stale-badge">Cached · Stale</span>
     </div>
   </div>
 </header>
@@ -701,63 +762,58 @@
         <b style="font-size: 15px; color: var(--yellow);">🤖 Live Operation Status of 5 AI Agents (Cold Lane)</b>
         <span style="font-size: 12px; color: var(--txt-muted);">· Autonomous market analysis, risk evaluation, and order governance 24/7</span>
       </div>
-      <span id="agentsOnlineLabel" style="font-size: 12px; color: var(--green); font-weight: 600;">● ALL AGENTS ONLINE</span>
+      <span id="agentsOnlineLabel" style="font-size: 12px; color: var(--txt-muted); font-weight: 600;">● ALL AGENTS STOPPED</span>
     </div>
 
     <div class="agent-live-grid">
       <!-- 1. Commander -->
-      <div class="agent-badge-card active-thinking" id="agentCard-commander">
+      <div class="agent-badge-card" id="agentCard-commander">
         <div class="agent-card-top">
           <span class="agent-avatar-icon">👑</span>
-          <span class="agent-state-pill state-thinking" id="badge-commander">REASONING 💭</span>
+          <span class="agent-status-badge status-stopped" id="badge-commander"><span class="status-dot"></span>Stopped</span>
         </div>
         <div class="agent-card-name">Commander</div>
         <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
-        <div class="agent-current-task" id="task-commander">Scanning Funding Rates: Reallocating capital into Basis Arbitrage...</div>
       </div>
 
       <!-- 2. Supervisor -->
       <div class="agent-badge-card" id="agentCard-supervisor">
         <div class="agent-card-top">
           <span class="agent-avatar-icon">🛡️</span>
-          <span class="agent-state-pill state-tool" id="badge-supervisor">EVALUATING ⚙️</span>
+          <span class="agent-status-badge status-stopped" id="badge-supervisor"><span class="status-dot"></span>Stopped</span>
         </div>
         <div class="agent-card-name">Supervisor</div>
         <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
-        <div class="agent-current-task" id="task-supervisor">Evaluating 7 Risk Kernel rules: Slippage 0.7 bps (Strictly Verified).</div>
       </div>
 
       <!-- 3. Coach -->
       <div class="agent-badge-card" id="agentCard-coach">
         <div class="agent-card-top">
           <span class="agent-avatar-icon">🎓</span>
-          <span class="agent-state-pill state-idle" id="badge-coach">OPTIMIZING 📊</span>
+          <span class="agent-status-badge status-stopped" id="badge-coach"><span class="status-dot"></span>Stopped</span>
         </div>
         <div class="agent-card-name">Coach</div>
         <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
-        <div class="agent-current-task" id="task-coach">Backtested 100 trades: LiqFade win rate at 78.4%, maintaining dip parameters.</div>
       </div>
 
       <!-- 4. Treasurer -->
       <div class="agent-badge-card" id="agentCard-treasurer">
         <div class="agent-card-top">
           <span class="agent-avatar-icon">💰</span>
-          <span class="agent-state-pill state-tool" id="badge-treasurer">X402 EVM 💎</span>
+          <span class="agent-status-badge status-stopped" id="badge-treasurer"><span class="status-dot"></span>Stopped</span>
         </div>
         <div class="agent-card-name">Treasurer</div>
         <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
-        <div class="agent-current-task" id="task-treasurer">Approved $0.02 USDT micropayment on Base L2 for Whale Data Feed.</div>
       </div>
 
       <!-- 5. Sales -->
       <div class="agent-badge-card" id="agentCard-sales">
         <div class="agent-card-top">
           <span class="agent-avatar-icon">📢</span>
-          <span class="agent-state-pill state-idle" id="badge-sales">MONETIZING 📈</span>
+          <span class="agent-status-badge status-stopped" id="badge-sales"><span class="status-dot"></span>Stopped</span>
         </div>
         <div class="agent-card-name">Sales Agent</div>
         <div class="agent-card-model"><span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span></div>
-        <div class="agent-current-task" id="task-sales">Monetized Smart Money signals to 32 external bots, earned $46.80 USDT.</div>
       </div>
     </div>
   </div>
@@ -803,17 +859,18 @@
         <span>Cumulative PnL (Selected Frame)</span>
         <span>💰</span>
       </div>
-      <div class="kpi-val" style="color: var(--green);" id="kpiPnl">+$2,480.25</div>
-      <div class="kpi-badge up" id="kpiPnlPct">▲ +4.96% capital growth</div>
+      <div class="kpi-val" id="kpiPnl">—</div>
+      <div class="kpi-badge neutral" id="kpiPnlPct">—</div>
     </div>
 
     <div class="kpi-card">
       <div class="kpi-title">
-        <span>Net Asset Value (NAV)</span>
-        <span>💼</span>
+        <span>Portfolio NAV</span>
+        <span style="font-size: 11px; color: var(--txt-muted);" id="kpiNavSource">Source: —</span>
       </div>
-      <div class="kpi-val" id="kpiNav">$52,480.25</div>
-      <div class="kpi-badge neutral" id="kpiAllocated">Allocated Capital: $28,500.00</div>
+      <div class="kpi-val" id="kpiNav">—</div>
+      <div class="kpi-badge neutral" id="kpiCapitalDetails">Initial: — · Source: —</div>
+      <div style="font-size: 10.5px; color: var(--txt-dim); margin-top: 2px;">executor.nav internal book value (not exchange balance)</div>
     </div>
 
     <div class="kpi-card">
@@ -821,8 +878,8 @@
         <span>Win Rate</span>
         <span>🎯</span>
       </div>
-      <div class="kpi-val" style="color: var(--yellow);" id="kpiWinRate">84.6%</div>
-      <div class="kpi-badge up" id="kpiTradesCount">1,482 trades executed</div>
+      <div class="kpi-val" id="kpiWinRate">—</div>
+      <div class="kpi-badge neutral" id="kpiTradesCount">—</div>
     </div>
 
     <div class="kpi-card">
@@ -830,8 +887,8 @@
         <span>AI Efficiency (ROI / Token Burn)</span>
         <span>🧠</span>
       </div>
-      <div class="kpi-val" style="color: var(--blue);" id="kpiRoi">725x</div>
-      <div class="kpi-badge neutral" id="kpiCost">LLM Cost: $3.42</div>
+      <div class="kpi-val" id="kpiRoi">—</div>
+      <div class="kpi-badge neutral" id="kpiCost">LLM Cost: —</div>
     </div>
   </div>
 
@@ -845,76 +902,52 @@
       <div class="panel-box">
         <div class="panel-header">
           <div class="panel-title">
-            <span>📈 Cumulative PnL Curve by Timeframe</span>
-            <span style="font-size: 12px; color: var(--yellow); font-family: var(--font-mono);" id="currentTfBadge">[Timeframe: 24 Hours]</span>
+            <span>📈 Cumulative PnL Curve</span>
+            <span style="font-size: 12px; color: var(--yellow); font-family: var(--font-mono);" id="currentTfBadge">[24H Operational Window]</span>
           </div>
-          <span style="font-size: 12px; color: var(--green);">● Binance WS Synced</span>
+          <span id="wsSyncStatus" style="font-size: 12px; color: var(--txt-muted); font-weight: 600;">● Disconnected</span>
         </div>
         <div class="panel-body">
           <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
             <div>
               <div style="font-size: 12px; color: var(--txt-muted);">Period Cumulative Profit:</div>
-              <div class="chart-big-pnl" id="chartPnlVal">+$2,480.25</div>
+              <div class="chart-big-pnl" id="chartPnlVal">—</div>
             </div>
             <div style="text-align: right;">
               <div style="font-size: 12px; color: var(--txt-muted);">Max Drawdown:</div>
-              <div style="font-size: 16px; font-weight: 700; font-family: var(--font-mono);"><span id="chartDrawdown">0.42%</span> <span style="font-size: 12px; color: var(--green);">(Low Risk)</span></div>
+              <div style="font-size: 16px; font-weight: 700; font-family: var(--font-mono);"><span id="chartDrawdown">—</span></div>
             </div>
           </div>
 
-          <!-- SVG Dynamic Rendered Chart -->
+          <!-- Honest Rendered Chart Baseline -->
           <div class="chart-wrapper">
             <svg width="100%" height="100%" viewBox="0 0 800 240" preserveAspectRatio="none" id="chartSvg">
               <line x1="0" y1="60" x2="800" y2="60" stroke="#1f2735" stroke-dasharray="4"/>
               <line x1="0" y1="120" x2="800" y2="120" stroke="#1f2735" stroke-dasharray="4"/>
               <line x1="0" y1="180" x2="800" y2="180" stroke="#1f2735" stroke-dasharray="4"/>
-              <defs>
-                <linearGradient id="chartGrad" x1="0%" y1="0%" x2="0%" y2="1">
-                  <stop offset="0%" stop-color="#0ecb81" stop-opacity="0.35"/>
-                  <stop offset="100%" stop-color="#0ecb81" stop-opacity="0.0"/>
-                </linearGradient>
-              </defs>
-              <path id="chartArea" d="M 0,220 Q 150,190 300,140 T 600,70 L 800,40 L 800,240 L 0,240 Z" fill="url(#chartGrad)"/>
-              <path id="chartLine" d="M 0,220 Q 150,190 300,140 T 600,70 L 800,40" fill="none" stroke="#0ecb81" stroke-width="3.5" stroke-linecap="round"/>
+              <path id="chartArea" d="M 0,235 L 800,235 L 800,240 L 0,240 Z" fill="rgba(14, 203, 129, 0.05)"/>
+              <path id="chartLine" d="M 0,235 L 800,235" fill="none" stroke="#2d3748" stroke-width="2" stroke-dasharray="6"/>
             </svg>
           </div>
+          <div id="chartNotice" style="font-size: 11.5px; color: var(--txt-muted); margin-top: 8px; text-align: center;">Continuous timeseries curve unavailable in snapshot feed · Metrics reflect 24H operational window</div>
 
           <!-- PnL Distribution by Symbol -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;">
-            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11.5px; color: var(--txt-muted);">ETH / USDT</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$1,240.50</div>
-              <div style="font-size: 11px; color: var(--txt-muted);">50.0% of profit</div>
-            </div>
-            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11.5px; color: var(--txt-muted);">BTC / USDT</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$810.20</div>
-              <div style="font-size: 11px; color: var(--txt-muted);">32.6% of profit</div>
-            </div>
-            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11.5px; color: var(--txt-muted);">SOL / USDT</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$380.15</div>
-              <div style="font-size: 11px; color: var(--txt-muted);">15.3% of profit</div>
-            </div>
-            <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
-              <div style="font-size: 11.5px; color: var(--txt-muted);">BNB / USDT</div>
-              <div style="font-size: 14px; font-weight: 700; color: var(--green);">+$49.40</div>
-              <div style="font-size: 11px; color: var(--txt-muted);">2.1% of profit</div>
-            </div>
+          <div id="symbolPnlDistribution" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;">
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--txt-muted); padding: 10px; font-size: 12px;">Loading…</div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Agent Live Reasoning Stream Console -->
+      <!-- Right Column: Agent Live Stream Console -->
       <div class="panel-box">
         <div class="panel-header">
           <div class="panel-title">
-            <span>⚡ Agent Live Reasoning &amp; Tool Calls Console</span>
+            <span>⚡ Hot-Lane Event Stream</span>
           </div>
         </div>
         <div class="panel-body">
           <div class="agent-console-box" id="consoleStream">
-            <!-- Live Agent Message Stream -->
+            <!-- Live Hot-Lane Tape Events -->
           </div>
         </div>
       </div>
@@ -933,22 +966,22 @@
         <div class="panel-box">
           <div class="panel-header">
             <div class="panel-title">
-              <span>⚙️ 8 Trading Engines PnL Leaderboard</span>
+              <span>⚙️ <span id="leaderboardEnginesTitle">Trading Strategies Leaderboard</span></span>
             </div>
             <span style="font-size: 12px; color: var(--txt-muted);">Ranked by Net PnL</span>
           </div>
-          <div class="panel-body" id="engineLeaderboard"></div>
+          <div class="panel-body" id="engineLeaderboard"><div style="padding:22px; text-align:center; color:var(--txt-muted);">Loading…</div></div>
         </div>
 
-        <!-- 5 LLM Agents Attributed PnL & Efficiency -->
+        <!-- AI Agents Leaderboard -->
         <div class="panel-box">
           <div class="panel-header">
             <div class="panel-title">
-              <span>🧠 AI Agents Attributed PnL Leaderboard</span>
+              <span>🧠 AI Agents Supervisory Leaderboard</span>
             </div>
-            <span style="font-size: 12px; color: var(--blue);">Token Cost Efficiency (ROI)</span>
+            <span style="font-size: 12px; color: var(--blue);">Governance &amp; Oversight</span>
           </div>
-          <div class="panel-body" id="agentLeaderboard"></div>
+          <div class="panel-body" id="agentLeaderboard"><div style="padding:22px; text-align:center; color:var(--txt-muted);">Loading…</div></div>
         </div>
 
       </div>
@@ -962,27 +995,35 @@
     <div class="panel-box" style="margin-top: 18px;">
       <div class="panel-header">
         <div class="panel-title">
-          <span>⚙️ 8 Scalping Engines — Live Status</span>
+          <span>⚙️ <span id="strategyCountTitle">Scalping Strategies</span> — Live Status</span>
         </div>
         <span style="font-size: 12px; color: var(--txt-muted);">Read-only view · engine state reflects the live backend</span>
       </div>
-      <div class="panel-body" style="padding: 0;">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Engine Name</th>
-              <th>Venue Mode</th>
-              <th>Symbols</th>
-              <th>Allocated ($)</th>
-              <th>Current Signal</th>
-              <th>Trades</th>
-              <th>Win Rate</th>
-              <th>Cumulative PnL</th>
-              <th>Active</th>
-            </tr>
-          </thead>
-          <tbody id="enginesFullTable"></tbody>
-        </table>
+      <div style="background: var(--card-sub); border: 1px solid var(--border); border-left: 3px solid var(--yellow); padding: 10px 16px; margin: 16px 20px 0; border-radius: 6px; font-size: 12.5px; color: #cbd5e1; line-height: 1.5;">
+        <b>Strategy Architecture:</b> Deterministic strategies execute trades according to algorithmic rules and market events; AI agents supervise risk thresholds, order parameters, and capital governance.
+      </div>
+      <div class="panel-body" style="padding: 16px 20px 0;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Strategy Name</th>
+                <th>Venue Mode</th>
+                <th>Symbols</th>
+                <th>Order Size (USD)</th>
+                <th>Risk Budget (USD)</th>
+                <th>Signal</th>
+                <th>Trades</th>
+                <th>Win Rate</th>
+                <th>Cumulative PnL</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="enginesFullTable">
+              <tr><td colspan="10" style="text-align:center; padding:22px; color:var(--txt-muted);">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -998,23 +1039,27 @@
         </div>
         <span style="font-size: 12px; color: var(--txt-muted);">Live open positions &amp; fills</span>
       </div>
-      <div class="panel-body" style="padding: 0;">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Engine</th>
-              <th>Symbol</th>
-              <th>Side / Action</th>
-              <th>Entry Price</th>
-              <th>Exit / Mark</th>
-              <th>Quantity</th>
-              <th>Net PnL</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="tradesTable"></tbody>
-        </table>
+      <div class="panel-body" style="padding: 16px 20px 0;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Engine</th>
+                <th>Symbol</th>
+                <th>Side / Action</th>
+                <th>Entry Price</th>
+                <th>Exit / Mark</th>
+                <th>Quantity</th>
+                <th>Net PnL</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tradesTable">
+              <tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
         <div id="tradesPager" class="pager"></div>
       </div>
     </div>
@@ -1057,23 +1102,23 @@
       <div class="dream-pipeline">
         <div class="dream-step-box" id="dStep1">
           <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 1: AUDIT LOSS TRADES</div>
-          <div style="font-size: 14px; font-weight: 700; color: var(--red);">🔍 12 Losses / 3 Vetoes</div>
-          <div style="font-size: 11.5px; color: var(--txt-muted);">Audited 1,482 executions across the past 24 hours.</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--red);">🔍 Audit Closed Trades</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Examines stopped-out executions and Risk Kernel veto events.</div>
         </div>
         <div class="dream-step-box" id="dStep2">
           <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 2: COUNTERFACTUAL REASONING</div>
-          <div style="font-size: 14px; font-weight: 700; color: var(--yellow);">💭 Root-Cause Simulation</div>
-          <div style="font-size: 11.5px; color: var(--txt-muted);">Severe funding cascade, slippage, or macro event?</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--yellow);">💭 Counterfactual Analysis</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Simulates alternative execution paths and parameter adjustments.</div>
         </div>
         <div class="dream-step-box" id="dStep3">
           <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 3: DISTILL INVARIANT RULES</div>
-          <div style="font-size: 14px; font-weight: 700; color: var(--purple);">💡 Invariant Golden Rule</div>
-          <div style="font-size: 11.5px; color: var(--txt-muted);">Formulates deterministic constraints preventing repeat losses.</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--purple);">💡 Invariant Golden Rules</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Extracts deterministic constraints to prevent recurring loss patterns.</div>
         </div>
         <div class="dream-step-box" id="dStep4">
           <div style="font-size: 11px; color: var(--txt-muted); font-weight: 700;">STEP 4: INJECT NEURAL MEMORY</div>
-          <div style="font-size: 14px; font-weight: 700; color: var(--green);">🧬 Update System Context</div>
-          <div style="font-size: 11.5px; color: var(--txt-muted);">Injected directly into System Prompts of 5 LLM Agents.</div>
+          <div style="font-size: 14px; font-weight: 700; color: var(--green);">🧬 Update Agent Context</div>
+          <div style="font-size: 11.5px; color: var(--txt-muted);">Injected into long-term system context of supervising agents.</div>
         </div>
       </div>
     </div>
@@ -1086,10 +1131,10 @@
           <div class="panel-title">
             <span>📖 Neural Memory Bank (Distilled Invariant Rules)</span>
           </div>
-          <span style="font-size: 12px; color: var(--purple); font-weight: 600;" id="dreamTotalLessons">4 Invariant Rules Injected</span>
+          <span style="font-size: 12px; color: var(--purple); font-weight: 600;" id="dreamTotalLessons">0 Invariant Rules</span>
         </div>
         <div class="panel-body" id="dreamLessonsContainer">
-          <!-- Render Distilled Lessons -->
+          <div style="padding:22px; text-align:center; color:var(--txt-muted);">Loading…</div>
         </div>
       <div id="dreamPager" class="pager"></div>
       </div>
@@ -1104,13 +1149,7 @@
         </div>
         <div class="panel-body">
           <div class="agent-console-box" id="dreamConsole" style="height: 480px;">
-            <div class="console-entry">
-              <div class="console-header">
-                <span class="console-agent" style="color: var(--purple);">🌙 Dream Neural Engine</span>
-                <span class="console-time">23:59:58</span>
-              </div>
-              <div class="console-text">24h reflection cycle triggered: All 5 agents enter Dream State for risk re-evaluation...</div>
-            </div>
+            <div style="padding:22px; text-align:center; color:var(--txt-dim); font-size:12px;">No reflection stream events yet. Stream updates when backend runs a reflection cycle.</div>
           </div>
         </div>
       </div>
@@ -1133,7 +1172,7 @@
 const IS_HTTP = !!window.location.host && window.location.protocol.startsWith("http");
 
 // Masked AI model markup — the model each agent uses is intentionally hidden on the public viewer.
-const MODEL_MASK = '<span class="model-hidden" title="AI model hidden"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg><span>hidden</span></span>';
+const MODEL_MASK = '<span class="model-hidden" title="AI model classified"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>MODEL · SECRET</span></span>';
 
 // View-only client-side pagination state (current 1-based page for each paged list).
 let tradesPage = 1;
@@ -1151,194 +1190,257 @@ function renderPager(containerId, page, totalItems, pageSize, prevAction, nextAc
     <span>Page ${page} of ${totalPages}</span>
     <button type="button" data-action="${nextAction}" ${page >= totalPages ? "disabled" : ""}>Next ›</button>`;
 }
+// ===========================================================================
+// FORMATTING & ESCAPING UTILITIES
+// ===========================================================================
+const ENGINE_NAME_MAP = {
+  basis: "Basis Cash & Carry",
+  liqfade: "Liquidation Fade",
+  smmirror: "Smart Money Mirror",
+  imbalance: "Orderbook Imbalance",
+  cexdex: "Arbitrage CEX/DEX",
+  convert: "Convert RFQ",
+  crossliq: "Multi-Venue Shield",
+  tokstock: "Tokenized Stock"
+};
+function engineName(id) { return ENGINE_NAME_MAP[id] || id || "Strategy"; }
 
-// Re-render the trade audit trail from the current source (canned offline or last real snapshot),
-// honouring the active filters. Used by the trades pager buttons.
+function esc(v) {
+  return String(v == null ? "" : v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function fmtSignedUsd(n) {
+  const v = Number(n) || 0;
+  return (v < 0 ? "-$" : "+$") + Math.abs(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtPct(hit) {
+  if (typeof hit !== "number" || isNaN(hit)) return "—";
+  const pct = hit <= 1 ? hit * 100 : hit;
+  return pct.toFixed(1) + "%";
+}
+
+function emptyEnginesRow(msg = "Loading…") {
+  return `<tr><td colspan="10" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
+}
+function emptyTradesRow(msg = "Loading…") {
+  return `<tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
+}
+function emptyPanel(msg = "Loading…") {
+  return `<div style="padding:22px; text-align:center; color:var(--txt-muted);">${esc(msg)}</div>`;
+}
+
+function showToast(title, msg, ms = 4000) {
+  const t = document.getElementById("toast");
+  if (!t) return;
+  document.getElementById("toastTitle").textContent = title;
+  document.getElementById("toastMsg").textContent = msg;
+  t.style.display = "block";
+  clearTimeout(window._t);
+  window._t = setTimeout(() => { t.style.display = "none"; }, ms);
+}
+
+// ===========================================================================
+// BOUNDED TTL VERSIONED LOCALSTORAGE CACHE (PUBLIC DISPLAY DATA ONLY)
+// Never caches operator snapshots, config, models, secrets, logs, or tickets.
+// Quota-safe and malformed-cache safe.
+// ===========================================================================
+const CACHE_KEY = "hydra_public_display_v1";
+const CACHE_TTL_MS = 300000; // 5 minute TTL
+
+function savePublicDisplayCache(s, dreamLessons) {
+  if (!s) return;
+  try {
+    const publicEngines = Array.isArray(s.engines) ? s.engines.map(e => ({
+      id: e.id,
+      name: e.name,
+      symbols: e.symbols,
+      sizeUsd: e.sizeUsd,
+      budgetUsd: e.budgetUsd != null ? e.budgetUsd : e.maxBudgetUsd,
+      contract: e.contract ? { side: e.contract.side, symbol: e.contract.symbol, edgeBps: e.contract.edgeBps } : null,
+      trades: e.trades != null ? e.trades : e.trades24h,
+      hit: typeof e.hit === "number" ? e.hit : e.hitRate,
+      pnl24h: e.pnl24h,
+      enabled: !!e.enabled,
+      paper: !!e.paper
+    })) : [];
+
+    const publicCapital = s.capital ? {
+      initialUsd: typeof s.capital.initialUsd === "number" ? s.capital.initialUsd : null,
+      navUsd: typeof s.capital.navUsd === "number" ? s.capital.navUsd : null,
+      source: typeof s.capital.source === "string" ? s.capital.source : ""
+    } : null;
+
+    const payload = {
+      v: 1,
+      ts: Date.now(),
+      data: {
+        engines: publicEngines,
+        capital: publicCapital,
+        executorNav: (s.executor && typeof s.executor.nav === "number") ? s.executor.nav : null,
+        drawdownPct: (s.executor && typeof s.executor.drawdownPct === "number") ? s.executor.drawdownPct : null,
+        llmCost: (s.spend && typeof s.spend.llmTodayUsd === "number") ? s.spend.llmTodayUsd : null,
+        dreamLessons: Array.isArray(dreamLessons) ? dreamLessons : []
+      }
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+  } catch (e) {
+    // QuotaExceededError or disabled storage — safe no-op
+  }
+}
+
+function loadPublicDisplayCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || parsed.v !== 1 || typeof parsed.ts !== "number" || !parsed.data) {
+      localStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+    if (Date.now() - parsed.ts > CACHE_TTL_MS) {
+      localStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+    return parsed.data;
+  } catch (e) {
+    try { localStorage.removeItem(CACHE_KEY); } catch (_) {}
+    return null;
+  }
+}
+
+function setWsSyncStatus(state) {
+  const el = document.getElementById("wsSyncStatus");
+  if (!el) return;
+  if (state === "synced") {
+    el.textContent = "● WS Synced";
+    el.style.color = "var(--green)";
+  } else if (state === "reconnecting") {
+    el.textContent = "● Reconnecting…";
+    el.style.color = "var(--yellow)";
+  } else {
+    el.textContent = "● Disconnected";
+    el.style.color = "var(--txt-muted)";
+  }
+}
+
+function setExplicitUnavailableState(msg = "Unavailable offline — live backend connection required") {
+  if (!window._lastSnapshot) {
+    const engTable = document.getElementById("enginesFullTable");
+    if (engTable) engTable.innerHTML = emptyEnginesRow(msg);
+    const tradesTable = document.getElementById("tradesTable");
+    if (tradesTable) tradesTable.innerHTML = emptyTradesRow(msg);
+    const engLb = document.getElementById("engineLeaderboard");
+    if (engLb) engLb.innerHTML = emptyPanel(msg);
+    const agentLb = document.getElementById("agentLeaderboard");
+    if (agentLb) agentLb.innerHTML = emptyPanel(msg);
+    const distEl = document.getElementById("symbolPnlDistribution");
+    if (distEl) distEl.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--txt-muted); padding: 10px; font-size: 12px;">${esc(msg)}</div>`;
+  }
+}
+
+function setCacheStaleIndicator(isStale) {
+  const badge = document.getElementById("cacheStaleBadge");
+  if (badge) badge.style.display = isStale ? "inline-block" : "none";
+}
+
+function restoreFromCache() {
+  const cached = loadPublicDisplayCache();
+  if (!cached) return false;
+  setCacheStaleIndicator(true);
+
+  if (cached.engines && cached.engines.length) {
+    const filtered = filteredEngines(cached.engines);
+    renderRealEngines(filtered);
+    renderRealEngineLeaderboard(cached.engines);
+    renderSymbolDistribution(cached.engines);
+  }
+
+  const synth = {
+    engines: cached.engines,
+    capital: cached.capital,
+    executor: { nav: cached.executorNav, drawdownPct: cached.drawdownPct },
+    spend: { llmTodayUsd: cached.llmCost }
+  };
+  renderRealKpis(synth);
+
+  if (cached.dreamLessons && cached.dreamLessons.length) {
+    DREAM_LESSONS = cached.dreamLessons;
+    renderDreamLessons();
+  }
+
+  // Invariant: never cached active dots as live; always Stopped until fresh server snapshot arrives.
+  updateAgentCards({});
+  return true;
+}
+
+// ===========================================================================
+// READ-ONLY VIEW FILTERS & NAVIGATION
+// ===========================================================================
+function currentSymbol() { const el = document.getElementById("coinFilter"); return el ? el.value : "ALL"; }
+function currentMode() { const el = document.getElementById("modeFilter"); return el ? el.value : "ALL"; }
+function symbolMatches(field, sel) { return sel === "ALL" || String(field || "").toUpperCase().includes(sel); }
+function modeMatches(isLive, sel) { return sel === "ALL" || (sel === "LIVE" ? isLive : !isLive); }
+function filteredEngines(list) {
+  const sym = currentSymbol(), mode = currentMode();
+  return (list || []).filter(e => {
+    const field = Array.isArray(e.symbols) ? e.symbols.join(",") : (e.symbol || e.sym || "");
+    const isLive = ("paper" in e) ? !e.paper : !!e.live;
+    return symbolMatches(field, sym) && modeMatches(isLive, mode);
+  });
+}
+function filteredTrades(list) { const sym = currentSymbol(); return (list || []).filter(t => symbolMatches(t.coin || t.symbol, sym)); }
+function filteredPositions(list) { const sym = currentSymbol(); return (list || []).filter(p => symbolMatches(p.symbol, sym)); }
+
 function rerenderTrades() {
-  if (backendMode !== "offline" && window._lastSnapshot) {
+  if (window._lastSnapshot) {
     const s = window._lastSnapshot;
     const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
     renderRealTrades(filteredPositions(pos));
   } else {
-    renderTradesTable();
+    renderRealTrades([]);
   }
 }
 
-const TIMEFRAME_DATA = {
-  "1H": {
-    pnl: 182.40, pnlPct: "+0.35%", trades: 64, winRate: "87.5%", roi: "820x", llmCost: "$0.22",
-    chartLine: "M 0,210 Q 200,180 400,120 T 800,60",
-    chartArea: "M 0,210 Q 200,180 400,120 T 800,60 L 800,240 L 0,240 Z"
-  },
-  "24H": {
-    pnl: 2480.25, pnlPct: "+4.96%", trades: 1482, winRate: "84.6%", roi: "725x", llmCost: "$3.42",
-    chartLine: "M 0,220 Q 150,190 300,140 T 600,70 L 800,40",
-    chartArea: "M 0,220 Q 150,190 300,140 T 600,70 L 800,40 L 800,240 L 0,240 Z"
-  },
-  "7D": {
-    pnl: 14250.80, pnlPct: "+32.40%", trades: 9840, winRate: "82.1%", roi: "690x", llmCost: "$20.65",
-    chartLine: "M 0,230 Q 250,160 500,90 T 800,25",
-    chartArea: "M 0,230 Q 250,160 500,90 T 800,25 L 800,240 L 0,240 Z"
-  },
-  "30D": {
-    pnl: 48920.00, pnlPct: "+138.50%", trades: 42100, winRate: "80.8%", roi: "710x", llmCost: "$68.90",
-    chartLine: "M 0,235 Q 180,180 360,110 T 700,50 L 800,15",
-    chartArea: "M 0,235 Q 180,180 360,110 T 700,50 L 800,15 L 800,240 L 0,240 Z"
-  },
-  "ALL": {
-    pnl: 74210.50, pnlPct: "+242.10%", trades: 68420, winRate: "81.4%", roi: "740x", llmCost: "$100.28",
-    chartLine: "M 0,238 Q 200,170 400,95 T 800,10",
-    chartArea: "M 0,238 Q 200,170 400,95 T 800,10 L 800,240 L 0,240 Z"
+function rerenderData() {
+  if (window._lastSnapshot) {
+    const s = window._lastSnapshot;
+    const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
+    renderRealEngines(engines);
+    renderRealEngineLeaderboard(engines);
+    const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
+    renderRealTrades(filteredPositions(pos));
+    renderSymbolDistribution(s.engines || []);
+  } else {
+    const cached = loadPublicDisplayCache();
+    if (cached && cached.engines) {
+      const engines = filteredEngines(cached.engines);
+      renderRealEngines(engines);
+      renderRealEngineLeaderboard(cached.engines);
+      renderSymbolDistribution(cached.engines);
+    }
   }
-};
-
-const ENGINES = [
-  { id: "basis", name: "Basis Cash & Carry", pnl: 1420.50, share: "57.2%", trades: 412, win: "94.2%", sym: "BTC, ETH", size: 8000, signal: "LONG FUT / SHORT SPOT 14.2% APR", live: true, on: true },
-  { id: "liqfade", name: "Liquidation Fade (LiqFade)", pnl: 650.20, share: "26.2%", trades: 218, win: "78.4%", sym: "SOL, ETH", size: 5000, signal: "MAKER BIDS AT SPREAD -2.4%", live: true, on: true },
-  { id: "smmirror", name: "Smart Money Mirror (DEX)", pnl: 480.00, share: "19.3%", trades: 94, win: "81.2%", sym: "ETH, PEPE", size: 4000, signal: "WHALE ACCUMULATION MATCHED", live: true, on: true },
-  { id: "imbalance", name: "L2 Orderbook Imbalance", pnl: 195.15, share: "7.8%", trades: 512, win: "64.5%", sym: "BTC, SOL", size: 3000, signal: "BID DEPTH DOMINANCE +42%", live: true, on: true },
-  { id: "cexdex", name: "Arbitrage CEX ↔ DEX", pnl: 120.40, share: "4.8%", trades: 310, win: "88.0%", sym: "ETH (Base)", size: 3500, signal: "BASE L2 SPREAD 18 bps", live: false, on: true },
-  { id: "convert", name: "Binance Convert RFQ", pnl: 42.00, share: "1.7%", trades: 84, win: "100%", sym: "USDC, USDT", size: 2500, signal: "ZERO-FEE TRIANGULAR ARB", live: true, on: true },
-  { id: "crossliq", name: "Multi-Venue Shield", pnl: 0.00, share: "0.0%", trades: 0, win: "100%", sym: "BTCUSDT", size: 1000, signal: "DELTA HEDGE READY", live: true, on: true },
-  { id: "tokstock", name: "Tokenized RWA Stock", pnl: -14.00, share: "-0.5%", trades: 12, win: "66.7%", sym: "NVDA, TSLA", size: 1500, signal: "MARKET CLOSED (OFFLINE)", live: false, on: false }
-];
-
-const AGENTS = [
-  { role: "👑 Commander (Portfolio Head)", model: "Claude 3.5 Sonnet", attributedPnl: "+$1,680.00", sharePct: 67.7, cost: "$1.84", roi: "913x", decision: "Optimized +$3,000 allocation to Basis Arbitrage on high funding rate divergence." },
-  { role: "🛡️ Supervisor (Risk Guardrail)", model: "DeepSeek R1", attributedPnl: "+$420.00", sharePct: 16.9, cost: "$0.85", roi: "494x", decision: "Prevented 4 adverse slippage spikes; tightened SOL position limits ahead of CPI." },
-  { role: "🎓 Coach (Optimization & Backtest)", model: "Qwen 2.5 Coder", attributedPnl: "+$260.00", sharePct: 10.5, cost: "$0.42", roi: "619x", decision: "Calibrated LiqFade wick threshold from $1M to $850k, boosting rebound capture by 12%." },
-  { role: "💰 Treasurer (x402 Micropayments)", model: "GPT-4o Mini", attributedPnl: "+$120.25", sharePct: 4.8, cost: "$0.18", roi: "668x", decision: "Autonomous $0.02 payment for on-chain whale data, unlocking a $120 profitable trade." }
-];
-
-let TRADES = [
-  { time: "12:35:14", engine: "Basis Arbitrage", coin: "ETH / USDT", side: "ARB (L/S)", entry: "3,410.20", exit: "3,414.80", qty: "3.50 ETH", pnl: "+$16.10", win: true },
-  { time: "12:32:02", engine: "LiqFade", coin: "SOL / USDT", side: "BUY DIP", entry: "212.10", exit: "215.30", qty: "25.0 SOL", pnl: "+$80.00", win: true },
-  { time: "12:28:40", engine: "Smart Money", coin: "ETH / USDT", side: "BUY SPOT", entry: "3,405.00", exit: "3,412.50", qty: "2.00 ETH", pnl: "+$15.00", win: true },
-  { time: "12:24:11", engine: "Imbalance", coin: "BTC / USDT", side: "SCALP BUY", entry: "91,400.00", exit: "91,445.00", qty: "0.10 BTC", pnl: "+$4.50", win: true }
-];
-
-// Dynamic action log for 5 AI Agents
-const LIVE_ACTIONS = [
-  {
-    agent: "👑 Commander",
-    text: "Detected Binance Futures (+0.014%) vs Spot funding gap. Reallocating $2,500 into Basis Arbitrage.",
-    tool: 'TOOL: set_engine_allocation({ engine: "basis", sizeUsd: 10500, symbol: "ETHUSDT" })',
-    card: "commander",
-    task: "Capital Allocation: Expanded Basis Arbitrage limit to $10,500"
-  },
-  {
-    agent: "🛡️ Supervisor",
-    text: "Audited 7 Risk Kernel rules. Spread slippage is 0.7 bps (Below 15 bps cap). ORDER APPROVED.",
-    tool: 'TOOL: evaluate_risk_kernel({ spreadBps: 0.7, notionalUsd: 2500, ruleResult: "PASS" })',
-    card: "supervisor",
-    task: "Risk Audit: 7/7 Risk Kernel rules passed, authorization granted"
-  },
-  {
-    agent: "💰 Treasurer",
-    text: "Prepared EIP-712 signature on Base: Autonomous $0.02 USDT micropayment for whale wallet feed.",
-    tool: 'TOOL: x402_sign_and_pay({ receiver: "0x7a2...8b3", amount: 0.02, network: "Base" })',
-    card: "treasurer",
-    task: "x402 Micropayment: Paid $0.02 USDT for on-chain whale data"
-  },
-  {
-    agent: "🎓 Coach",
-    text: "Analyzed last 50 LiqFade executions: 84% wick-bottom precision. Maintaining sensitivity at 0.85.",
-    tool: 'TOOL: update_engine_params({ engine: "liqfade", cascadeThresholdUsd: 850000 })',
-    card: "coach",
-    task: "Optimization: Preserving cascade threshold parameters for LiqFade"
-  },
-  {
-    agent: "📢 Sales Agent",
-    text: "x402 Feed Server received $0.04 USDT from 2 external quant bots querying L2 Imbalance signal.",
-    tool: 'TOOL: emit_data_feed({ feed: "l2_imbalance", clients: 32, revenueUsd: 46.80 })',
-    card: "sales",
-    task: "Signal Monetization: Earned +$0.04 USDT from external bots"
-  }
-];
-
-// ===========================================================================
-// AGENT STREAM ACTION PROCESSING
-// ===========================================================================
-function pushAgentAction(action) {
-  const c = document.getElementById("consoleStream");
-  const timeStr = new Date().toTimeString().split(" ")[0];
-
-  const div = document.createElement("div");
-  div.className = "console-entry";
-  div.innerHTML = `
-    <div class="console-header">
-      <span class="console-agent">${action.agent}</span>
-      <span class="console-time">${timeStr}</span>
-    </div>
-    <div class="console-text">${action.text}</div>
-    <div class="console-tool">${action.tool}</div>
-  `;
-  c.insertBefore(div, c.firstChild);
-
-  // Update agent badge card on the 5-card row
-  const taskEl = document.getElementById(`task-${action.card}`);
-  const cardEl = document.getElementById(`agentCard-${action.card}`);
-  if (taskEl) taskEl.textContent = action.task;
-
-  // Glow effect when agent is active
-  document.querySelectorAll(".agent-badge-card").forEach(el => el.classList.remove("active-thinking"));
-  if (cardEl) cardEl.classList.add("active-thinking");
 }
+function applyFilters() { rerenderData(); }
 
-// Automatically push random agent activity to keep the war room live.
-// Only runs on file:// (no backend). Over http the real WS tape drives the console.
-let actionIdx = 0;
-// Canned simulation: runs on file:// OR when a backend reports it is a static showcase edge
-// (Cloudflare Worker: /api/session -> {simulation:true}) with no live engine. Idempotent.
-function startSimulation() {
-  if (window._simStarted) return;
-  window._simStarted = true;
-  setBackendMode("offline");
-  renderLeaderboards();
-  renderEnginesTable();
-  renderTradesTable();
-  pushAgentAction(LIVE_ACTIONS[0]);
-  setTimeout(() => pushAgentAction(LIVE_ACTIONS[1]), 500);
-  setTimeout(() => pushAgentAction(LIVE_ACTIONS[2]), 1000);
-  setInterval(() => {
-    pushAgentAction(LIVE_ACTIONS[actionIdx % LIVE_ACTIONS.length]);
-    actionIdx++;
-  }, 4500);
-}
-
-// ===========================================================================
-// TIMEFRAME & TAB SWITCHING
-// ===========================================================================
 function setTimeframe(tf, el) {
   document.querySelectorAll(".time-pill").forEach(p => p.classList.remove("active"));
-  el.classList.add("active");
-  document.getElementById("currentTfBadge").textContent = `[Timeframe: ${tf}]`;
-
-  const d = TIMEFRAME_DATA[tf];
-  // The canned timeframe curve is decorative; when connected to a live backend the
-  // KPI cards must reflect the real snapshot, never the canned TIMEFRAME_DATA numbers.
-  if (backendMode === "offline") {
-    document.getElementById("kpiPnl").textContent = "+$" + d.pnl.toLocaleString(undefined, {minimumFractionDigits: 2});
-    document.getElementById("kpiPnlPct").textContent = "▲ " + d.pnlPct + " capital growth";
-    document.getElementById("kpiWinRate").textContent = d.winRate;
-    document.getElementById("kpiTradesCount").textContent = d.trades.toLocaleString() + " trades executed";
-    document.getElementById("kpiRoi").textContent = d.roi;
-    document.getElementById("kpiCost").textContent = "LLM Cost: " + d.llmCost;
-  } else if (window._lastSnapshot) {
+  if (el) el.classList.add("active");
+  const tfBadge = document.getElementById("currentTfBadge");
+  const noticeEl = document.getElementById("chartNotice");
+  if (tf === "24H") {
+    if (tfBadge) tfBadge.textContent = "[24H Operational Window]";
+    if (noticeEl) noticeEl.textContent = "Continuous timeseries curve unavailable in snapshot feed · Metrics reflect 24H operational window";
+  } else {
+    if (tfBadge) tfBadge.textContent = `[Timeframe: ${tf} · Unsupported by live feed]`;
+    if (noticeEl) noticeEl.textContent = `Historical ${tf} timeseries curve is not retained by the live feed. Displaying active 24H operational window.`;
+    showToast(`Timeframe ${tf}`, `Historical ${tf} metrics are unsupported by live snapshot feed. Active 24H window shown.`);
+  }
+  if (window._lastSnapshot) {
     renderRealKpis(window._lastSnapshot);
   }
-  if (backendMode === "offline") {
-    document.getElementById("chartPnlVal").textContent = "+$" + d.pnl.toLocaleString(undefined, {minimumFractionDigits: 2});
-    document.getElementById("chartLine").setAttribute("d", d.chartLine);
-    document.getElementById("chartArea").setAttribute("d", d.chartArea);
-  } else if (window._lastSnapshot) {
-    renderRealKpis(window._lastSnapshot);
-  }
-  showToast(`Switched to ${tf} timeframe`, `PnL metrics and cumulative curve updated accordingly.`);
 }
 
-// Path-based navigation: each nav item is a real page (full page load), not a JS tab toggle.
-// Show only the section whose route matches the current pathname and mark its nav link active.
 const ROUTE_TABS = { "/": "overview", "/demo": "overview", "/leaderboard": "leaderboard", "/engines": "engines", "/trades": "trades", "/dream": "dream" };
 function activeTabFromPath() {
   const p = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -1348,7 +1450,6 @@ function showActivePage() {
   const tabId = activeTabFromPath();
   document.querySelectorAll(".view-tab").forEach(t => t.classList.toggle("active", t.id === "tab-" + tabId));
   document.querySelectorAll(".nav-btn").forEach(a => a.classList.toggle("active", a.dataset.nav === tabId));
-  // War Room widgets (5-agent grid + KPI cards) belong to the overview page only.
   const onOverview = tabId === "overview";
   const agents = document.getElementById("warRoomAgents");
   const kpis = document.getElementById("warRoomKpis");
@@ -1356,519 +1457,310 @@ function showActivePage() {
   if (kpis) kpis.style.display = onOverview ? "" : "none";
 }
 
-function renderLeaderboards() {
-  // Engine Leaderboard
-  document.getElementById("engineLeaderboard").innerHTML = filteredEngines(ENGINES).map((e, idx) => `
-    <div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; color: var(--yellow);">#${idx + 1}</span>
-          <b style="font-size: 13.5px;">${e.name}</b>
-        </div>
-        <span style="font-family: var(--font-mono); font-weight: 700; color: ${e.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">
-          ${e.pnl >= 0 ? '+' : ''}$${e.pnl.toFixed(2)}
-        </span>
-      </div>
-      <div style="height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 10px 0 6px;">
-        <div style="height: 100%; width: ${Math.max(4, parseFloat(e.share))}%; background: var(--green);"></div>
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
-        <span>Share: <b>${e.share}</b></span>
-        <span>Win Rate: <b style="color:var(--yellow);">${e.win}</b></span>
-      </div>
-    </div>
-  `).join("");
-
-  // Agent Leaderboard
-  document.getElementById("agentLeaderboard").innerHTML = AGENTS.map((a, idx) => `
-    <div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <b style="font-size: 13.5px;">${a.role}</b>
-          <div style="font-size: 11px; color: var(--yellow); font-family: var(--font-mono);">${MODEL_MASK}</div>
-        </div>
-        <span style="font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--blue);">
-          ${a.attributedPnl}
-        </span>
-      </div>
-      <div style="font-size: 12px; color: #cbd5e1; margin: 8px 0; font-style: italic;">
-        "${a.decision}"
-      </div>
-      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
-        <span>ROI: <b style="color:var(--green);">${a.roi}</b></span>
-        <span>Token Cost: <b>${a.cost}</b></span>
-        <span>Attributed Share: <b>${a.sharePct}%</b></span>
-      </div>
-    </div>
-  `).join("");
-}
-
-function renderEnginesTable() {
-  document.getElementById("enginesFullTable").innerHTML = filteredEngines(ENGINES).map((e, idx) => `
-    <tr>
-      <td><b>${e.name}</b> <span style="font-size:11px; color:var(--txt-muted);">(${e.id})</span></td>
-      <td><span style="font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; background: ${e.live ? 'var(--yellow-dim)' : 'var(--card-sub)'}; color: ${e.live ? 'var(--yellow)' : 'var(--txt-muted)'}; border: 1px solid var(--border);">${e.live ? 'LIVE BINANCE' : 'PAPER TEST'}</span></td>
-      <td><b>${e.sym}</b></td>
-      <td style="font-family: var(--font-mono); font-weight: 600;">$${e.size.toLocaleString()}</td>
-      <td style="font-size: 11.5px; color: var(--green); font-family: var(--font-mono);">${e.signal}</td>
-      <td style="font-family: var(--font-mono);">${e.trades}</td>
-      <td style="font-family: var(--font-mono); color: var(--yellow);">${e.win}</td>
-      <td style="font-family: var(--font-mono); font-weight: 700; color: ${e.pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${e.pnl >= 0 ? '+' : ''}$${e.pnl.toFixed(2)}</td>
-      <td>
-        <label class="switch">
-          <input type="checkbox" ${e.on ? 'checked' : ''} disabled>
-          <span class="slider"></span>
-        </label>
-      </td>
-    </tr>
-  `).join("");
-}
-
-function renderTradesTable() {
-  const all = filteredTrades(TRADES);
-  const pageSize = 8;
-  const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
-  tradesPage = Math.min(Math.max(1, tradesPage), totalPages);
-  const rows = all.slice((tradesPage - 1) * pageSize, tradesPage * pageSize);
-  document.getElementById("tradesTable").innerHTML = rows.map(t => `
-    <tr>
-      <td style="font-family: var(--font-mono); color: var(--txt-muted);">${t.time}</td>
-      <td><b>${t.engine}</b></td>
-      <td><b>${t.coin}</b></td>
-      <td><span style="font-size:11px; padding:2px 6px; border-radius:4px; font-weight:600; background: ${t.side.includes('BUY') || t.side.includes('ARB') ? 'var(--green-dim)' : 'var(--red-dim)'}; color: ${t.side.includes('BUY') || t.side.includes('ARB') ? 'var(--green)' : 'var(--red)'};">${t.side}</span></td>
-      <td style="font-family: var(--font-mono);">${t.entry}</td>
-      <td style="font-family: var(--font-mono);">${t.exit}</td>
-      <td style="font-family: var(--font-mono);">${t.qty}</td>
-      <td style="font-family: var(--font-mono); font-weight: 700; color: ${t.win ? 'var(--green)' : 'var(--red)'};">${t.pnl}</td>
-      <td><span style="font-size: 11px; color: ${t.win ? 'var(--green)' : 'var(--red)'};">● ${t.win ? 'CLOSED (PROFIT)' : 'STOP LOSS'}</span></td>
-    </tr>
-  `).join("");
-  renderPager("tradesPager", tradesPage, all.length, pageSize, "trades-prev", "trades-next");
-}
-
 // ===========================================================================
-// READ-ONLY VIEW FILTERS (symbol + execution mode). These only change what data is
-// displayed; they re-render from the last real snapshot and never mutate the backend.
+// 5 AI AGENTS SCHEDULER ACTIVITY (WAR ROOM CARDS)
+// Server snapshot provides agents.runtime map { name: { active: boolean } }
+// Active means scheduler enabled => show Active with green pulsing dot before text.
+// Absence/offline => Stopped (gray). Never infer activity from fabricated text or old runs.
 // ===========================================================================
-function currentSymbol() { const el = document.getElementById("coinFilter"); return el ? el.value : "ALL"; }
-function currentMode() { const el = document.getElementById("modeFilter"); return el ? el.value : "ALL"; }
-function symbolMatches(field, sel) { return sel === "ALL" || String(field || "").toUpperCase().includes(sel); }
-function modeMatches(isLive, sel) { return sel === "ALL" || (sel === "LIVE" ? isLive : !isLive); }
-function filteredEngines(list) {
-  const sym = currentSymbol(), mode = currentMode();
-  return (list || []).filter(e => {
-    const field = Array.isArray(e.symbols) ? e.symbols.join(",") : (e.sym || "");
-    const isLive = ("paper" in e) ? !e.paper : !!e.live;
-    return symbolMatches(field, sym) && modeMatches(isLive, mode);
+const AGENT_META = {
+  commander: { icon: "👑", name: "Commander (Portfolio Head)" },
+  supervisor: { icon: "🛡️", name: "Supervisor (Risk Guardrail)" },
+  coach: { icon: "🎓", name: "Coach (Optimization & Backtest)" },
+  treasurer: { icon: "💰", name: "Treasurer (x402 Micropayments)" },
+  sales: { icon: "📢", name: "Sales (Signal Monetization)" }
+};
+const AGENT_KEYS = ["commander", "supervisor", "coach", "treasurer", "sales"];
+
+function updateAgentCards(agentsObj) {
+  const runtime = (agentsObj && agentsObj.runtime) || {};
+  let activeCount = 0;
+  AGENT_KEYS.forEach(k => {
+    const isAct = !!(runtime[k] && runtime[k].active === true);
+    if (isAct) activeCount++;
+    const badge = document.getElementById(`badge-${k}`);
+    const card = document.getElementById(`agentCard-${k}`);
+    if (badge) {
+      if (isAct) {
+        badge.innerHTML = '<span class="status-dot pulsing"></span>Active';
+        badge.className = "agent-status-badge status-active";
+      } else {
+        badge.innerHTML = '<span class="status-dot"></span>Stopped';
+        badge.className = "agent-status-badge status-stopped";
+      }
+    }
+    if (card) {
+      card.classList.toggle("is-active", isAct);
+    }
+  });
+
+  const bannerEl = document.getElementById("agentsOnlineLabel");
+  if (bannerEl) {
+    if (activeCount > 0) {
+      bannerEl.textContent = `● ${activeCount} / 5 AGENTS ACTIVE`;
+      bannerEl.style.color = "var(--green)";
+    } else {
+      bannerEl.textContent = "● ALL AGENTS STOPPED";
+      bannerEl.style.color = "var(--txt-muted)";
+    }
+  }
+}
+
+function summarizeDecision(run) {
+  const d = run ? run.decision : null;
+  if (d == null || d === "") return run ? "Reviewed market — no directive issued" : "Standing by — scheduler idle";
+  if (typeof d === "string") return d;
+  if (typeof d !== "object") return String(d);
+  if (typeof d.action === "string" && d.action) {
+    if (/^(none|hold|noop|no_op)$/i.test(d.action)) return "Held position — no change warranted";
+    return "Action: " + d.action + (run && run.applied ? " (applied)" : " (evaluated)");
+  }
+  const parts = [];
+  for (const k of Object.keys(d)) {
+    const v = d[k];
+    if (v == null || typeof v === "object") continue;
+    parts.push(k.replace(/_/g, " ") + ": " + v);
+    if (parts.length >= 3) break;
+  }
+  if (parts.length) { const line = parts.join(" · "); return line.length > 120 ? line.slice(0, 120) + "…" : line; }
+  try { const t = JSON.stringify(d); return t.length > 140 ? t.slice(0, 140) + "…" : t; } catch (e) { return "decision recorded"; }
+}
+
+function applyAgentConfig(config) {
+  if (!config) return;
+  AGENT_KEYS.forEach(k => {
+    const card = document.getElementById(`agentCard-${k}`);
+    if (!card) return;
+    const modelEl = card.querySelector(".agent-card-model");
+    if (modelEl) modelEl.innerHTML = MODEL_MASK;
   });
 }
-function filteredTrades(list) { const sym = currentSymbol(); return (list || []).filter(t => symbolMatches(t.coin, sym)); }
-function filteredPositions(list) { const sym = currentSymbol(); return (list || []).filter(p => symbolMatches(p.symbol, sym)); }
 
-// Re-render the currently displayed data from the last real snapshot (or the canned showcase
-// when offline), honouring the active filters. Never calls a mutating backend route.
-function rerenderData() {
-  if (backendMode === "offline") {
-    renderLeaderboards();
-    renderEnginesTable();
-    renderTradesTable();
-  } else if (window._lastSnapshot) {
-    const s = window._lastSnapshot;
-    const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
-    renderRealEngines(engines);
-    renderRealEngineLeaderboard(engines);
-    const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
-    renderRealTrades(filteredPositions(pos));
-  }
-}
-function applyFilters() { rerenderData(); }
-
-// ===========================================================================
-// BACKEND MODE (read-only viewer)
-// backendMode: "offline" (static showcase / no live backend) | "live" (real backend).
-// The viewer is strictly read-only in every mode: no operator controls exist on this page.
-// ===========================================================================
-let backendMode = "offline";
-
-function setBackendMode(mode) {
-  backendMode = mode;
-}
-
-function showToast(title, msg, ms = 4000) {
-  const t = document.getElementById("toast");
-  document.getElementById("toastTitle").textContent = title;
-  document.getElementById("toastMsg").textContent = msg;
-  t.style.display = "block";
-  clearTimeout(window._t);
-  window._t = setTimeout(() => t.style.display = "none", ms);
-}
-
-
-// ===========================================================================
-// DREAM COIN (24H NEURAL REFLECTION & MEMORY BANK)
-// ===========================================================================
-let DREAM_LESSONS = [
-  {
-    id: "lesson-05",
-    time: "Just distilled",
-    category: "fee",
-    catLabel: "FEE OPTIMIZATION",
-    title: "Route Sub-$2,500 Rebalance Orders via Binance Convert RFQ",
-    trigger: "Sub-$2,000 Spot executions incurred 7.5 bps taker fees, eroding 18% of scalping alpha.",
-    counterfactual: "If routed via Binance Convert RFQ with zero trading fees, net profit increases by +$42.00.",
-    rule: "All stablecoin and blue-chip rebalancing orders under $2,500 must prioritize Convert RFQ.",
-    confidence: "96%",
-    agents: ["Commander", "Treasurer"]
-  },
-  {
-    id: "lesson-01",
-    time: "1 day ago",
-    category: "anti-loss",
-    catLabel: "ANTI-LOSS",
-    title: "Prohibit LiqFade Entries Under Severe Negative Funding (< -0.025%)",
-    trigger: "SOL -$6.00 stop-loss triggered as second liquidation cascade overwhelmed wick bids.",
-    counterfactual: "If waiting for funding rate to normalize above -0.01%, position avoids secondary cascade pressure.",
-    rule: "LiqFade only activates when funding_rate >= -0.020% across all derivative altcoins.",
-    confidence: "94%",
-    agents: ["Commander", "Supervisor", "Coach"]
-  },
-  {
-    id: "lesson-02",
-    time: "2 days ago",
-    category: "risk",
-    catLabel: "RISK MANAGEMENT",
-    title: "Reduce Order Size by 50% Ahead of High-Impact Macro News (CPI/FOMC)",
-    trigger: "ETHUSDT spread widened from 0.8 bps to 18.2 bps within 30s during Fed rate announcement.",
-    counterfactual: "If auto-reducing max notional to $2,500 ahead of release, slippage adverse impact drops 75%.",
-    rule: "Automatically engage Macro-Guard mode ahead of scheduled high-volatility economic announcements.",
-    confidence: "98%",
-    agents: ["Supervisor", "Commander"]
-  },
-  {
-    id: "lesson-03",
-    time: "3 days ago",
-    category: "exec",
-    catLabel: "EXECUTION",
-    title: "Reject DEX Smart Money Copies When Price Impact Exceeds 10 bps",
-    trigger: "Copy-trade of whale 0x7a2... on Uniswap v3 incurred 14.5 bps slippage due to thin pool liquidity.",
-    counterfactual: "If placing limit orders or routing to equivalent Binance Spot pair, profit margin gains +$34.00.",
-    rule: "SmartMoney Mirror on DEX must verify pool depth: reject order if estimated impact > 10 bps.",
-    confidence: "91%",
-    agents: ["Coach", "Treasurer"]
-  },
-  {
-    id: "lesson-04",
-    time: "4 days ago",
-    category: "fee",
-    catLabel: "FEE OPTIMIZATION",
-    title: "Route Sub-$2,500 Rebalance Orders via Binance Convert RFQ",
-    trigger: "Sub-$2,000 Spot executions incurred 7.5 bps taker fees, eroding 18% of scalping alpha.",
-    counterfactual: "If routed via Binance Convert RFQ with zero trading fees, net profit increases by +$42.00.",
-    rule: "All stablecoin and blue-chip rebalancing orders under $2,500 must prioritize Convert RFQ.",
-    confidence: "96%",
-    agents: ["Commander", "Treasurer"]
-  }
-];
-
-function renderDreamLessons() {
-  const container = document.getElementById("dreamLessonsContainer");
-  if (!container) return;
-  document.getElementById("dreamTotalLessons").textContent = `${DREAM_LESSONS.length} Invariant Rules Injected`;
-
-  const pageSize = 3;
-  const totalPages = Math.max(1, Math.ceil(DREAM_LESSONS.length / pageSize));
-  dreamPage = Math.min(Math.max(1, dreamPage), totalPages);
-  const rows = DREAM_LESSONS.slice((dreamPage - 1) * pageSize, dreamPage * pageSize);
-  container.innerHTML = rows.map(l => `
-    <div class="dream-lesson-card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="badge-category cat-${l.category}">${l.catLabel}</span>
-          <b style="font-size: 14px; color: #fff;">${l.title}</b>
-        </div>
-        <span style="font-size: 12px; color: var(--purple); font-weight: 700;">Confidence: ${l.confidence}</span>
-      </div>
-
-      <div style="font-size: 12px; color: var(--txt-muted); margin-bottom: 6px;">
-        <span style="color: var(--red);">● Trigger Event:</span> ${l.trigger}
-      </div>
-
-      <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px; font-style: italic;">
-        <span style="color: var(--yellow);">💭 Counterfactual Reasoning:</span> "${l.counterfactual}"
-      </div>
-
-      <div style="background: var(--card-sub); border: 1px solid var(--border); border-left: 3px solid var(--purple); padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-family: var(--font-mono); color: #e2e8f0; margin-bottom: 8px;">
-        <b>Invariant Golden Rule:</b> ${l.rule}
-      </div>
-
-      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
-        <span>Applied to: <b>${l.agents.join(", ")}</b></span>
-        <span>${l.time}</span>
-      </div>
-    </div>
-  `).join("");
-  renderPager("dreamPager", dreamPage, DREAM_LESSONS.length, pageSize, "dream-prev", "dream-next");
-}
-
-function pushDreamLog(msg) {
-  const c = document.getElementById("dreamConsole");
-  if (!c) return;
-  const timeStr = new Date().toTimeString().split(" ")[0];
-  const div = document.createElement("div");
-  div.className = "console-entry";
-  div.innerHTML = `
-    <div class="console-header">
-      <span class="console-agent" style="color: var(--purple);">🌙 Dream Neural Engine</span>
-      <span class="console-time">${timeStr}</span>
-    </div>
-    <div class="console-text">${msg}</div>
-  `;
-  c.insertBefore(div, c.firstChild);
-}
-
-function startDreamCycle() {
-  showToast("🌙 Starting 24H Reflection Cycle", "AI models entering Dream State to analyze past executions and risk vetoes...");
-  
-  // Highlight Step 1
-  document.getElementById("dStep1").classList.add("active");
-  pushDreamLog("STEP 1: Scanned 1,482 executed orders. Isolated 12 stop-losses and 3 Risk Kernel veto events.");
-
-  setTimeout(() => {
-    document.getElementById("dStep1").classList.remove("active");
-    document.getElementById("dStep2").classList.add("active");
-    pushDreamLog("STEP 2: Counterfactual simulation: SOL short -$6.00 loss was caused by falling-knife entry when funding rate was deeply negative at -0.035%.");
-  }, 1200);
-
-  setTimeout(() => {
-    document.getElementById("dStep2").classList.remove("active");
-    document.getElementById("dStep3").classList.add("active");
-    pushDreamLog("STEP 3: Distilled rule: 'PROHIBIT LiqFade entry when altcoin funding rate < -0.020%'. Formulated new Invariant Rule!");
-  }, 2400);
-
-  setTimeout(() => {
-    document.getElementById("dStep3").classList.remove("active");
-    document.getElementById("dStep4").classList.add("active");
-    pushDreamLog("STEP 4: Rule committed to Dream Memory Bank. Injected into System Context of Commander & Supervisor!");
-
-    const newLesson = {
-      id: `lesson-${DREAM_LESSONS.length + 1}`,
-      time: "Just distilled",
-      category: "anti-loss",
-      catLabel: "ANTI-LOSS",
-      title: "Prevent Falling-Knife Entries Under Severe Negative Funding (< -0.020%)",
-      trigger: "SOL -$6.00 stopped out due to premature entry amid secondary cascade.",
-      counterfactual: "If waiting for funding rate recovery above -0.01%, order avoids adverse secondary selloff.",
-      rule: "LiqFade only triggers when funding_rate >= -0.020% on derivative altcoins.",
-      confidence: "97%",
-      agents: ["Commander", "Supervisor", "Coach"]
-    };
-    DREAM_LESSONS.unshift(newLesson);
-    renderDreamLessons();
-    showToast("✨ 24H Reflection Cycle Complete", "Successfully distilled 1 new Invariant Rule and updated agent neural memories!");
-  }, 3600);
-
-  setTimeout(() => {
-    document.getElementById("dStep4").classList.remove("active");
-  }, 5000);
-}
-
-
-// Initialization
-// Dream lessons always render (they are hydrated from the backend over http).
-renderDreamLessons();
-
-if (!IS_HTTP) {
-  startSimulation();
-} else {
-  // Served over http: honest loading/empty states until we learn whether a live backend exists.
-  document.getElementById("enginesFullTable").innerHTML = emptyEnginesRow("Connecting to live backend…");
-  document.getElementById("tradesTable").innerHTML = emptyTradesRow("Connecting to live backend…");
-  document.getElementById("engineLeaderboard").innerHTML = emptyPanel("Connecting to live backend…");
-  document.getElementById("agentLeaderboard").innerHTML = emptyPanel("Connecting to live backend…");
-}
-
-// ===========================================================================
-// EVENT DELEGATION (CSP Compliant: no inline on*=; all buttons use data-action)
-// ===========================================================================
-const CLICK_ACTIONS = {
-  "timeframe": (el) => setTimeframe(el.dataset.arg, el),
-  "trades-prev": () => { tradesPage--; rerenderTrades(); },
-  "trades-next": () => { tradesPage++; rerenderTrades(); },
-  "dream-prev": () => { dreamPage--; renderDreamLessons(); },
-  "dream-next": () => { dreamPage++; renderDreamLessons(); }
-};
-const CHANGE_ACTIONS = {
-  "apply-filters": applyFilters
-};
-document.addEventListener("click", (e) => {
-  const el = e.target.closest("[data-action]");
+function renderRealAgentLeaderboard(latest) {
+  const el = document.getElementById("agentLeaderboard");
   if (!el) return;
-  const fn = CLICK_ACTIONS[el.dataset.action];
-  if (fn) fn(el);
-});
-document.addEventListener("change", (e) => {
-  const fn = CHANGE_ACTIONS[e.target.dataset.action];
-  if (fn) fn(e.target);
-});
-
-// Apply the route-based active page immediately (script runs at end of <body>).
-showActivePage();
-
-// ===========================================================================
-// BACKEND CONNECTION (read-only): anonymous viewer session + single-use WS ticket.
-// file:// or an unreachable/simulation backend -> backendMode = "offline" (static showcase).
-// ===========================================================================
-let liveSocket = null;
-let reconnectTimer = null;
-
-function onSession() {
-  setBackendMode("live");
-  connectLive();
-  hydrateLessons();
-  startAgentRunsPolling();
+  el.innerHTML = AGENT_KEYS.map(k => {
+    const run = latest && latest[k];
+    const decision = summarizeDecision(run);
+    return `<div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <b style="font-size: 13.5px;">${AGENT_META[k].icon} ${esc(AGENT_META[k].name)}</b>
+          <div style="font-size: 11px; color: var(--yellow); font-family: var(--font-mono);">${MODEL_MASK}</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #cbd5e1; margin: 8px 0 0; font-style: italic;">"${esc(decision)}"</div>
+    </div>`;
+  }).join("");
 }
 
-function scheduleReconnect() {
-  clearTimeout(reconnectTimer);
-  reconnectTimer = setTimeout(connectLive, 2000);
+function applyAgentRuns(runs) {
+  const latest = {};
+  (runs || []).forEach(r => {
+    const a = (r.agent || "").toLowerCase();
+    if (!a) return;
+    if (!latest[a] || (r.ts || 0) > (latest[a].ts || 0)) latest[a] = r;
+  });
+  window._lastRuns = latest;
+  renderRealAgentLeaderboard(latest);
 }
 
-// Request a fresh single-use ticket on each connection (30s TTL). Anonymous viewers are allowed.
-async function connectLive() {
-  if (backendMode === "offline") return;
-  let ticket;
-  try {
-    const r = await fetch("/api/ws-ticket", { method: "POST" });
-    if (!r.ok) { scheduleReconnect(); return; }
-    ticket = (await r.json()).ticket;
-  } catch (e) {
-    scheduleReconnect();
-    return;
-  }
-  const proto = window.location.protocol === "https:" ? "wss" : "ws";
-  const socket = new WebSocket(`${proto}://${window.location.host}/ws?ticket=${encodeURIComponent(ticket)}`);
-  liveSocket = socket;
-  socket.onmessage = (ev) => {
-    try {
-      handleSnapshot(JSON.parse(ev.data));
-    } catch (e) {}
+function startAgentRunsPolling() {
+  if (window._agentRunsPoll) return;
+  const poll = () => {
+    fetch("/api/agents/runs?limit=20")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && Array.isArray(d.runs)) applyAgentRuns(d.runs); })
+      .catch(() => {});
   };
-  socket.onclose = () => {
-    if (liveSocket === socket) scheduleReconnect();
-  };
+  poll();
+  window._agentRunsPoll = setInterval(poll, 5000);
 }
 
 // ===========================================================================
-// REAL BACKEND RENDERERS (used only when connected over http; never fabricate)
+// REAL BACKEND RENDERERS
 // ===========================================================================
-const ENGINE_NAME_MAP = {};
-ENGINES.forEach(e => { ENGINE_NAME_MAP[e.id] = e.name; });
-function engineName(id) { return ENGINE_NAME_MAP[id] || id || "engine"; }
-
-function esc(v) {
-  return String(v == null ? "" : v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-}
-
-function fmtSignedUsd(n) {
-  const v = Number(n) || 0;
-  return (v < 0 ? "-$" : "+$") + Math.abs(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-// hit may arrive as a ratio (0..1) or an explicit percentage; render honestly as %.
-function fmtPct(hit) {
-  if (typeof hit !== "number") return "—";
-  const pct = hit <= 1 ? hit * 100 : hit;
-  return pct.toFixed(1) + "%";
-}
-
-function emptyEnginesRow(msg) {
-  return `<tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
-}
-function emptyTradesRow(msg) {
-  return `<tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">${esc(msg)}</td></tr>`;
-}
-function emptyPanel(msg) {
-  return `<div style="padding:22px; text-align:center; color:var(--txt-muted);">${esc(msg)}</div>`;
-}
-
 function renderRealKpis(s) {
   const engines = Array.isArray(s.engines) ? s.engines : [];
-  const nav = s.executor && typeof s.executor.nav === "number" ? s.executor.nav : null;
-  document.getElementById("kpiNav").textContent = nav != null ? "$" + nav.toLocaleString(undefined, { minimumFractionDigits: 2 }) : "—";
 
   let pnl = 0, trades = 0, hitWeighted = 0, hitTrades = 0;
   engines.forEach(e => {
     pnl += Number(e.pnl24h) || 0;
-    const t = Number(e.trades) || 0;
+    const t = Number(e.trades != null ? e.trades : e.trades24h) || 0;
     trades += t;
-    if (typeof e.hit === "number") { hitWeighted += e.hit * t; hitTrades += t; }
+    const hit = typeof e.hit === "number" ? e.hit : (typeof e.hitRate === "number" ? e.hitRate : null);
+    if (hit !== null) { hitWeighted += hit * t; hitTrades += t; }
   });
 
+  // NAV & Capital:
+  // Server snapshot may add capital: { initialUsd: number | null, navUsd: number | null, source: string }
+  // or executor: { nav: number | null }
+  // Zero is legitimate; no sizeUsd sum NAV fallback.
+  // executor.nav represents internal book value, not live exchange balance.
+  let nav = null;
+  let navSource = "—";
+  if (s.capital && typeof s.capital.navUsd === "number") {
+    nav = s.capital.navUsd;
+    navSource = s.capital.source || "server snapshot";
+  } else if (s.executor && typeof s.executor.nav === "number") {
+    nav = s.executor.nav;
+    navSource = (s.capital && s.capital.source) ? s.capital.source : "executor.nav (book value)";
+  }
+
+  const navEl = document.getElementById("kpiNav");
+  if (navEl) {
+    navEl.textContent = (nav !== null) ? "$" + nav.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+  }
+
+  let initialUsd = null;
+  if (s.capital && typeof s.capital.initialUsd === "number") {
+    initialUsd = s.capital.initialUsd;
+  }
+  const initStr = (initialUsd !== null) ? "$" + initialUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+  const capitalDetailsEl = document.getElementById("kpiCapitalDetails");
+  if (capitalDetailsEl) {
+    capitalDetailsEl.textContent = `Initial: ${initStr} · Source: ${navSource}`;
+  }
+  const navSourceEl = document.getElementById("kpiNavSource");
+  if (navSourceEl) {
+    navSourceEl.textContent = "Source: " + navSource;
+  }
+
   const pnlEl = document.getElementById("kpiPnl");
-  pnlEl.textContent = fmtSignedUsd(pnl);
-  pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+  if (pnlEl) {
+    pnlEl.textContent = fmtSignedUsd(pnl);
+    pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+  }
 
   const pctEl = document.getElementById("kpiPnlPct");
-  const pct = pnl / Math.max(nav || 0, 1) * 100;
-  pctEl.textContent = (pnl >= 0 ? "▲ +" : "▼ ") + Math.abs(pct).toFixed(2) + "% capital growth";
-  pctEl.className = "kpi-badge " + (pnl >= 0 ? "up" : "down");
-
-  document.getElementById("kpiTradesCount").textContent = trades.toLocaleString() + " trades executed";
-  document.getElementById("kpiWinRate").textContent = hitTrades > 0 ? fmtPct(hitWeighted / hitTrades) : "—";
-
-  const llmCost = s.spend && typeof s.spend.llmTodayUsd === "number" ? s.spend.llmTodayUsd : 0;
-  document.getElementById("kpiRoi").textContent = (pnl > 0 && llmCost > 0) ? Math.round(pnl / llmCost) + "x" : "—";
-  document.getElementById("kpiCost").textContent = "LLM Cost: $" + llmCost.toFixed(2);
-
-  // Cumulative PnL chart panel: real cumulative value + real drawdown. No historical PnL series is
-  // available in the snapshot, so the curve is a flat baseline (honest) rather than a fabricated uptrend.
-  const chartVal = document.getElementById("chartPnlVal");
-  if (chartVal) { chartVal.textContent = fmtSignedUsd(pnl); chartVal.style.color = pnl >= 0 ? "var(--green)" : "var(--red)"; }
-  const ddEl = document.getElementById("chartDrawdown");
-  if (ddEl) { const dd = s.executor && typeof s.executor.drawdownPct === "number" ? s.executor.drawdownPct : 0; ddEl.textContent = Math.abs(dd).toFixed(2) + "%"; }
-  const lineEl = document.getElementById("chartLine");
-  const areaEl = document.getElementById("chartArea");
-  if (lineEl) lineEl.setAttribute("d", "M 0,235 L 800,235");
-  if (areaEl) areaEl.setAttribute("d", "M 0,235 L 800,235 L 800,240 L 0,240 Z");
-
-  // Allocated capital = sum of per-engine sizeUsd (real); agents banner reflects the cold-lane capability.
-  const allocated = engines.reduce((sum, e) => sum + (Number(e.sizeUsd) || 0), 0);
-  const allocEl = document.getElementById("kpiAllocated");
-  if (allocEl) allocEl.textContent = "Allocated Capital: $" + allocated.toLocaleString(undefined, { minimumFractionDigits: 2 });
-  const coldLane = (Array.isArray(s.capabilities) ? s.capabilities : []).find(c => /cold lane|LLM agents/i.test(c.name || ""));
-  const bannerEl = document.getElementById("agentsOnlineLabel");
-  if (bannerEl) {
-    const on = coldLane ? coldLane.on : false;
-    bannerEl.textContent = on ? "● ALL AGENTS ONLINE" : "● COLD LANE OFF";
-    bannerEl.style.color = on ? "var(--green)" : "var(--txt-muted)";
+  if (pctEl) {
+    let pct = null;
+    if (initialUsd && initialUsd > 0) {
+      pct = (pnl / initialUsd) * 100;
+    } else if (nav !== null && (nav - pnl) > 0) {
+      pct = (pnl / (nav - pnl)) * 100;
+    }
+    if (pct !== null) {
+      pctEl.textContent = (pnl >= 0 ? "▲ +" : "▼ ") + Math.abs(pct).toFixed(2) + "% growth";
+      pctEl.className = "kpi-badge " + (pnl >= 0 ? "up" : "down");
+    } else {
+      pctEl.textContent = "—";
+      pctEl.className = "kpi-badge neutral";
+    }
   }
+
+  const tradesCountEl = document.getElementById("kpiTradesCount");
+  if (tradesCountEl) tradesCountEl.textContent = trades.toLocaleString() + " trades executed";
+
+  const winRateEl = document.getElementById("kpiWinRate");
+  if (winRateEl) winRateEl.textContent = hitTrades > 0 ? fmtPct(hitWeighted / hitTrades) : "—";
+
+  const llmCost = (s.spend && typeof s.spend.llmTodayUsd === "number") ? s.spend.llmTodayUsd : 0;
+  const costEl = document.getElementById("kpiCost");
+  if (costEl) costEl.textContent = "LLM Cost: $" + llmCost.toFixed(2);
+
+  const roiEl = document.getElementById("kpiRoi");
+  if (roiEl) roiEl.textContent = (pnl > 0 && llmCost > 0) ? Math.round(pnl / llmCost) + "x" : "—";
+
+  const chartVal = document.getElementById("chartPnlVal");
+  if (chartVal) {
+    chartVal.textContent = fmtSignedUsd(pnl);
+    chartVal.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+  }
+  const ddEl = document.getElementById("chartDrawdown");
+  if (ddEl) {
+    const dd = (s.executor && typeof s.executor.drawdownPct === "number") ? s.executor.drawdownPct : 0;
+    ddEl.textContent = Math.abs(dd).toFixed(2) + "%";
+  }
+
+  renderSymbolDistribution(engines);
+}
+
+function renderSymbolDistribution(engines) {
+  const container = document.getElementById("symbolPnlDistribution");
+  if (!container) return;
+  const symMap = {};
+  let totalPositive = 0;
+  (engines || []).forEach(e => {
+    const syms = Array.isArray(e.symbols) ? e.symbols : (e.symbol ? [e.symbol] : (e.sym ? String(e.sym).split(",") : []));
+    const pnl = Number(e.pnl24h) || 0;
+    if (!syms.length) {
+      const fallbackSym = e.id ? e.id.toUpperCase() : "GENERAL";
+      symMap[fallbackSym] = (symMap[fallbackSym] || 0) + pnl;
+      if (pnl > 0) totalPositive += pnl;
+      return;
+    }
+    const splitPnl = pnl / syms.length;
+    syms.forEach(raw => {
+      const s = String(raw).trim().toUpperCase();
+      if (!s) return;
+      symMap[s] = (symMap[s] || 0) + splitPnl;
+      if (splitPnl > 0) totalPositive += splitPnl;
+    });
+  });
+
+  const keys = Object.keys(symMap);
+  if (!keys.length) {
+    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--txt-muted); padding: 10px; font-size: 12px;">No symbol distribution reported</div>';
+    return;
+  }
+  container.innerHTML = keys.slice(0, 4).map(sym => {
+    const pnl = symMap[sym];
+    const pct = totalPositive > 0 && pnl > 0 ? ((pnl / totalPositive) * 100).toFixed(1) + "% of profit" : "—";
+    return `
+      <div style="background: var(--card-sub); padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size: 11.5px; color: var(--txt-muted);">${esc(sym)}</div>
+        <div style="font-size: 14px; font-weight: 700; color: ${pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(pnl)}</div>
+        <div style="font-size: 11px; color: var(--txt-muted);">${pct}</div>
+      </div>
+    `;
+  }).join("");
 }
 
 function renderRealEngines(engines) {
+  const count = engines.length;
+  const countEl = document.getElementById("strategyCountTitle");
+  if (countEl) countEl.textContent = `${count} Scalping Strateg${count === 1 ? 'y' : 'ies'}`;
+  const navCountEl = document.getElementById("navEnginesCount");
+  if (navCountEl) navCountEl.textContent = `${count} Strateg${count === 1 ? 'y' : 'ies'}`;
+  const lbTitleEl = document.getElementById("leaderboardEnginesTitle");
+  if (lbTitleEl) lbTitleEl.textContent = `${count} Trading Strategies Leaderboard`;
+
   const body = document.getElementById("enginesFullTable");
-  if (!engines.length) { body.innerHTML = emptyEnginesRow("No engines reported by backend"); return; }
+  if (!body) return;
+  if (!engines.length) {
+    body.innerHTML = emptyEnginesRow("No strategies reported by backend");
+    return;
+  }
   body.innerHTML = engines.map(e => {
     const live = !e.paper;
-    const sym = Array.isArray(e.symbols) ? e.symbols.join(", ") : "";
+    const sym = Array.isArray(e.symbols) ? e.symbols.join(", ") : (e.symbol || e.sym || "");
     const sig = e.contract ? `${esc(e.contract.side)} ${esc(e.contract.symbol)} ${Math.round(Number(e.contract.edgeBps) || 0)}bps` : "—";
     const pnl = Number(e.pnl24h) || 0;
+    const orderSize = Number(e.sizeUsd) || 0;
+    const riskBudget = e.budgetUsd != null ? '$' + Number(e.budgetUsd).toLocaleString() : (e.maxBudgetUsd != null ? '$' + Number(e.maxBudgetUsd).toLocaleString() : '—');
+    const trades = Number(e.trades != null ? e.trades : e.trades24h) || 0;
+    const hit = typeof e.hit === "number" ? e.hit : (typeof e.hitRate === "number" ? e.hitRate : null);
+
     return `<tr>
       <td><b>${esc(engineName(e.id))}</b> <span style="font-size:11px; color:var(--txt-muted);">(${esc(e.id)})</span></td>
       <td><span style="font-size:11px; padding:2px 7px; border-radius:4px; font-weight:600; background:${live ? 'var(--yellow-dim)' : 'var(--card-sub)'}; color:${live ? 'var(--yellow)' : 'var(--txt-muted)'}; border:1px solid var(--border);">${live ? 'LIVE BINANCE' : 'PAPER TEST'}</span></td>
       <td><b>${esc(sym) || '—'}</b></td>
-      <td style="font-family:var(--font-mono); font-weight:600;">$${(Number(e.sizeUsd) || 0).toLocaleString()}</td>
+      <td style="font-family:var(--font-mono); font-weight:600;">$${orderSize.toLocaleString()}</td>
+      <td style="font-family:var(--font-mono); color:var(--txt-muted);">${esc(riskBudget)}</td>
       <td style="font-size:11.5px; color:var(--green); font-family:var(--font-mono);">${sig}</td>
-      <td style="font-family:var(--font-mono);">${Number(e.trades) || 0}</td>
-      <td style="font-family:var(--font-mono); color:var(--yellow);">${fmtPct(e.hit)}</td>
+      <td style="font-family:var(--font-mono);">${trades}</td>
+      <td style="font-family:var(--font-mono); color:var(--yellow);">${fmtPct(hit)}</td>
       <td style="font-family:var(--font-mono); font-weight:700; color:${pnl >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(pnl)}</td>
-      <td><label class="switch"><input type="checkbox" ${e.enabled ? 'checked' : ''} disabled><span class="slider"></span></label></td>
+      <td><span class="status-pill ${e.enabled ? 'pill-enabled' : 'pill-disabled'}">${e.enabled ? 'ENABLED' : 'DISABLED'}</span></td>
     </tr>`;
   }).join("");
 }
 
 function renderRealEngineLeaderboard(engines) {
   const el = document.getElementById("engineLeaderboard");
-  if (!engines.length) { el.innerHTML = emptyPanel("No engines reported by backend"); return; }
+  if (!el) return;
+  if (!engines.length) { el.innerHTML = emptyPanel("No strategies reported by backend"); return; }
   const sorted = engines.slice().sort((a, b) => (Number(b.pnl24h) || 0) - (Number(a.pnl24h) || 0));
   const totalAbs = sorted.reduce((sum, e) => sum + Math.max(0, Number(e.pnl24h) || 0), 0);
   el.innerHTML = sorted.map((e, idx) => {
@@ -1887,7 +1779,7 @@ function renderRealEngineLeaderboard(engines) {
       </div>
       <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
         <span>Share: <b>${share.toFixed(1)}%</b></span>
-        <span>Win Rate: <b style="color:var(--yellow);">${fmtPct(e.hit)}</b></span>
+        <span>Win Rate: <b style="color:var(--yellow);">${fmtPct(e.hit || e.hitRate)}</b></span>
       </div>
     </div>`;
   }).join("");
@@ -1895,8 +1787,13 @@ function renderRealEngineLeaderboard(engines) {
 
 function renderRealTrades(positions) {
   const body = document.getElementById("tradesTable");
+  if (!body) return;
   const all = positions || [];
-  if (!all.length) { body.innerHTML = emptyTradesRow("No trades yet — demo has no executed fills"); renderPager("tradesPager", 1, 0, 8, "trades-prev", "trades-next"); return; }
+  if (!all.length) {
+    body.innerHTML = emptyTradesRow("No trades yet — demo has no executed fills");
+    renderPager("tradesPager", 1, 0, 8, "trades-prev", "trades-next");
+    return;
+  }
   const pageSize = 8;
   const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
   tradesPage = Math.min(Math.max(1, tradesPage), totalPages);
@@ -1920,60 +1817,55 @@ function renderRealTrades(positions) {
   renderPager("tradesPager", tradesPage, all.length, pageSize, "trades-prev", "trades-next");
 }
 
-const AGENT_META = {
-  commander: { icon: "👑", name: "Commander (Portfolio Head)" },
-  supervisor: { icon: "🛡️", name: "Supervisor (Risk Guardrail)" },
-  coach: { icon: "🎓", name: "Coach (Optimization & Backtest)" },
-  treasurer: { icon: "💰", name: "Treasurer (x402 Micropayments)" },
-  sales: { icon: "📢", name: "Sales (Signal Monetization)" }
-};
-const AGENT_KEYS = ["commander", "supervisor", "coach", "treasurer", "sales"];
-
-function applyAgentConfig(config) {
-  if (!config) return;
-  AGENT_KEYS.forEach(k => {
-    const card = document.getElementById(`agentCard-${k}`);
-    if (!card) return;
-    const modelEl = card.querySelector(".agent-card-model");
-    if (modelEl) modelEl.innerHTML = MODEL_MASK;
-  });
-}
-
-function renderRealAgentLeaderboard(latest) {
-  const el = document.getElementById("agentLeaderboard");
-  if (!el) return;
-  const s = window._lastSnapshot;
-  const cfg = s && s.agents && s.agents.config ? s.agents.config : {};
-  el.innerHTML = AGENT_KEYS.map(k => {
-    const run = latest && latest[k];
-    const decision = run && run.decision ? run.decision : "Idle — cold lane off";
-    return `<div style="background: var(--card-sub); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <b style="font-size: 13.5px;">${AGENT_META[k].icon} ${esc(AGENT_META[k].name)}</b>
-          <div style="font-size: 11px; color: var(--yellow); font-family: var(--font-mono);">${MODEL_MASK}</div>
-        </div>
-      </div>
-      <div style="font-size: 12px; color: #cbd5e1; margin: 8px 0 0; font-style: italic;">"${esc(decision)}"</div>
-    </div>`;
-  }).join("");
-}
-
+// ===========================================================================
+// LIVE EVENT STREAM CONSOLE
+// ===========================================================================
 function pushConsoleLine(agent, text, tool, tsMs) {
   const c = document.getElementById("consoleStream");
   if (!c) return;
   const timeStr = new Date(tsMs || Date.now()).toTimeString().split(" ")[0];
   const div = document.createElement("div");
   div.className = "console-entry";
-  div.innerHTML = `<div class="console-header"><span class="console-agent">${esc(agent)}</span><span class="console-time">${timeStr}</span></div><div class="console-text">${esc(text)}</div>${tool ? `<div class="console-tool">${esc(tool)}</div>` : ""}`;
+  const full = text == null ? "" : String(text);
+  const LIMIT = 160;
+  const long = full.length > LIMIT;
+  const short = long ? full.slice(0, LIMIT).trimEnd() + "…" : full;
+  div.innerHTML = `<div class="console-header"><span class="console-agent">${esc(agent)}</span><span class="console-time">${timeStr}</span></div><div class="console-text"></div>${long ? '<button class="console-more" type="button">more</button>' : ""}`;
+  const textEl = div.querySelector(".console-text");
+  textEl.textContent = short;
+  if (long) {
+    const btn = div.querySelector(".console-more");
+    let open = false;
+    btn.addEventListener("click", () => {
+      open = !open;
+      textEl.textContent = open ? full : short;
+      btn.textContent = open ? "less" : "more";
+    });
+  }
   c.insertBefore(div, c.firstChild);
   while (c.childElementCount > 50) c.removeChild(c.lastChild);
+}
+
+function safeJson(p) {
+  let txt;
+  try { txt = JSON.stringify(p); } catch (e) { txt = String(p); }
+  if (txt && txt.length > 220) txt = txt.slice(0, 220) + "…";
+  return txt || "";
 }
 
 function tapeToConsole(ev) {
   const n = ev.name || "";
   const p = ev.payload || {};
   const low = n.toLowerCase();
+  if (low.includes("decision")) {
+    const who = String(p.agent || "agent").toLowerCase();
+    const meta = AGENT_META[who];
+    const label = meta ? (meta.icon + " " + meta.name.split(" (")[0]) : ("🤖 " + (p.agent || "Agent"));
+    const text = summarizeDecision({ decision: p.decision, applied: p.applied });
+    const status = p.applied ? "applied" : "evaluated";
+    const rej = p.toolRejections ? (" · " + p.toolRejections + " tool rejection(s)") : "";
+    return { agent: label, text: text, tool: status + rej };
+  }
   if (low.includes("veto")) {
     const rule = p.rule != null ? p.rule : (p.ruleId != null ? p.ruleId : "?");
     const detail = p.detail || p.reason || "";
@@ -1995,13 +1887,6 @@ function tapeToConsole(ev) {
   return { agent: `📡 ${n || "event"}`, text: safeJson(p), tool: `EVENT ${n}` };
 }
 
-function safeJson(p) {
-  let txt;
-  try { txt = JSON.stringify(p); } catch (e) { txt = String(p); }
-  if (txt && txt.length > 220) txt = txt.slice(0, 220) + "…";
-  return txt || "";
-}
-
 function appendTapeEvents(tape) {
   if (!Array.isArray(tape)) return;
   if (!window._seenTapeKeys) window._seenTapeKeys = new Set();
@@ -2016,127 +1901,267 @@ function appendTapeEvents(tape) {
   });
 }
 
-function applyAgentRuns(runs) {
-  const latest = {};
-  (runs || []).forEach(r => {
-    const a = (r.agent || "").toLowerCase();
-    if (!a) return;
-    if (!latest[a] || (r.ts || 0) > (latest[a].ts || 0)) latest[a] = r;
-  });
-  AGENT_KEYS.forEach(k => {
-    const taskEl = document.getElementById(`task-${k}`);
-    const badge = document.getElementById(`badge-${k}`);
-    const card = document.getElementById(`agentCard-${k}`);
-    const run = latest[k];
-    const active = !!(run && run.decision);
-    if (taskEl) taskEl.textContent = active ? run.decision : "Idle — cold lane off";
-    if (badge) {
-      badge.textContent = active ? "ACTIVE ⚙️" : "IDLE 💤";
-      badge.className = "agent-state-pill " + (active ? "state-tool" : "state-idle");
-    }
-    if (card) card.classList.toggle("active-thinking", active);
-  });
-  window._lastRuns = latest;
-  renderRealAgentLeaderboard(latest);
-}
+// ===========================================================================
+// DREAM COIN MEMORY BANK (HYDRATED FROM /api/dream/memory ONLY)
+// Initially empty; no fake logs, no fake simulations.
+// ===========================================================================
+let DREAM_LESSONS = [];
 
-function startAgentRunsPolling() {
-  if (window._agentRunsPoll) return;
-  const poll = () => {
-    if (backendMode === "offline") return;
-    fetch("/api/agents/runs?limit=20")
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && Array.isArray(d.runs)) applyAgentRuns(d.runs); })
-      .catch(() => {});
-  };
-  poll();
-  window._agentRunsPoll = setInterval(poll, 5000);
-}
+function renderDreamLessons() {
+  const container = document.getElementById("dreamLessonsContainer");
+  if (!container) return;
+  const countEl = document.getElementById("dreamTotalLessons");
+  if (countEl) countEl.textContent = `${DREAM_LESSONS.length} Invariant Rule${DREAM_LESSONS.length === 1 ? '' : 's'}`;
 
-function handleSnapshot(s) {
-  if (!s) return;
-  window._lastSnapshot = s;
-
-  // KPI cards driven entirely by the real snapshot (never canned numbers).
-  renderRealKpis(s);
-
-  // Engines table + PnL leaderboard + trade audit trail, honouring the read-only filters.
-  const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
-  renderRealEngines(engines);
-  renderRealEngineLeaderboard(engines);
-  const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
-  renderRealTrades(filteredPositions(pos));
-
-  // Agent model labels + agent leaderboard from real config/runs.
-  if (s.agents && s.agents.config) applyAgentConfig(s.agents.config);
-  renderRealAgentLeaderboard(window._lastRuns || null);
-
-  // Live console: append NEW real hot-lane tape events.
-  appendTapeEvents(s.tape);
-
-  // Dream reflection cycle is a passive display driven by the real backend tape event.
-  if (Array.isArray(s.tape)) {
-    const dreamEv = s.tape.find(t => t.name === "dream.cycle");
-    if (dreamEv && !window._lastDreamHandled) {
-      window._lastDreamHandled = dreamEv.ts;
-      startDreamCycle();
-    }
+  if (!DREAM_LESSONS.length) {
+    container.innerHTML = '<div style="padding:22px; text-align:center; color:var(--txt-muted);">No distilled invariant rules in memory bank yet. Rules are generated after real operational reflection cycles.</div>';
+    renderPager("dreamPager", 1, 0, 3, "dream-prev", "dream-next");
+    return;
   }
+
+  const pageSize = 3;
+  const totalPages = Math.max(1, Math.ceil(DREAM_LESSONS.length / pageSize));
+  dreamPage = Math.min(Math.max(1, dreamPage), totalPages);
+  const rows = DREAM_LESSONS.slice((dreamPage - 1) * pageSize, dreamPage * pageSize);
+  container.innerHTML = rows.map(l => `
+    <div class="dream-lesson-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge-category cat-${esc(l.category || 'anti-loss')}">${esc(l.catLabel || 'INVARIANT')}</span>
+          <b style="font-size: 14px; color: #fff;">${esc(l.title)}</b>
+        </div>
+        <span style="font-size: 12px; color: var(--purple); font-weight: 700;">Confidence: ${esc(l.confidence || '95%')}</span>
+      </div>
+
+      <div style="font-size: 12px; color: var(--txt-muted); margin-bottom: 6px;">
+        <span style="color: var(--red);">● Trigger Event:</span> ${esc(l.trigger || '—')}
+      </div>
+
+      <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 8px; font-style: italic;">
+        <span style="color: var(--yellow);">💭 Counterfactual Reasoning:</span> "${esc(l.counterfactual || '—')}"
+      </div>
+
+      <div style="background: var(--card-sub); border: 1px solid var(--border); border-left: 3px solid var(--purple); padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-family: var(--font-mono); color: #e2e8f0; margin-bottom: 8px;">
+        <b>Invariant Golden Rule:</b> ${esc(l.rule || '—')}
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--txt-muted);">
+        <span>Applied to: <b>${esc(Array.isArray(l.agents) ? l.agents.join(", ") : (l.agents || 'All Agents'))}</b></span>
+        <span>${esc(l.time || '—')}</span>
+      </div>
+    </div>
+  `).join("");
+  renderPager("dreamPager", dreamPage, DREAM_LESSONS.length, pageSize, "dream-prev", "dream-next");
 }
 
-// Hydrate Dream lessons from backend (session cookie, no auth header).
 function hydrateLessons() {
   fetch("/api/dream/memory")
     .then(r => r.ok ? r.json() : null)
     .then(m => {
-      if (m && Array.isArray(m.lessons) && m.lessons.length > 0) {
+      if (m && Array.isArray(m.lessons)) {
         DREAM_LESSONS = m.lessons.map((l, i) => ({
           id: l.id || `lesson-${i+1}`,
-          time: new Date(l.timestamp).toLocaleTimeString() || "24h ago",
+          time: l.timestamp ? new Date(l.timestamp).toLocaleTimeString() : "distilled",
           category: l.category || "anti-loss",
           catLabel: l.category === "risk-management" ? "RISK MANAGEMENT" : l.category === "fee-optimization" ? "FEE OPTIMIZATION" : "ANTI-LOSS",
-          title: l.title,
-          trigger: l.trigger,
-          counterfactual: l.counterfactual,
-          rule: l.invariantRule,
+          title: l.title || "Invariant Rule",
+          trigger: l.trigger || "",
+          counterfactual: l.counterfactual || "",
+          rule: l.invariantRule || l.rule || "",
           confidence: Math.round((l.confidence || 0.9) * 100) + "%",
           agents: l.appliedToAgents || ["Commander", "Supervisor"]
         }));
         renderDreamLessons();
+        if (window._lastSnapshot) {
+          savePublicDisplayCache(window._lastSnapshot, DREAM_LESSONS);
+        }
       }
     }).catch(() => {});
 }
 
+// ===========================================================================
+// SNAPSHOT HANDLER
+// ===========================================================================
+function handleSnapshot(s) {
+  if (!s) return;
+  window._lastSnapshot = s;
+  setCacheStaleIndicator(false);
+
+  // 1. Agent Cards: driven by s.agents.runtime map { name: { active: boolean } }
+  updateAgentCards(s.agents || {});
+
+  // 2. Real KPI metrics
+  renderRealKpis(s);
+
+  // 3. Scalping strategies table and leaderboard
+  const engines = Array.isArray(s.engines) ? filteredEngines(s.engines) : [];
+  renderRealEngines(engines);
+  renderRealEngineLeaderboard(engines);
+
+  // 4. Executed positions / trades
+  const pos = s.executor && Array.isArray(s.executor.positions) ? s.executor.positions : [];
+  renderRealTrades(filteredPositions(pos));
+
+  // 5. Agent supervisory leaderboard
+  if (s.agents && s.agents.config) applyAgentConfig(s.agents.config);
+  renderRealAgentLeaderboard(window._lastRuns || null);
+
+  // 6. Live tape events into console stream
+  appendTapeEvents(s.tape);
+
+  // 7. Persist bounded TTL versioned cache of public display data
+  savePublicDisplayCache(s, DREAM_LESSONS);
+
+  // 8. Handle real dream reflection cycle event from tape
+  if (Array.isArray(s.tape)) {
+    const dreamEv = s.tape.find(t => t.name === "dream.cycle");
+    if (dreamEv && (!window._lastDreamHandled || window._lastDreamHandled < dreamEv.ts)) {
+      window._lastDreamHandled = dreamEv.ts;
+      hydrateLessons();
+      const c = document.getElementById("dreamConsole");
+      if (c) {
+        const timeStr = new Date(dreamEv.ts || Date.now()).toTimeString().split(" ")[0];
+        const div = document.createElement("div");
+        div.className = "console-entry";
+        div.innerHTML = `<div class="console-header"><span class="console-agent" style="color: var(--purple);">🌙 Dream Neural Cycle</span><span class="console-time">${timeStr}</span></div><div class="console-text">${esc(safeJson(dreamEv.payload || {}))}</div>`;
+        c.insertBefore(div, c.firstChild);
+      }
+    }
+  }
+}
+
+// ===========================================================================
+// BACKEND CONNECTION & RECOVERY
+// Reconnects recovering initial failed session and socket.
+// ===========================================================================
+let liveSocket = null;
+let reconnectTimer = null;
+let sessionRetryTimer = null;
+
+function onSession() {
+  setCacheStaleIndicator(false);
+  connectLive();
+  hydrateLessons();
+  startAgentRunsPolling();
+}
+
+function scheduleReconnect() {
+  clearTimeout(reconnectTimer);
+  reconnectTimer = setTimeout(connectLive, 3000);
+}
+
+function scheduleSessionRetry() {
+  clearTimeout(sessionRetryTimer);
+  sessionRetryTimer = setTimeout(bootBackend, 4000);
+}
+
+async function connectLive() {
+  let ticket;
+  try {
+    const r = await fetch("/api/ws-ticket", { method: "POST" });
+    if (!r.ok) { scheduleReconnect(); return; }
+    const data = await r.json().catch(() => ({}));
+    ticket = data.ticket;
+    if (!ticket) { scheduleReconnect(); return; }
+  } catch (e) {
+    scheduleReconnect();
+    return;
+  }
+  const proto = window.location.protocol === "https:" ? "wss" : "ws";
+  const socket = new WebSocket(`${proto}://${window.location.host}/ws?ticket=${encodeURIComponent(ticket)}`);
+  liveSocket = socket;
+  socket.onopen = () => {
+    setCacheStaleIndicator(false);
+    setWsSyncStatus("synced");
+  };
+  socket.onmessage = (ev) => {
+    try {
+      handleSnapshot(JSON.parse(ev.data));
+    } catch (e) {}
+  };
+  socket.onclose = () => {
+    if (liveSocket === socket) {
+      setCacheStaleIndicator(true);
+      setWsSyncStatus("reconnecting");
+      scheduleReconnect();
+    }
+  };
+  socket.onerror = () => {
+    socket.close();
+  };
+}
+
+let sessionRetryCount = 0;
 async function bootBackend() {
-  setBackendMode("offline");
-  if (!IS_HTTP) return;
+  // Fast restore from bounded TTL cache
+  const hasCache = restoreFromCache();
+
+  if (!IS_HTTP) {
+    setCacheStaleIndicator(true);
+    setWsSyncStatus("disconnected");
+    if (!hasCache) {
+      setExplicitUnavailableState("Unavailable on file:// — HTTP live backend required");
+    }
+    return;
+  }
+
   let r;
   try {
     r = await fetch("/api/session");
   } catch (e) {
-    // Backend unreachable over http (e.g. static deploy without an engine): show the showcase.
-    startSimulation();
+    sessionRetryCount++;
+    setCacheStaleIndicator(true);
+    setWsSyncStatus("reconnecting");
+    if (!hasCache && sessionRetryCount >= 2) {
+      setExplicitUnavailableState("Live backend unavailable — retrying…");
+    }
+    scheduleSessionRetry();
     return;
   }
   if (r.ok) {
-    const data = await r.json().catch(() => ({}));
-    if (data && data.simulation === true) {
-      // Static showcase edge (e.g. Cloudflare Worker) with no live engine: run the canned showcase.
-      startSimulation();
-      return;
-    }
+    sessionRetryCount = 0;
     onSession();
   } else {
-    // No live backend session available: fall back to the read-only static showcase.
-    startSimulation();
+    sessionRetryCount++;
+    setCacheStaleIndicator(true);
+    setWsSyncStatus("reconnecting");
+    if (!hasCache && sessionRetryCount >= 2) {
+      setExplicitUnavailableState("Live backend unavailable — retrying…");
+    }
+    scheduleSessionRetry();
   }
 }
 
+// ===========================================================================
+// EVENT DELEGATION (CSP Compliant: no inline on*=; all actions via data-action)
+// ===========================================================================
+const CLICK_ACTIONS = {
+  "timeframe": (el) => setTimeframe(el.dataset.arg, el),
+  "trades-prev": () => { tradesPage--; rerenderTrades(); },
+  "trades-next": () => { tradesPage++; rerenderTrades(); },
+  "dream-prev": () => { dreamPage--; renderDreamLessons(); },
+  "dream-next": () => { dreamPage++; renderDreamLessons(); }
+};
+const CHANGE_ACTIONS = {
+  "apply-filters": applyFilters
+};
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const fn = CLICK_ACTIONS[el.dataset.action];
+  if (fn) fn(el);
+});
+document.addEventListener("change", (e) => {
+  const fn = CHANGE_ACTIONS[e.target.dataset.action];
+  if (fn) fn(e.target);
+});
+
+showActivePage();
+renderDreamLessons();
 bootBackend();
 
+// Autonomous countdown timer to 00:00:00 UTC (honest passive schedule timer)
 (() => {
-
-  // 24h autonomous countdown timer to 00:00:00 UTC
   function tickCountdown() {
     const now = new Date();
     const nextMidnight = new Date();
@@ -2149,13 +2174,6 @@ bootBackend();
     const timerEl = document.getElementById("dreamCountdownTimer");
     if (timerEl) {
       timerEl.textContent = `Next Session: 00:00:00 UTC (${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s remaining)`;
-    }
-
-    // Auto-trigger Dream Cycle when clock hits 00:00 UTC
-    if (diff <= 1000 && !window._dreamTriggeredToday) {
-      window._dreamTriggeredToday = true;
-      startDreamCycle();
-      setTimeout(() => { window._dreamTriggeredToday = false; }, 60000);
     }
   }
   setInterval(tickCountdown, 1000);
