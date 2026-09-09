@@ -599,7 +599,7 @@ export function checkNoveltyGate(
       if (!meta.bootstrapped) {
         return { hasWork: true, reason: "initial bootstrap run" };
       }
-      const starvationMs = meta.starvationMs ?? 6 * 3_600_000;
+      const starvationMs = meta.starvationMs ?? 30 * 60_000;
       if (meta.nowMs !== undefined && meta.lastRunMs !== undefined && meta.nowMs - meta.lastRunMs >= starvationMs) {
         return { hasWork: true, reason: "starvation prevention cadence reached" };
       }

@@ -39,7 +39,7 @@ const log = logger("cold.scheduler");
 export const TICK_MS = 5_000;
 const HOUR_MS = 3_600_000;
 const DAY_MS = 86_400_000;
-export const STARVATION_MS = 6 * HOUR_MS;
+export const STARVATION_MS = 30 * 60_000;
 
 /** Budget fraction (spent / daily cap) at which each gate closes. */
 export const BUDGET_GATES = { shadow: 0.7, coach: 0.8, sales: 0.8, treasurer: 0.9, commander: 1.0, supervisor: 1.0 } as const;
