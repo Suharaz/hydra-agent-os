@@ -267,7 +267,8 @@ export async function chat(req: ChatRequest, deps: ChatDeps): Promise<ChatResult
     schemaValid = false;
     if (content !== null) {
       try {
-        parsed = JSON.parse(content);
+        const clean = content.trim().replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/i, "$1").trim();
+        parsed = JSON.parse(clean);
         schemaValid = true;
       } catch {
         // caller retries with a corrective message

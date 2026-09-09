@@ -53,11 +53,11 @@ export function makeEnginePatch(allowedSymbols: readonly string[], bounds: Param
     z
       .object({
         engine: z.literal(engine),
-        enabled: z.boolean().nullable(),
-        paper: z.boolean().nullable(),
-        symbols,
-        sizeUsd: z.number().min(0).nullable(),
-        params: engineParamsSchema(engine, bounds).nullable(),
+        enabled: z.boolean().optional().nullable(),
+        paper: z.boolean().optional().nullable(),
+        symbols: symbols.optional().nullable(),
+        sizeUsd: z.number().min(0).optional().nullable(),
+        params: engineParamsSchema(engine, bounds).optional().nullable(),
         rationale: z.string().max(300),
       })
       .strict(),
