@@ -15,6 +15,7 @@ app.get("/api/health", (c) => {
     system: "HYDRA Edge Node",
     version: "0.1.0",
     network: "Cloudflare Edge",
+    gateway: "YEScale AI Gateway",
     timestamp: Date.now(),
   });
 });
@@ -33,10 +34,13 @@ app.get("/api/session", (c) => {
 app.get("/api/models", (c) => {
   return c.json({
     data: [
-      { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet" },
-      { id: "openai/gpt-4o", name: "GPT-4o" },
-      { id: "deepseek/deepseek-chat", name: "DeepSeek V3" },
-      { id: "deepseek/deepseek-r1", name: "DeepSeek R1" },
+      { id: "claude-fable-5-1", name: "Claude Fable 5.1 (Commander)" },
+      { id: "deepseek-v4-pro", name: "DeepSeek V4 Pro (Supervisor/Sales)" },
+      { id: "gpt-5.6-sol", name: "GPT-5.6 Sol (Treasurer)" },
+      { id: "gpt-6-astra", name: "GPT-6 Astra (Coach)" },
+      { id: "claude-sonnet-4-5", name: "Claude Sonnet 4.5" },
+      { id: "gpt-4.1-mini", name: "GPT-4.1 Mini" },
+      { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash" },
     ],
   });
 });
