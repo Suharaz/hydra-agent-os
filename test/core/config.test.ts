@@ -144,7 +144,7 @@ describe("writes", () => {
     expect(seen.map((s) => s.model)).toEqual(["x/y", "x/z"]);
     // YAML comments/structure preserved: file still parses and other agents untouched.
     const cfg = loadConfig(dir).agents.agents;
-    expect(cfg.treasurer.model).toBe("gpt-5.6-sol");
+    expect(cfg.treasurer.model).toBe("gpt-4.1");
     expect(cfg.supervisor.model).toBe("deepseek-v4-pro");
   });
 
