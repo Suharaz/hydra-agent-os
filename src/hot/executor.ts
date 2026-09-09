@@ -101,6 +101,7 @@ class UncertainLeg extends Error {
 interface SpotWatcher {
   orderId: number;
   engine: EngineId;
+  venue?: Venue;
   symbol: string;
   side: Side;
   qty: number;
@@ -166,7 +167,10 @@ export class Executor {
   start(): void {
     this.disposers.push(
       this.bus.on("feed.trade", (t) => {
-        if (t.venue === "spot") this.onSpotTrade(t.symbol, t.price);
+        this.onPriceTick(t.venue, t.symbol, t.price);
+      }),
+      this.bus.on("feed.mark", (m) => {
+        this.onPriceTick("futures", m.symbol, m.mark);
       }),
       this.bus.on("system.kill", () => { this.killed = true; }),
       this.bus.on("system.kill.cleared", () => { if (readKillLock(this.d.stateDir) === null) this.killed = false; }),
@@ -511,7 +515,20 @@ export class Executor {
       } catch (err) {
         this.d.ledger.updateOrderStatus(o.id, "FAILED", JSON.stringify({ error: errText(err) }));
         this.onError("futures", err);
-        log.error(`futures ${kind} order failed; position unprotected`, { intent: intent.id, symbol: intent.symbol, error: errText(err) });
+        log.warn(`futures ${kind} REST rejected (${errText(err)}); falling back to price watcher`, { intent: intent.id, symbol: intent.symbol });
+        this.addWatcher({
+          orderId: o.id,
+          engine: intent.engine,
+          venue: "futures",
+          symbol: intent.symbol,
+          side: intent.side,
+          qty,
+          tp: intent.tp,
+          sl: intent.sl,
+          extId: undefined,
+          firing: false,
+        });
+        break;
       }
     }
   }
@@ -554,17 +571,17 @@ export class Executor {
     return true;
   }
 
-  private onSpotTrade(symbol: string, price: number): void {
+  private onPriceTick(venue: Venue, symbol: string, price: number): void {
     const list = this.watchers.get(symbol);
     if (list === undefined || list.length === 0) return;
     for (const w of list) {
-      if (w.firing) continue;
+      if (w.firing || (w.venue !== undefined && w.venue !== venue)) continue;
       const long = w.side === "BUY";
       const hitTp = w.tp !== undefined && (long ? price >= w.tp : price <= w.tp);
       const hitSl = w.sl !== undefined && (long ? price <= w.sl : price >= w.sl);
       if (!hitTp && !hitSl) continue;
       w.firing = true;
-      void this.fireWatcher(w, hitTp ? "tp" : "sl", price).catch((err) => log.error("spot watcher close failed", { orderId: w.orderId, symbol, error: errText(err) }));
+      void this.fireWatcher(w, hitTp ? "tp" : "sl", price).catch((err) => log.error(`${w.venue ?? "spot"} watcher close failed`, { orderId: w.orderId, symbol, error: errText(err) }));
     }
   }
 
@@ -573,6 +590,38 @@ export class Executor {
     if (list !== undefined) {
       const i = list.indexOf(w);
       if (i >= 0) list.splice(i, 1);
+    }
+    const v: Venue = w.venue ?? "spot";
+    if (v === "futures") {
+      const fut = this.futures();
+      let qty = w.qty;
+      if (this.d.positions !== null) {
+        qty = Math.min(qty, Math.abs(this.d.positions.symbolQty("futures", w.symbol, false)));
+      }
+      qty = this.round("futures", w.symbol, "qty", qty);
+      if (qty <= 0) return;
+      const side = opposite(w.side);
+      const attempt = w.attempts ?? 0;
+      const cid = clientId(w.engine, String(w.orderId), attempt === 0 ? `-${kind}` : `-${kind}${attempt}`);
+      const row = this.d.ledger.db.query<{ intent_id: number }, [number]>("SELECT intent_id FROM orders WHERE id = ?").get(w.orderId);
+      const intentRow = row?.intent_id ?? 0;
+      const o: Order = { id: 0, intentId: intentRow, venue: "futures", symbol: w.symbol, side, qty, clientId: cid, status: "PENDING", tSentNs: this.now() };
+      o.id = this.d.ledger.insertOrderPending(o);
+      const fills: Fill[] = [];
+      try {
+        const ack = await fut.order({ symbol: w.symbol, side, type: "MARKET", quantity: qty, reduceOnly: true, newClientOrderId: cid });
+        const leg: Leg = { intent: { id: String(w.orderId), engine: w.engine, venue: "futures", symbol: w.symbol, side, qty, type: "MARKET", ttlMs: 0, paper: false, tSignalNs: o.tSentNs }, intentRow, order: o, filledQty: 0, avgPrice: 0, extId: null, status: "PENDING" };
+        this.applyFuturesAck(leg, ack, fills);
+        log.info(`futures ${kind} hit; closed via market`, { orderId: w.orderId, symbol: w.symbol, trigger: price, qty });
+      } catch (err) {
+        this.d.ledger.updateOrderStatus(o.id, "FAILED", JSON.stringify({ error: errText(err) }));
+        w.firing = false;
+        w.attempts = attempt + 1;
+        this.watchers.set(w.symbol, [...(this.watchers.get(w.symbol) ?? []), w]);
+        this.onError("futures", err);
+        throw err;
+      }
+      return;
     }
     const spot = this.spot();
     if (w.extId !== undefined) {
