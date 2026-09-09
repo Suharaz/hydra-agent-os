@@ -24,7 +24,7 @@ engines:
   basis:
     enabled: true
     paper: false
-    symbols: [ BTCUSDT ]
+    symbols: [ BTCUSDT, ETHUSDT ]
     sizeUsd: 200
     params:
       lookbackSec: 300 # 60-900     z-score window (1 s samples)
