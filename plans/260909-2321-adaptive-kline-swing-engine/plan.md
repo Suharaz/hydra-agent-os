@@ -1,7 +1,7 @@
 ---
 title: "Adaptive Kline & Swing Strategy Engine"
 description: "Xây dựng Engine giao dịch nến 15m/30m đa chế độ (Breakout, EMA Pullback, RSI Reversal) tích hợp vòng lặp tự suy luận và tối ưu tham số của AI Agent."
-status: pending
+status: completed
 priority: P1
 effort: "9h"
 tags: [trading, kline, swing, ai-agents, machine-learning, binance]
@@ -39,7 +39,6 @@ Kế hoạch này phát triển một chiến lược hoàn toàn mới: **Engin
                       │  - Bắn Intent ra Kernel Guard -> Binance Executor      │
                       └────────────────────────────────────────────────────────┘
 ```
-
 ## Goals
 
 | # | Goal | Priority |
@@ -53,16 +52,16 @@ Kế hoạch này phát triển một chiến lược hoàn toàn mới: **Engin
 
 | # | Phase | Effort | Status | Deliverables |
 |---|-------|--------|--------|--------------|
-| 1 | [Phase 1: Kline Ingestion & Technical Indicators](./phase-01-start.md) | 2h | Pending | `rest-futures.ts`, `rest-spot.ts`, `indicators.ts` |
-| 2 | [Phase 2: Swing Engine Multi-Mode Implementation](./phase-02-swing-engine-modes.md) | 3h | Pending | `src/hot/engines/swing.ts`, đăng ký engine |
-| 3 | [Phase 3: Agent Autonomous Deduction & Patch Loop](./phase-03-agent-deduction-patches.md) | 2h | Pending | Mở rộng `commander.ts`, `coach.ts`, `ledger.ts` |
-| 4 | [Phase 4: Verification, Test Suite, and Production Deployment](./phase-04-verification-and-experimentation.md) | 2h | Pending | Unit tests, test suite 100% pass, deploy VPS |
+| 1 | [Phase 1: Kline Ingestion & Technical Indicators](./phase-01-start.md) | 2h | Completed | `rest-futures.ts`, `rest-spot.ts`, `indicators.ts` |
+| 2 | [Phase 2: Swing Engine Multi-Mode Implementation](./phase-02-swing-engine-modes.md) | 3h | Completed | `src/hot/engines/swing.ts`, đăng ký engine |
+| 3 | [Phase 3: Agent Autonomous Deduction & Patch Loop](./phase-03-agent-deduction-patches.md) | 2h | Completed | Mở rộng `commander.ts`, `coach.ts`, `ledger.ts` |
+| 4 | [Phase 4: Verification, Test Suite, and Production Deployment](./phase-04-verification-and-experimentation.md) | 2h | Completed | Unit tests, test suite 100% pass, deploy VPS |
 
 ## Success Criteria
 
-- [ ] Lấy dữ liệu nến 15m và 30m từ Binance REST API ổn định, không bị dính mã lỗi 429 Rate Limit.
-- [ ] Engine `swing` thực hiện chính xác 3 chế độ chiến thuật và tính toán SL/TP theo ATR.
-- [ ] AI Agent (Commander) phân tích được hiệu suất từng Mode và phát sinh lệnh đổi Mode hợp lệ khi thị trường thay đổi.
-- [ ] Toàn bộ 242+ tests đều vượt qua, hệ thống chạy trơn tru trên VPS `159.195.47.180`.
+- [x] Lấy dữ liệu nến 15m và 30m từ Binance REST API ổn định, không bị dính mã lỗi 429 Rate Limit.
+- [x] Engine `swing` thực hiện chính xác 3 chế độ chiến thuật và tính toán SL/TP theo ATR.
+- [x] AI Agent (Commander) phân tích được hiệu suất từng Mode và phát sinh lệnh đổi Mode hợp lệ khi thị trường thay đổi.
+- [x] Toàn bộ 248 tests đều vượt qua, hệ thống chạy trơn tru trên VPS `159.195.47.180`.
 
 <!-- slug: adaptive-kline-swing-engine -->
