@@ -123,7 +123,7 @@ export class Positions {
     this.spotSymbols = deps.spotSymbols ?? [];
     this.reconcileMs = deps.reconcileMs ?? 10_000;
     this.snapMs = deps.snapMs ?? 1000;
-    this.dust = deps.dust ?? (() => 0);
+    this.dust = deps.dust ?? ((_venue, _symbol) => 1e-5);
     this.stEngine = this.ledger.db.prepare<{ engine: EngineId }, [number]>(
       "SELECT i.engine AS engine FROM orders o JOIN intents i ON i.id = o.intent_id WHERE o.id = ? AND COALESCE(json_extract(i.json, '$.killUnattributed'), 0) = 0",
     );
