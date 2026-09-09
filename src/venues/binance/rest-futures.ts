@@ -102,6 +102,30 @@ export interface ExchangeInfo {
   [k: string]: unknown;
 }
 
+export interface KlineCandle {
+  openTime: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  closeTime: number;
+}
+
+export type RawKline = [number, string, string, string, string, string, number, string, number, string, string, string];
+
+export function parseKline(raw: RawKline): KlineCandle {
+  return {
+    openTime: raw[0],
+    open: Number(raw[1]),
+    high: Number(raw[2]),
+    low: Number(raw[3]),
+    close: Number(raw[4]),
+    volume: Number(raw[5]),
+    closeTime: raw[6],
+  };
+}
+
 export interface FuturesOrderParams {
   symbol: string;
   side: "BUY" | "SELL";
@@ -214,5 +238,10 @@ export class FuturesRest {
 
   leverage(symbol: string, n: number): Promise<{ leverage: number; maxNotionalValue: string; symbol: string }> {
     return this.http.signed("POST", "/fapi/v1/leverage", { symbol, leverage: n }) as Promise<{ leverage: number; maxNotionalValue: string; symbol: string }>;
+  }
+
+  async klines(symbol: string, interval = "15m", limit = 50): Promise<KlineCandle[]> {
+    const raw = (await this.http.request("GET", "/fapi/v1/klines", { symbol, interval, limit })) as RawKline[];
+    return Array.isArray(raw) ? raw.map(parseKline) : [];
   }
 }

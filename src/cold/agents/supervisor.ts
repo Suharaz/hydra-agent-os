@@ -23,8 +23,8 @@ export function overlayToPatch(out: SupervisorOut, nowMs: number): TightenPatch 
   }
   const per: Partial<Record<EngineId, number>> = {};
   for (const e of ENGINE_IDS) {
-    const v = o.per_engine_max_notional_usd[e];
-    if (v !== null) {
+    const v = o.per_engine_max_notional_usd?.[e];
+    if (v !== null && v !== undefined) {
       per[e] = v;
       any = true;
     }

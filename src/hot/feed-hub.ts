@@ -17,7 +17,7 @@ import type { Ledger } from "../core/ledger.ts";
 import { logger } from "../core/log.ts";
 import type { MarkEvent, Mode, Side } from "../core/types.ts";
 import type { Module } from "../main.ts";
-import { FuturesRest, type DepthSnapshot, type Ticker24h } from "../venues/binance/rest-futures.ts";
+import { FuturesRest, type DepthSnapshot, type KlineCandle, type Ticker24h } from "../venues/binance/rest-futures.ts";
 import { SpotRest } from "../venues/binance/rest-spot.ts";
 import { urlMatrix, type UrlMatrix } from "../venues/binance/urls.ts";
 import { BinanceWs, combinedStreamUrl, realClock, realWsFactory, streamName, type Clock, type Frame, type WsFactory } from "../venues/binance/ws.ts";
@@ -47,8 +47,7 @@ export interface Burst {
 export type FrameSource = "futures" | "spot" | "spotRef";
 
 /** Read-only REST surface the hub needs; null disables snapshots/ADV (replay). */
-export type FeedFuturesRest = Pick<FuturesRest, "depth" | "ticker24h">;
-
+export type FeedFuturesRest = Pick<FuturesRest, "depth" | "ticker24h"> & Partial<Pick<FuturesRest, "klines">>;
 export interface FeedHubDeps {
   futuresRest: FeedFuturesRest | null;
   /** Reserved for spot REST reads; the hub currently only needs the spot stream. */
@@ -97,6 +96,7 @@ export class FeedHub {
   private readonly symbols = new Map<string, SymbolState>();
   private readonly spotTop = new Map<string, { bid: number; ask: number }>();
   private readonly refTop = new Map<string, { bid: number; ask: number }>();
+  private readonly klineMap = new Map<string, KlineCandle[]>();
   private readonly sockets: BinanceWs[] = [];
   private readonly timers = new Set<unknown>();
   private trackerStop: (() => void) | null = null;
@@ -175,6 +175,16 @@ export class FeedHub {
     return t === undefined || t.bid <= 0 || t.ask <= 0 ? null : (t.bid + t.ask) / 2;
   }
 
+  /** Trailing 15m klines from REST cache; empty until warmed. */
+  klines(symbol: string): readonly KlineCandle[] {
+    return this.klineMap.get(symbol) ?? [];
+  }
+
+  /** For tests / replay: manually prime klines. */
+  overrideKlines(symbol: string, candles: KlineCandle[]): void {
+    this.klineMap.set(symbol, candles);
+  }
+
   // ---- lifecycle ----------------------------------------------------------
 
   start(): void {
@@ -182,6 +192,7 @@ export class FeedHub {
     this.stopped = false;
     this.openSockets();
     this.startAdvPolling();
+    this.startKlinePolling();
     this.startOnchain();
   }
 
@@ -280,6 +291,26 @@ export class FeedHub {
     };
     poll();
     this.every(poll, ADV_REFRESH_MS);
+  }
+
+  private startKlinePolling(): void {
+    const rest = this.deps.futuresRest;
+    if (rest === null || !("klines" in rest) || typeof rest.klines !== "function") return;
+    const fut = this.deps.risk.allowed_symbols.futures;
+    if (fut.length === 0) return;
+    const poll = () => {
+      if (this.stopped) return;
+      for (const sym of fut) {
+        rest.klines!(sym, "15m", 50).then(
+          (candles: KlineCandle[]) => {
+            if (candles.length > 0) this.klineMap.set(sym, candles);
+          },
+          (err: unknown) => log.warn("kline poll failed", { symbol: sym, error: err instanceof Error ? err.message : String(err) }),
+        );
+      }
+    };
+    poll();
+    this.every(poll, 60_000);
   }
 
   private startOnchain(): void {

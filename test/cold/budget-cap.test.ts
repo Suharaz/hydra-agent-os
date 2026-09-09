@@ -34,7 +34,7 @@ const supervisorOut = {
     min_liq_distance_pct: null,
     max_orders_per_sec: null,
     daily_drawdown_kill_pct: null,
-    per_engine_max_notional_usd: { liqfade: null, basis: null, convert: null, smmirror: null, cexdex: null, tokstock: null },
+    per_engine_max_notional_usd: { liqfade: null, basis: null, convert: null, smmirror: null, cexdex: null, tokstock: null, swing: null },
     onchain_max_notional_usd: null,
     engines_paused: null,
     expires_in_min: null,

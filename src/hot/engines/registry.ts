@@ -24,7 +24,7 @@ import { ENGINE_VENUE, Engine, type EngineCtx, type EngineFeed, parseParams } fr
 import { LiqfadeEngine } from "./liqfade.ts";
 import { SmmirrorEngine } from "./smmirror.ts";
 import { TokstockEngine } from "./tokstock.ts";
-
+import { SwingEngine } from "./swing.ts";
 const log = logger("engines");
 
 export const TICK_MS = 250;
@@ -39,8 +39,8 @@ export const DEFAULT_FACTORIES: Record<EngineId, EngineFactory> = {
   smmirror: (ctx) => new SmmirrorEngine(ctx),
   cexdex: (ctx) => new CexdexEngine(ctx),
   tokstock: (ctx) => new TokstockEngine(ctx),
+  swing: (ctx) => new SwingEngine(ctx),
 };
-
 export interface ApplyResult {
   applied: EngineId[];
   rejected: Array<{ engine: EngineId; reason: string }>;

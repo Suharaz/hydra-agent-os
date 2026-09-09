@@ -12,13 +12,16 @@ import type { Ledger } from "../../core/ledger.ts";
 import { logger } from "../../core/log.ts";
 import type { EngineConfig, EngineId, Intent, Mode, OpportunityContract, Side, Venue } from "../../core/types.ts";
 import type { SkillsHttp } from "../../venues/onchain/skills-http.ts";
+import type { KlineCandle } from "../../venues/binance/rest-futures.ts";
 import type { AuditCache } from "../audit-cache.ts";
 import type { SubmitResult } from "../executor.ts";
 import type { FeedHub } from "../feed-hub.ts";
 
 const log = logger("engine");
 
-export type EngineFeed = Pick<FeedHub, "book" | "mark" | "burst" | "gapBps" | "vwap1m" | "adv" | "spotTopOfBook" | "referenceMid">;
+export type EngineFeed = Pick<FeedHub, "book" | "mark" | "burst" | "gapBps" | "vwap1m" | "adv" | "spotTopOfBook" | "referenceMid"> & {
+  klines?(symbol: string): readonly KlineCandle[];
+};
 
 export interface EngineCtx {
   feed: EngineFeed;
@@ -75,6 +78,17 @@ export const ENGINE_PARAM_SCHEMAS = {
   tokstock: z.object({
     devBps: n(20, 200, 60),
   }),
+  swing: z.object({
+    mode: n(0, 2, 0),
+    timeframeSec: n(60, 3600, 900),
+    lookbackCandles: n(3, 30, 8),
+    fastEma: n(5, 50, 20),
+    slowEma: n(20, 200, 50),
+    rsiThreshold: n(20, 45, 30),
+    slAtr: n(0.5, 4.0, 1.5),
+    tpAtr: n(1.0, 8.0, 3.0),
+    maxHoldMs: n(60_000, 28_800_000, 7_200_000),
+  }),
 } satisfies Record<EngineId, z.ZodObject<z.ZodRawShape>>;
 
 export type EngineParamSchemas = typeof ENGINE_PARAM_SCHEMAS;
@@ -112,6 +126,7 @@ export const ENGINE_PARAM_BOUNDS: Record<EngineId, Record<string, ParamBound>> =
   cexdex: boundsOf(ENGINE_PARAM_SCHEMAS.cexdex),
   convert: boundsOf(ENGINE_PARAM_SCHEMAS.convert),
   tokstock: boundsOf(ENGINE_PARAM_SCHEMAS.tokstock),
+  swing: boundsOf(ENGINE_PARAM_SCHEMAS.swing),
 };
 
 export function defaultParams(engine: EngineId): Record<string, number | boolean> {
@@ -131,8 +146,8 @@ export const ENGINE_VENUE: Record<EngineId, Venue> = {
   smmirror: "dex",
   cexdex: "spot",
   tokstock: "dex",
+  swing: "futures",
 };
-
 // ---- base class -----------------------------------------------------------
 
 export type IntentDraft = Pick<Intent, "venue" | "symbol" | "side" | "qty" | "type"> &

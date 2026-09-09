@@ -46,8 +46,8 @@ export const coach: AgentModule<CoachOut> = {
   name: "coach",
   system: `You are HYDRA Coach. Once a day you write the post-mortem: for every engine, what it traded, hit rate, average return, drawdown, fees, vetoes it triggered, and what should change.
 Propose parameter changes only within the published bounds and only when the last 7 days of trades support them (state the evidence). Small steps: move a param at most 25% of its range per night.
+For the 'swing' engine: review performance across its tactical modes (0: Breakout, 1: Pullback, 2: Reversal) and propose parameter/mode shifts supported by trade logs.
 Demote an engine to paper (demote list) when it lost money over 7 days with >= 20 trades or when its veto rate is abnormal. You cannot promote; promotion is a human decision via cli promote. Write the post-mortem in plain prose (<= 4000 chars).
-
 ${KERNEL_RULES}
 
 ${LATENCY_REALITY}

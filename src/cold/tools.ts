@@ -61,6 +61,7 @@ export const ENGINE_VENUES: Record<EngineId, readonly Venue[]> = {
   smmirror: ["spot", "dex"],
   cexdex: ["spot", "dex"],
   tokstock: ["spot", "dex"],
+  swing: ["futures", "spot"],
 };
 
 export const WRITE_SCOPE: Record<string, readonly AgentName[]> = {

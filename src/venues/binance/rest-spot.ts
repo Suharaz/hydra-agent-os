@@ -2,7 +2,7 @@
 // `/sapi/*` (live only) is derived by swapping the trailing segment.
 
 import { BinanceHttp, type HttpOptions } from "./http.ts";
-import type { CancelRef, DepthSnapshot, ExchangeInfo } from "./rest-futures.ts";
+import { type CancelRef, type DepthSnapshot, type ExchangeInfo, type KlineCandle, parseKline, type RawKline } from "./rest-futures.ts";
 import type { QueryParams } from "./sign.ts";
 
 export interface SpotOrderRow {
@@ -139,5 +139,10 @@ export class SpotRest {
   apiRestrictions(): Promise<ApiRestrictions> {
     if (/testnet/.test(this.baseUrl)) return Promise.reject(new Error("apiRestrictions: /sapi has no testnet; live only"));
     return this.sapi.signed("GET", "/sapi/v1/account/apiRestrictions") as Promise<ApiRestrictions>;
+  }
+
+  async klines(symbol: string, interval = "15m", limit = 50): Promise<KlineCandle[]> {
+    const raw = (await this.http.request("GET", "/v3/klines", { symbol, interval, limit })) as RawKline[];
+    return Array.isArray(raw) ? raw.map(parseKline) : [];
   }
 }

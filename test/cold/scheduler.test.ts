@@ -61,7 +61,7 @@ function insertVeto(r: Rig, rule = 5, detail = "max delta exceeded"): void {
   });
 }
 
-const dummyDecision = { action: "none", overlay: { nav_usd_cap: null, max_net_delta_pct: null, max_leverage: null, min_liq_distance_pct: null, max_orders_per_sec: null, daily_drawdown_kill_pct: null, per_engine_max_notional_usd: { liqfade: null, basis: null, convert: null, smmirror: null, cexdex: null, tokstock: null }, onchain_max_notional_usd: null, engines_paused: null, expires_in_min: null }, kill_reason: null, rationale: "ok" };
+const dummyDecision = { action: "none", overlay: { nav_usd_cap: null, max_net_delta_pct: null, max_leverage: null, min_liq_distance_pct: null, max_orders_per_sec: null, daily_drawdown_kill_pct: null, per_engine_max_notional_usd: { liqfade: null, basis: null, convert: null, smmirror: null, cexdex: null, tokstock: null, swing: null }, onchain_max_notional_usd: null, engines_paused: null, expires_in_min: null }, kill_reason: null, rationale: "ok" };
 
 describe("Scheduler hard daily budget gating", () => {
   test("all agents respect hard daily budget including supervisor at >= 100%", () => {

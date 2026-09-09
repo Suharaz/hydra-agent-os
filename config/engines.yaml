@@ -65,3 +65,18 @@ engines:
     sizeUsd: 100
     params:
       devBps: 60 # 20-200     token vs reference deviation
+  swing:
+    enabled: true
+    paper: false
+    symbols: [ BTCUSDT, ETHUSDT ]
+    sizeUsd: 20
+    params:
+      mode: 0
+      timeframeSec: 900
+      lookbackCandles: 8
+      fastEma: 20
+      slowEma: 50
+      rsiThreshold: 30
+      slAtr: 1.5
+      tpAtr: 3.0
+      maxHoldMs: 7200000

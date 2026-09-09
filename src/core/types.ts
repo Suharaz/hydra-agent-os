@@ -1,7 +1,7 @@
 // Shared domain types. Every later phase consumes these; keep names stable.
 
-export type EngineId = "liqfade" | "basis" | "convert" | "smmirror" | "cexdex" | "tokstock";
-export const ENGINE_IDS: readonly EngineId[] = ["liqfade", "basis", "convert", "smmirror", "cexdex", "tokstock"];
+export type EngineId = "liqfade" | "basis" | "convert" | "smmirror" | "cexdex" | "tokstock" | "swing";
+export const ENGINE_IDS: readonly EngineId[] = ["liqfade", "basis", "convert", "smmirror", "cexdex", "tokstock", "swing"];
 
 export type Venue = "spot" | "futures" | "dex";
 export const VENUES: readonly Venue[] = ["spot", "futures", "dex"];

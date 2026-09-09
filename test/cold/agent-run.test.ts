@@ -157,7 +157,7 @@ describe("runAgent primary + shadow", () => {
 
   test("treasurer: budgets written by primary only, report file written by primary only", async () => {
     const out = {
-      budgets: { liqfade: 1000, basis: 1500, convert: null, smmirror: null, cexdex: null, tokstock: null },
+      budgets: { liqfade: 1000, basis: 1500, convert: null, smmirror: null, cexdex: null, tokstock: null, swing: null },
       llm_daily_budget_usd: null,
       data_daily_budget_usd: null,
       purchases: [],
