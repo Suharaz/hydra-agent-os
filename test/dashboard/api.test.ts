@@ -45,7 +45,7 @@ describe("PUT /api/config/agents", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]?.actor).toBe("operator:bearer");
     expect(rows[0]?.path).toContain("agents.yaml");
-    expect(JSON.parse(rows[0]?.diff ?? "{}")).toMatchObject({ "agents.commander.model": { from: "claude-fable-5-1", to: "anthropic/claude-sonnet-4.6" } });
+    expect(JSON.parse(rows[0]?.diff ?? "{}")).toMatchObject({ "agents.commander.model": { from: "gpt-4.1", to: "anthropic/claude-sonnet-4.6" } });
 
     const get = (await (await fetch(`${rig.base}/api/config/agents`, authed())).json()) as { agents: { commander: { model: string } } };
     expect(get.agents.commander.model).toBe("anthropic/claude-sonnet-4.6");

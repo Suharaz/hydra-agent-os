@@ -541,7 +541,7 @@ export class Executor {
     }
     if (list.some((x) => x.orderId === w.orderId)) return;
     list.push(w);
-    log.info("spot tp/sl watcher armed", { orderId: w.orderId, symbol: w.symbol, side: w.side, qty: w.qty, tp: w.tp, sl: w.sl });
+    log.info(`${w.venue ?? "spot"} tp/sl watcher armed`, { orderId: w.orderId, symbol: w.symbol, side: w.side, qty: w.qty, tp: w.tp, sl: w.sl });
   }
 
   /**
@@ -549,7 +549,7 @@ export class Executor {
    * Returns false when the order is not spot or its intent has no tp/sl.
    */
   rebuildWatcher(order: Order): boolean {
-    if (order.venue !== "spot") return false;
+    if (order.venue !== "spot" && order.venue !== "futures") return false;
     const row = this.d.ledger.db.query<{ engine: EngineId; json: string | null }, [number]>("SELECT engine, json FROM intents WHERE id = ?").get(order.intentId);
     if (row === null) return false;
     let tp: number | undefined;
@@ -567,7 +567,7 @@ export class Executor {
       }
     }
     if (tp === undefined && sl === undefined) return false;
-    this.addWatcher({ orderId: order.id, engine: row.engine, symbol: order.symbol, side: order.side, qty: order.qty, tp, sl, extId: order.extId, firing: false });
+    this.addWatcher({ orderId: order.id, engine: row.engine, venue: order.venue, symbol: order.symbol, side: order.side, qty: order.qty, tp, sl, extId: order.extId, firing: false });
     return true;
   }
 
@@ -596,7 +596,7 @@ export class Executor {
       const fut = this.futures();
       let qty = w.qty;
       if (this.d.positions !== null) {
-        qty = Math.min(qty, Math.abs(this.d.positions.symbolQty("futures", w.symbol, false)));
+        qty = Math.min(qty, Math.abs(this.d.positions.qty("futures", w.engine, w.symbol)));
       }
       qty = this.round("futures", w.symbol, "qty", qty);
       if (qty <= 0) return;
