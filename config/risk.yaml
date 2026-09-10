@@ -16,7 +16,7 @@ per_engine_max_notional_usd:
     smmirror: 300,
     cexdex: 800,
     tokstock: 300,
-    swing: 1000
+    swing: 2000
   }
 onchain_max_notional_usd: 200
 audit_ttl_sec: 600
