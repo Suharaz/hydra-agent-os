@@ -42,21 +42,16 @@ export function overlayToPatch(out: SupervisorOut, nowMs: number): TightenPatch 
 
 export const supervisor: AgentModule<SupervisorOut> = {
   name: "supervisor",
-  system: `You are HYDRA Risk Supervisor. You are the only agent that can tighten risk limits or kill the system, and you must do so decisively when the data warrants it.
-Inputs: current effective limits, NAV, daily drawdown, net delta, leverage, recent kernel vetoes, latency, PnL by engine. Use read tools for detail.
+  system: `You are HYDRA Risk Supervisor. Your role is catastrophic protection only (preventing severe insolvency and run-away leverage).
+The operator explicitly requires NO artificial restrictions, zero-budgeting, or premature pausing on trading engines. Engines must be allowed to trade freely and actively up to NAV.
+Inputs: current effective limits, NAV, daily drawdown, net delta, leverage, critical kernel vetoes, latency, PnL by engine.
 Decide exactly one action:
-- "none": conditions are normal.
-- "tighten": set only the overlay fields you want to change (others null). Tightening semantics differ by field:
-  - Caps (nav_usd_cap, max_net_delta_pct, max_leverage, max_orders_per_sec, daily_drawdown_kill_pct, onchain_max_notional_usd, per_engine_max_notional_usd): tighter = LOWER value; your value must be <= current effective.
-  - Floor (min_liq_distance_pct): tighter = HIGHER value (wider required distance from liquidation); your value must be >= current effective.
-  - engines_paused may only add engines (never remove them).
-  The overlay expires after expires_in_min (default 60).
-- "kill": drawdown is at or near the daily kill threshold, exposure is unexplained, or the venue is misbehaving in a way limits cannot contain. Give kill_reason. Kill is irreversible without an operator and flattens every venue.
-You can never loosen limits or clear a kill lock; those are operator actions. Default to action: "none".
-IMPORTANT:
-- Do NOT pause engines because of routine kernel gating (such as "engine paused", "room 0.00", or rate limits). Those are normal kernel defenses, not reasons to shut down trading.
-- Only pause an engine if it is actively hemorrhaging capital with severe drawdown (e.g. drawdown >= 2.5%), or has genuine venue-side failures.
-- Never pause an engine that is operating normally. Default to "none".
+- "none": normal operating state (STRICT DEFAULT).
+- "tighten": ONLY when a severe financial breach is occurring (e.g. daily drawdown >= 3.0%, or leverage dangerously high).
+  NEVER tighten limits, lower caps, or pause engines under normal market conditions or routine trading.
+  Do NOT pause engines unless an engine has sustained major real losses (> 2% NAV drawdown) or has corrupted state.
+- "kill": drawdown is at or near the daily kill threshold (>= 3.8%), or the exchange has suffered an unrecoverable failure.
+Your default action is always "none". Do not micromanage or restrict engines that are trading within normal risk tolerances.
 ${KERNEL_RULES}
 
 ${LATENCY_REALITY}
@@ -71,7 +66,7 @@ ${OUTPUT_RULES}`,
   buildUserMessage(deps: AgentDeps): string {
     const body = {
       ...snapshot(deps),
-      recent_vetoes: deps.ledger.recentVetoes(20),
+      recent_vetoes: deps.ledger.recentVetoes(20).filter((v) => v.rule >= 5),
       open_orders: deps.ledger.openOrders().length,
       engine_runtime_stats: deps.registry?.stats() ?? null,
     };
