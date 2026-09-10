@@ -12,6 +12,7 @@ import type { EngineId, Fill, Position, Residue, Venue } from "../core/types.ts"
 import { ENGINE_IDS } from "../core/types.ts";
 import type { FuturesRest } from "../venues/binance/rest-futures.ts";
 import type { SpotRest } from "../venues/binance/rest-spot.ts";
+import { recoverFills } from "../venues/binance/recovery.ts";
 
 const log = logger("positions");
 
@@ -566,6 +567,22 @@ export class Positions {
       }
       const symbols = new Set<string>(this.venueFutures.keys());
       for (const pos of this.byKey.values()) if (pos.venue === "futures" && pos.qty !== 0) symbols.add(pos.symbol);
+      let mismatch = false;
+      for (const symbol of symbols) {
+        const ledgerQty = this.symbolQty("futures", symbol);
+        const venueQty = this.venueFutures.get(symbol)?.qty ?? 0;
+        if (Math.abs(ledgerQty - venueQty) > this.dust("futures", symbol)) {
+          mismatch = true;
+          break;
+        }
+      }
+      if (mismatch) {
+        try {
+          await recoverFills({ ledger: this.ledger, bus: this.bus, futuresRest: this.futures, futuresSymbols: Array.from(symbols) });
+        } catch (err) {
+          log.warn("fill recovery during reconcile failed", { error: String(err) });
+        }
+      }
       for (const symbol of symbols) {
         const ledgerQty = this.symbolQty("futures", symbol);
         const venueQty = this.venueFutures.get(symbol)?.qty ?? 0;
