@@ -482,6 +482,11 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
       kill,
       limits,
       engines: engineRows(now),
+      pnl: {
+        realized24h: engineRows(now).reduce((sum, e) => sum + (e.pnl24h ?? 0), 0),
+        unrealized: (stack === null ? [] : stack.positions.snapshot()).reduce((sum, p) => sum + (p.unrealized ?? 0), 0),
+        totalNet: engineRows(now).reduce((sum, e) => sum + (e.pnl24h ?? 0), 0) + (stack === null ? [] : stack.positions.snapshot()).reduce((sum, p) => sum + (p.unrealized ?? 0), 0),
+      },
       agents:
         role === "operator"
           ? { config: agents.agents, overrides: deps.env.modelOverrides, runtime: deps.agentRuntime?.() ?? {} }
@@ -838,6 +843,31 @@ export function createDashboard(deps: DashboardDeps): Dashboard {
     return c.json({ days, since, engines: rows, total: { realized, fees, net: realized - fees } });
   });
 
+  app.get("/api/ledger/trades", (c) => {
+    const limit = Math.min(200, Math.max(1, Number(c.req.query("limit") ?? 50) || 50));
+    const db = reads().db;
+    type TradeRow = {
+      id: number;
+      engine: string;
+      venue: string;
+      symbol: string;
+      opened_ns: number;
+      closed_ns: number;
+      qty: number;
+      entry: number;
+      exit: number;
+      realized: number;
+      fees: number;
+      ret_bps: number;
+      ts_wall: number;
+    };
+    const rows = db
+      .query<TradeRow, [number]>(
+        "SELECT id, engine, venue, symbol, opened_ns, closed_ns, qty, entry, exit, realized, fees, ret_bps, ts_wall FROM trades ORDER BY id DESC LIMIT ?",
+      )
+      .all(limit);
+    return c.json({ trades: rows.map((r) => ({ ...r, net: r.realized - r.fees })) });
+  });
   app.get("/api/agents/runs", (c) => {
     const limit = Math.min(500, Math.max(1, Number(c.req.query("limit") ?? 50) || 50));
     const agent = c.req.query("agent");

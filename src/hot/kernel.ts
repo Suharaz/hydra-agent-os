@@ -368,9 +368,9 @@ export class Kernel {
   private readonly r4: Rule = (i, c) => {
     if (!(c.price > 0)) return "no reference price";
     if (c.deltaAbs <= 0) return null;
-    const engineCap = c.limits.per_engine_max_notional_usd[i.engine];
+    const engineCap = c.limits.per_engine_max_notional_usd[i.engine] > 0 ? c.limits.per_engine_max_notional_usd[i.engine] : this.navBase(c);
     const budget = c.budgets[i.engine];
-    const cap = budget === undefined || budget > engineCap ? engineCap : budget;
+    const cap = typeof budget === "number" && budget > 0 ? Math.min(budget, engineCap) : engineCap;
     // S03: subtract in-flight reserved notional so concurrent/sequential intents cannot both see the same room.
     const open = i.paper && this.positions.paperOpenNotional !== undefined ? this.positions.paperOpenNotional(i.engine) : this.positions.openNotional(i.engine);
     const room = cap - open - this.reservedNotional(i.engine, i.paper);

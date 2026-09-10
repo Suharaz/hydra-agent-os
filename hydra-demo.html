@@ -856,11 +856,12 @@ body {
   <div class="kpi-row" id="warRoomKpis">
     <div class="kpi-card">
       <div class="kpi-title">
-        <span>Cumulative PnL (Selected Frame)</span>
+        <span>Total PnL (Realized + Floating)</span>
         <span>💰</span>
       </div>
       <div class="kpi-val" id="kpiPnl">—</div>
       <div class="kpi-badge neutral" id="kpiPnlPct">—</div>
+      <div style="font-size: 11px; color: var(--txt-muted); margin-top: 5px; font-family: var(--font-mono);" id="kpiPnlBreakdown">Realized: — · Floating: —</div>
     </div>
 
     <div class="kpi-card">
@@ -1032,35 +1033,71 @@ body {
   <!-- TAB 4: TRADE EXECUTION AUDIT TRAIL -->
   <!-- ======================================================================= -->
   <div id="tab-trades" class="view-tab">
+    <!-- 1. LIVE OPEN POSITIONS -->
     <div class="panel-box" style="margin-top: 18px;">
       <div class="panel-header">
         <div class="panel-title">
-          <span>📋 Real-Time Execution Audit Trail</span>
+          <span>🟢 Live Open Positions (Vị thế đang mở)</span>
         </div>
-        <span style="font-size: 12px; color: var(--txt-muted);">Live open positions &amp; fills</span>
+        <span style="font-size: 12px; color: var(--green); font-weight: 600;">● Real-Time Floating PnL</span>
       </div>
-      <div class="panel-body" style="padding: 16px 20px 0;">
+      <div class="panel-body" style="padding: 16px 20px 10px;">
         <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Timestamp</th>
+                <th>Status</th>
                 <th>Engine</th>
                 <th>Symbol</th>
-                <th>Side / Action</th>
+                <th>Side</th>
                 <th>Entry Price</th>
                 <th>Exit / Mark</th>
                 <th>Quantity</th>
-                <th>Net PnL</th>
-                <th>Status</th>
+                <th>Unrealized PnL</th>
+                <th>Venue</th>
               </tr>
             </thead>
             <tbody id="tradesTable">
-              <tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">Loading…</td></tr>
+              <tr><td colspan="9" style="text-align:center; padding:22px; color:var(--txt-muted);">No open positions</td></tr>
             </tbody>
           </table>
         </div>
         <div id="tradesPager" class="pager"></div>
+      </div>
+    </div>
+
+    <!-- 2. CLOSED TRADES HISTORY -->
+    <div class="panel-box" style="margin-top: 24px;">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📜 Closed Trades History (Lịch sử lệnh đã chốt)</span>
+        </div>
+        <span style="font-size: 12px; color: var(--txt-muted);">Database Audit Trail from SQLite</span>
+      </div>
+      <div class="panel-body" style="padding: 16px 20px 10px;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Closed Time</th>
+                <th>Engine</th>
+                <th>Symbol</th>
+                <th>Venue</th>
+                <th>Entry Price</th>
+                <th>Exit Price</th>
+                <th>Quantity</th>
+                <th>Gross Realized</th>
+                <th>Fees</th>
+                <th>Net PnL</th>
+                <th>Return (bps)</th>
+              </tr>
+            </thead>
+            <tbody id="closedTradesTable">
+              <tr><td colspan="11" style="text-align:center; padding:22px; color:var(--txt-muted);">Loading closed trades…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="closedTradesPager" class="pager"></div>
       </div>
     </div>
   </div>
@@ -1576,6 +1613,59 @@ function startAgentRunsPolling() {
   poll();
   window._agentRunsPoll = setInterval(poll, 5000);
 }
+let closedTrades = [];
+let closedTradesPage = 1;
+
+function renderClosedTrades(trades) {
+  const body = document.getElementById("closedTradesTable");
+  if (!body) return;
+  const all = trades || [];
+  if (!all.length) {
+    body.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:22px; color:var(--txt-muted);">No closed trades recorded yet</td></tr>`;
+    renderPager("closedTradesPager", 1, 0, 10, "closed-prev", "closed-next");
+    return;
+  }
+  const pageSize = 10;
+  const totalPages = Math.max(1, Math.ceil(all.length / pageSize));
+  closedTradesPage = Math.min(Math.max(1, closedTradesPage), totalPages);
+  const rows = all.slice((closedTradesPage - 1) * pageSize, closedTradesPage * pageSize);
+  body.innerHTML = rows.map(t => {
+    const net = Number(t.net) != null && !isNaN(t.net) ? Number(t.net) : (Number(t.realized) - Number(t.fees)) || 0;
+    const timeStr = t.ts_wall ? new Date(t.ts_wall).toLocaleTimeString() : (t.closed_ns ? new Date(t.closed_ns / 1e6).toLocaleTimeString() : "—");
+    const retBps = Number(t.ret_bps) || 0;
+    return `<tr>
+      <td style="font-family: var(--font-mono); font-size: 11.5px; color: var(--txt-muted);">${timeStr}</td>
+      <td><b>${esc(engineName(t.engine))}</b></td>
+      <td><b>${esc(t.symbol)}</b></td>
+      <td><span style="font-size:10px; padding:2px 5px; border-radius:3px; background:var(--card-sub); border:1px solid var(--border);">${esc(t.venue || 'futures')}</span></td>
+      <td style="font-family: var(--font-mono); font-size: 12px;">$${Number(t.entry).toFixed(2)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12px;">$${Number(t.exit).toFixed(2)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12px;">${Number(t.qty).toFixed(4)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12px; color: ${t.realized >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(t.realized)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12px; color: var(--txt-muted);">${fmtSignedUsd(t.fees)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: ${net >= 0 ? 'var(--green)' : 'var(--red)'};">${fmtSignedUsd(net)}</td>
+      <td style="font-family: var(--font-mono); font-size: 12px; color: ${retBps >= 0 ? 'var(--green)' : 'var(--red)'};">${retBps >= 0 ? '+' : ''}${retBps.toFixed(1)} bps</td>
+    </tr>`;
+  }).join("");
+  renderPager("closedTradesPager", closedTradesPage, all.length, pageSize, "closed-prev", "closed-next");
+}
+
+function startClosedTradesPolling() {
+  if (window._closedTradesPoll) return;
+  const poll = () => {
+    fetch("/api/ledger/trades?limit=100")
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d && Array.isArray(d.trades)) {
+          closedTrades = d.trades;
+          renderClosedTrades(closedTrades);
+        }
+      })
+      .catch(() => {});
+  };
+  poll();
+  window._closedTradesPoll = setInterval(poll, 4000);
+}
 
 // ===========================================================================
 // REAL BACKEND RENDERERS
@@ -1626,12 +1716,21 @@ function renderRealKpis(s) {
     navSourceEl.textContent = "Source: " + navSource;
   }
 
+  const pnlRealized = (s.pnl && typeof s.pnl.realized24h === "number") ? s.pnl.realized24h : pnl;
+  const pnlUnrealized = (s.pnl && typeof s.pnl.unrealized === "number") ? s.pnl.unrealized : (s.executor && Array.isArray(s.executor.positions) ? s.executor.positions.reduce((sum, p) => sum + (Number(p.unrealized) || 0), 0) : 0);
+  const totalNet = (s.pnl && typeof s.pnl.totalNet === "number") ? s.pnl.totalNet : (pnlRealized + pnlUnrealized);
+
   const pnlEl = document.getElementById("kpiPnl");
   if (pnlEl) {
-    pnlEl.textContent = fmtSignedUsd(pnl);
-    pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+    pnlEl.textContent = fmtSignedUsd(totalNet);
+    pnlEl.style.color = totalNet >= 0 ? "var(--green)" : "var(--red)";
   }
 
+  const breakdownEl = document.getElementById("kpiPnlBreakdown");
+  if (breakdownEl) {
+    breakdownEl.textContent = `Realized: ${fmtSignedUsd(pnlRealized)} · Floating: ${fmtSignedUsd(pnlUnrealized)}`;
+    breakdownEl.style.color = pnlUnrealized >= 0 ? "var(--green)" : "var(--red)";
+  }
   const pctEl = document.getElementById("kpiPnlPct");
   if (pctEl) {
     let pct = null;
@@ -1664,8 +1763,8 @@ function renderRealKpis(s) {
 
   const chartVal = document.getElementById("chartPnlVal");
   if (chartVal) {
-    chartVal.textContent = fmtSignedUsd(pnl);
-    chartVal.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+    chartVal.textContent = fmtSignedUsd(totalNet);
+    chartVal.style.color = totalNet >= 0 ? "var(--green)" : "var(--red)";
   }
   const ddEl = document.getElementById("chartDrawdown");
   if (ddEl) {
@@ -2043,6 +2142,7 @@ function onSession() {
   connectLive();
   hydrateLessons();
   startAgentRunsPolling();
+  startClosedTradesPolling();
 }
 
 function scheduleReconnect() {
@@ -2139,6 +2239,8 @@ const CLICK_ACTIONS = {
   "timeframe": (el) => setTimeframe(el.dataset.arg, el),
   "trades-prev": () => { tradesPage--; rerenderTrades(); },
   "trades-next": () => { tradesPage++; rerenderTrades(); },
+  "closed-prev": () => { closedTradesPage--; renderClosedTrades(closedTrades); },
+  "closed-next": () => { closedTradesPage++; renderClosedTrades(closedTrades); },
   "dream-prev": () => { dreamPage--; renderDreamLessons(); },
   "dream-next": () => { dreamPage++; renderDreamLessons(); }
 };

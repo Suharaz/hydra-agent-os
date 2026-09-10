@@ -69,7 +69,7 @@ engines:
     enabled: true
     paper: false
     symbols: [ BTCUSDT, ETHUSDT ]
-    sizeUsd: 20
+    sizeUsd: 150
     params:
       mode: 0
       timeframeSec: 900
