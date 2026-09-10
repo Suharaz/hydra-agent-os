@@ -130,6 +130,33 @@ export async function recoverBoot(deps: RecoveryDeps): Promise<RecoverySummary> 
   if (deps.positions !== undefined && deps.positions !== null) {
     try {
       await deps.positions.reconcile();
+      // Re-arm protection watchers for any open position whose intent carried tp/sl
+      for (const pos of deps.positions.snapshot()) {
+        if (Math.abs(pos.qty) <= 0) continue;
+        const row = deps.ledger.db.query<{ id: number; intent_id: number; venue: Venue; symbol: string; side: Side; qty: number; client_id: string; status: OrderStatus; t_sent_ns: number; price?: number; ext_id: string | null }, [string, string, string]>(
+          "SELECT orders.id, orders.intent_id, orders.venue, orders.symbol, orders.side, orders.qty, orders.client_id, orders.status, orders.t_sent_ns, orders.ext_id " +
+          "FROM orders JOIN intents ON orders.intent_id = intents.id " +
+          "WHERE orders.venue = ? AND intents.engine = ? AND orders.symbol = ? AND orders.status = 'FILLED' " +
+          "ORDER BY orders.id DESC LIMIT 1"
+        ).get(pos.venue, pos.engine, pos.symbol);
+        if (row) {
+          const ord: Order = {
+            id: row.id,
+            intentId: row.intent_id,
+            venue: row.venue,
+            symbol: row.symbol,
+            side: row.side,
+            qty: row.qty,
+            clientId: row.client_id,
+            status: row.status,
+            tSentNs: row.t_sent_ns,
+            extId: row.ext_id ?? undefined,
+          };
+          if (deps.executor.rebuildWatcher(ord)) {
+            summary.watchersRebuilt++;
+          }
+        }
+      }
     } catch (err) {
       log.warn("initial reconcile failed", { error: errText(err) });
     }
