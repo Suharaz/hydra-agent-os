@@ -8,7 +8,7 @@ import { alert as defaultAlert, type AlertLevel } from "../core/alert.ts";
 import type { Ledger } from "../core/ledger.ts";
 import { logger } from "../core/log.ts";
 import { readKillLock } from "../core/state.ts";
-import type { KillLock, Order, OrderStatus, Residue, Venue } from "../core/types.ts";
+import type { KillLock, Order, OrderStatus, Residue, Side, Venue } from "../core/types.ts";
 import type { FuturesRest } from "../venues/binance/rest-futures.ts";
 import type { SpotRest } from "../venues/binance/rest-spot.ts";
 import type { Positions } from "./positions.ts";
@@ -130,13 +130,17 @@ export async function recoverBoot(deps: RecoveryDeps): Promise<RecoverySummary> 
   if (deps.positions !== undefined && deps.positions !== null) {
     try {
       await deps.positions.reconcile();
-      // Re-arm protection watchers for any open position whose intent carried tp/sl
+    } catch (err) {
+      log.warn("initial reconcile failed", { error: errText(err) });
+    }
+    // Re-arm protection watchers for any open position whose intent carried tp/sl
+    try {
       for (const pos of deps.positions.snapshot()) {
         if (Math.abs(pos.qty) <= 0) continue;
         const row = deps.ledger.db.query<{ id: number; intent_id: number; venue: Venue; symbol: string; side: Side; qty: number; client_id: string; status: OrderStatus; t_sent_ns: number; price?: number; ext_id: string | null }, [string, string, string]>(
-          "SELECT orders.id, orders.intent_id, orders.venue, orders.symbol, orders.side, orders.qty, orders.client_id, orders.status, orders.t_sent_ns, orders.ext_id " +
+          "SELECT orders.id, orders.intent_id, orders.venue, intents.symbol, intents.side, intents.qty, orders.client_id, orders.status, orders.t_sent_ns, orders.ext_id " +
           "FROM orders JOIN intents ON orders.intent_id = intents.id " +
-          "WHERE orders.venue = ? AND intents.engine = ? AND orders.symbol = ? AND orders.status = 'FILLED' " +
+          "WHERE orders.venue = ? AND intents.engine = ? AND intents.symbol = ? AND orders.status = 'FILLED' " +
           "ORDER BY orders.id DESC LIMIT 1"
         ).get(pos.venue, pos.engine, pos.symbol);
         if (row) {
@@ -158,7 +162,7 @@ export async function recoverBoot(deps: RecoveryDeps): Promise<RecoverySummary> 
         }
       }
     } catch (err) {
-      log.warn("initial reconcile failed", { error: errText(err) });
+      log.warn("rebuilding position watchers failed", { error: errText(err) });
     }
   }
 
