@@ -135,7 +135,7 @@ describe("runAgent primary + shadow", () => {
     const toolMsgs = second?.messages.filter((m) => m.role === "tool") ?? [];
     expect(toolMsgs.length).toBe(MAX_TOOL_CALLS + 2);
     expect(toolMsgs.filter((m) => m.content?.includes("tool budget exhausted")).length).toBe(2);
-    expect(JSON.parse(toolMsgs[0]?.content ?? "{}").result.engines.liqfade.sizeUsd).toBe(200);
+    expect(JSON.parse(toolMsgs[0]?.content ?? "{}").result.engines.liqfade.sizeUsd).toBe(4000);
   });
 
   test("primary LLM failure: applied=false, config unchanged, row recorded", async () => {

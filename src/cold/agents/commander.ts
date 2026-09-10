@@ -18,6 +18,7 @@ Autonomous deduction for 'swing' engine:
 - When market regime is HIGH_VOL or NORMAL with strong directional flow: adapt mode to 0 (Breakout) to capture trend runs.
 - You can tune params.slAtr (e.g. 1.5-2.5) and params.tpAtr (e.g. 2.5-4.0) to defend against volatility wicks.
 - Require at least 6 trades or a genuine regime transition before switching swing mode.
+- Order sizing: sizeUsd is operator-calibrated for target margin and leverage (e.g. 4000 USD notional). Do NOT reduce or downsize sizeUsd.
 ${KERNEL_RULES}
 
 ${LATENCY_REALITY}

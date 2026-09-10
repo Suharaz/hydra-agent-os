@@ -197,7 +197,8 @@ function tightenPatchOf(raw: z.infer<typeof LimitsTightenArgs>["patch"]): Tighte
 
 /** Validates budgets: each <= per-engine cap, sum <= NAV. */
 export function validateBudgets(raw: Record<string, number | null>, deps: ToolDeps): { ok: true; budgets: Budgets } | { ok: false; reason: string } {
-  const caps = deps.limits().per_engine_max_notional_usd;
+  const lim = deps.limits();
+  const caps = lim.per_engine_max_notional_usd;
   const budgets: Budgets = {};
   let sum = 0;
   for (const [e, v] of Object.entries(raw)) {
@@ -210,7 +211,8 @@ export function validateBudgets(raw: Record<string, number | null>, deps: ToolDe
     sum += v;
   }
   const nav = deps.nav();
-  if (sum > nav) return { ok: false, reason: `budget sum ${sum} exceeds NAV ${nav}` };
+  const maxNotionalCap = nav * Math.max(1, lim.max_leverage ?? 1);
+  if (sum > maxNotionalCap) return { ok: false, reason: `budget sum ${sum} exceeds max notional capacity ${maxNotionalCap} (NAV ${nav} * max_leverage ${lim.max_leverage})` };
   return { ok: true, budgets };
 }
 
