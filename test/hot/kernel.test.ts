@@ -9,7 +9,36 @@ import { AuditCache } from "../../src/hot/audit-cache.ts";
 import { type FeedView, KILL_LOCK_TTL_MS, Kernel, type KernelPositions } from "../../src/hot/kernel.ts";
 import { REPO_CONFIG, cleanup, tempDir } from "../core/helpers.ts";
 
-const BASE_RISK = loadConfig(REPO_CONFIG).risk;
+const TEST_BASE_RISK: RiskConfig = {
+  nav_usd_cap: 5000,
+  max_net_delta_pct: 25,
+  max_leverage: 3,
+  min_liq_distance_pct: 15,
+  max_orders_per_sec: 8,
+  daily_drawdown_kill_pct: 4,
+  nav_jump_alert_pct: 50,
+  per_engine_max_notional_usd: {
+    liqfade: 2000,
+    basis: 2500,
+    convert: 1000,
+    smmirror: 300,
+    cexdex: 800,
+    tokstock: 300,
+    swing: 2000,
+  },
+  onchain_max_notional_usd: 200,
+  audit_ttl_sec: 600,
+  allowed_symbols: {
+    futures: ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"],
+    spot: ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"],
+    dex: ["PEPE"],
+  },
+  llm_daily_budget_usd: 5,
+  data_daily_budget_usd: 1,
+  transfer_max_usd_per_day: 0,
+  kill_verify_attempts_before_alert: 3,
+};
+const BASE_RISK = TEST_BASE_RISK;
 
 class FakePositions implements KernelPositions {
   navUsd = 10_000;
